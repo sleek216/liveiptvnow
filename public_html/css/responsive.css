@@ -1,0 +1,427 @@
+/* ══════════════════════════════════════════════════════════
+   LIVE IPTV NOW — Ultimate Responsive Framework
+   Systematic Breakpoints: 1400px (XL) | 1200px (LG) | 1024px (MD) | 768px (SM) | 480px (XS)
+   ══════════════════════════════════════════════════════════ */
+
+/* ╔══════════════════════════════════╗
+   ║  0. GLOBAL RESPONSIVE TOKENS     ║
+   ╚══════════════════════════════════╝ */
+:root {
+    --fluid-h1: clamp(2.2rem, 8vw, 4.5rem);
+    --fluid-h2: clamp(1.8rem, 5vw, 2.8rem);
+    --fluid-h3: clamp(1.4rem, 3vw, 1.8rem);
+}
+
+/* ╔══════════════════════════════════╗
+   ║  XL — ULTRA WIDE (1400px+)       ║
+   ╚══════════════════════════════════╝ */
+@media (min-width: 1400px) {
+    .wrap {
+        max-width: 1340px;
+    }
+}
+
+/* ╔══════════════════════════════════╗
+   ║  LG — DESKTOP (1200px - 1400px)   ║
+   ╚══════════════════════════════════╝ */
+@media (max-width: 1200px) {
+
+    /* Footer Grid */
+    .ft-grid {
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 40px;
+    }
+
+    .ft-about {
+        grid-column: 1 / -1;
+        max-width: 520px;
+        text-align: left;
+    }
+
+    /* Navigation Spacing */
+    .mnav {
+        gap: 0;
+    }
+
+    .mnav a {
+        padding: 8px 12px;
+        font-size: 0.85rem;
+    }
+
+    /* Grids */
+    .ch-grid,
+    .pk-grid,
+    .features-grid,
+    .pricing-grid {
+        gap: 20px;
+    }
+}
+
+/* ╔══════════════════════════════════╗
+   ║  MD — TABLETS (1024px)           ║
+   ╚══════════════════════════════════╝ */
+@media (max-width: 1024px) {
+    :root {
+        --sec-py: 80px;
+    }
+
+    /* Header & Navigation */
+    .mnav,
+    .hdr-end {
+        display: none;
+    }
+
+    .m-toggle {
+        display: grid;
+    }
+
+    .hdr-bar {
+        height: 68px;
+        padding: 0 20px;
+    }
+
+    .top-bar {
+        padding: 6px 0;
+        font-size: 0.75rem;
+    }
+
+    .top-info span:last-child {
+        display: none;
+    }
+
+    .top-right {
+        gap: 10px;
+    }
+
+    /* Layout Grids */
+    .ch-grid,
+    .pricing-grid,
+    .reviews-grid,
+    .co-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .pk-grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    }
+
+    .split-inner,
+    .why-grid {
+        grid-template-columns: 1fr;
+        gap: 48px;
+    }
+
+    /* Stats */
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .stat-item {
+        border-right: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .stat-item:nth-child(even) {
+        border-right: none;
+    }
+
+    /* Footer */
+    .ft-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    /* Checkout Specialized Fix */
+    .co-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .co-sidebar {
+        position: static;
+        order: -1;
+        margin-bottom: 24px;
+    }
+}
+
+/* ╔══════════════════════════════════╗
+   ║  SM — MOBILE LANDSCAPE (768px)   ║
+   ╚══════════════════════════════════╝ */
+@media (max-width: 768px) {
+    :root {
+        --sec-py: 64px;
+    }
+
+    .wrap {
+        padding: 0 18px;
+    }
+
+    /* Hide top bar for cleaner mobile view */
+    .top-bar {
+        display: none;
+    }
+
+    /* Typography Overrides */
+    h1 {
+        font-size: clamp(2rem, 8vw, 2.8rem) !important;
+        letter-spacing: -1px !important;
+    }
+
+    h2 {
+        font-size: clamp(1.6rem, 6vw, 2.2rem) !important;
+    }
+
+    /* Header Fixes */
+    .hdr {
+        top: 0;
+    }
+
+    /* Grids to Single Column */
+    .ch-grid,
+    .pricing-grid,
+    .reviews-grid,
+    .co-grid,
+    .steps-grid,
+    .features-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    /* Hero Content */
+    .hero-content {
+        text-align: center;
+        padding: 80px 0 100px;
+    }
+
+    .hero-cta {
+        justify-content: center;
+    }
+
+    .hero-trust {
+        justify-content: center;
+    }
+
+    .hero-float-badge {
+        position: relative;
+        right: auto;
+        bottom: auto;
+        transform: none;
+        margin: 30px auto 0;
+        width: fit-content;
+    }
+
+    /* Page Hero (Shared) */
+    .ph-hero {
+        padding: 50px 0;
+        text-align: center;
+    }
+
+    .ph-hero .ph-highlights {
+        justify-content: center;
+    }
+
+    .ph-hero .ph-ctas {
+        justify-content: center;
+    }
+
+    .ph-stats {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    /* Footer Bottom */
+    .ft-bottom {
+        flex-direction: column;
+        text-align: center;
+        gap: 16px;
+        padding: 24px 0;
+    }
+
+    .ft-pay {
+        justify-content: center;
+    }
+
+    /* Tables */
+    .table-responsive {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+/* ╔══════════════════════════════════╗
+   ║  SM+ — LARGE MOBILE (640px)       ║
+   ╚══════════════════════════════════╝ */
+@media (max-width: 640px) {
+    /* Pricing / Package Cards */
+    .pk-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    .pk-card,
+    .pricing-card {
+        max-width: 100%;
+    }
+
+    /* Co-fields row (checkout two-column rows) */
+    .co-row {
+        grid-template-columns: 1fr;
+    }
+
+    /* Profile / Affiliate sections */
+    .profile-grid,
+    .aff-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Hero CTA buttons stack */
+    .hero-cta {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .hero-cta .hb {
+        width: 100%;
+        justify-content: center;
+    }
+
+    /* Contact form */
+    .ct-row {
+        grid-template-columns: 1fr;
+    }
+
+    /* FAQ accordion */
+    .fq-q {
+        font-size: 0.9375rem;
+        padding: 16px 18px;
+    }
+
+    /* Modal boxes */
+    .co-modal-box {
+        padding: 28px 20px;
+        margin: 16px;
+    }
+}
+
+/* ╔══════════════════════════════════╗
+   ║  XS — MOBILE PORTRAIT (480px)    ║
+   ╚══════════════════════════════════╝ */
+@media (max-width: 480px) {
+    :root {
+        --sec-py: 52px;
+    }
+
+    .wrap {
+        padding: 0 16px;
+    }
+
+    /* Announcement Bar */
+    .ann {
+        font-size: 0.78rem;
+        padding: 10px 16px;
+    }
+
+    .ann-tag {
+        display: none;
+    }
+
+    /* Brand Size */
+    .brand-name {
+        font-size: 1.15rem;
+    }
+
+    .brand-logo {
+        height: 32px;
+    }
+
+    .brand-dot {
+        width: 36px;
+        height: 36px;
+        font-size: 18px;
+    }
+
+    /* Stats */
+    .stat-num {
+        font-size: 1.8rem;
+    }
+
+    /* CTAs */
+    .btn,
+    .hb {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .cta-btns {
+        flex-direction: column;
+    }
+
+    /* Duration Tabs / Category Tabs */
+    .pk-tabs,
+    .ch-tabs {
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        justify-content: flex-start;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 8px;
+    }
+
+    .pk-tab,
+    .ch-tab {
+        flex-shrink: 0;
+    }
+
+    /* Footer */
+    .ft-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .ft-logo-text {
+        font-size: 1.2rem;
+    }
+
+    .scroll-top {
+        bottom: 18px;
+        right: 18px;
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+    }
+}
+
+/* ╔══════════════════════════════════╗
+   ║  UTILITY CLASSES                 ║
+   ╚══════════════════════════════════╝ */
+.hide-mobile {
+    @media (max-width: 768px) {
+        display: none !important;
+    }
+}
+
+.show-mobile {
+    display: none;
+
+    @media (max-width: 768px) {
+        display: block !important;
+    }
+}
+
+.text-center-mobile {
+    @media (max-width: 768px) {
+        text-align: center !important;
+    }
+}
+
+/* Prevent horizontal scroll from mobile drawer / AOS */
+html, body {
+    overflow-x: hidden;
+    position: relative;
+    width: 100%;
+}
+
+/* Fix for IOS input zoom */
+@media screen and (max-width: 768px) {
+
+    input,
+    textarea,
+    select {
+        font-size: 16px !important;
+    }
+}

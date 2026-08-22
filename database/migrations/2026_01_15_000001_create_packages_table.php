@@ -1,0 +1,35 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('packages', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('slug')->unique();
+            $table->text('description')->nullable();
+            $table->decimal('price', 10, 2);
+            $table->decimal('original_price', 10, 2)->nullable();
+            $table->integer('duration_months')->default(1);
+            $table->integer('duration_days')->default(30);
+            $table->string('duration_label')->default('1 Month');
+            $table->integer('connections')->default(1);
+            $table->json('features_list')->nullable();
+            $table->boolean('is_featured')->default(false);
+            $table->boolean('is_trial')->default(false);
+            $table->boolean('is_active')->default(true);
+            $table->integer('sort_order')->default(0);
+            $table->timestamps();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('packages');
+    }
+};

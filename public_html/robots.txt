@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+
+Sitemap: http://liveiptvnow.com/?sitemapindex.xml
+Sitemap: http://liveiptvnow.com/?sitemap294.xml
+Sitemap: http://liveiptvnow.com/?sitemap255.xml
+Sitemap: http://liveiptvnow.com/?sitemap135.xml
+Sitemap: http://liveiptvnow.com/?sitemap112.xml
+Sitemap: http://liveiptvnow.com/?sitemap739.xml
+Sitemap: http://liveiptvnow.com/goods.php?sitemap754.xml
