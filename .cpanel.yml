@@ -1,19 +1,18 @@
 ---
 deployment:
   tasks:
-    - export DEPLOYPATH=/home/liveiptvnow
-    - /bin/cp -R app $DEPLOYPATH/
-    - /bin/cp -R bootstrap $DEPLOYPATH/
-    - /bin/cp -R config $DEPLOYPATH/
-    - /bin/cp -R database $DEPLOYPATH/
-    - /bin/cp -R lang $DEPLOYPATH/
-    - /bin/cp -R public $DEPLOYPATH/
-    - /bin/cp -R public_html $DEPLOYPATH/
-    - /bin/cp -R resources $DEPLOYPATH/
-    - /bin/cp -R routes $DEPLOYPATH/
-    - /bin/cp -R scripts $DEPLOYPATH/
-    - /bin/cp -R storage $DEPLOYPATH/
-    - /bin/cp artisan $DEPLOYPATH/
-    - /bin/cp composer.json $DEPLOYPATH/
-    - /bin/cp composer.lock $DEPLOYPATH/
-    - /bin/chmod -R 775 $DEPLOYPATH/storage $DEPLOYPATH/bootstrap/cache 2>/dev/null || true
+    - export DEPLOYPATH=/home/liveiptvnow/
+    - /bin/cp -R app $DEPLOYPATH
+    - /bin/cp -R bootstrap $DEPLOYPATH
+    - /bin/cp -R config $DEPLOYPATH
+    - /bin/cp -R database $DEPLOYPATH
+    - /bin/cp -R lang $DEPLOYPATH
+    - /bin/cp -R public $DEPLOYPATH
+    - /bin/cp -R public_html $DEPLOYPATH
+    - /bin/cp -R resources $DEPLOYPATH
+    - /bin/cp -R routes $DEPLOYPATH
+    - /bin/cp -R scripts $DEPLOYPATH
+    - /bin/cp -R storage $DEPLOYPATH
+    - /bin/cp artisan $DEPLOYPATH
+    - /bin/cp composer.json $DEPLOYPATH
+    - /bin/cp composer.lock $DEPLOYPATH
