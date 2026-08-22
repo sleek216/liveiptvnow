@@ -32,15 +32,19 @@ class AuthController extends Controller
                 $request->only('email')
             );
 
-            return $status === PasswordFacade::RESET_LINK_SENT
-                        ? back()->with(['status' => __($status)])
-                        : back()->withErrors(['email' => __($status)]);
-        } catch (\Throwable $e) {
-            \Illuminate\Support\Facades\Log::error('Password reset email error: ' . $e->getMessage());
+            if ($status === PasswordFacade::RESET_THROTTLED) {
+                return back()->withErrors([
+                    'email' => __('Please wait a few seconds before requesting another reset link.')
+                ])->onlyInput('email');
+            }
 
-            return back()->withErrors([
-                'email' => 'Mail delivery error: Please check your SMTP mail settings in Admin Settings or contact support (' . $e->getMessage() . ')'
-            ])->onlyInput('email');
+            // Industry standard: Always return clean, positive confirmation (prevents email enumeration and gives smooth UX)
+            return back()->with('status', __("If an account exists for this email address, you will receive a password reset link within a few minutes. Please check your Inbox and Spam folder."));
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::warning('Password reset notification caught error: ' . $e->getMessage());
+
+            // Graceful industry standard fallback
+            return back()->with('status', __("If an account exists for this email address, you will receive a password reset link within a few minutes. Please check your Inbox and Spam folder."));
         }
     }
 
