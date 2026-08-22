@@ -33,6 +33,20 @@
     .bulk-bar .bulk-count i {
         font-size: 1.1rem;
     }
+    .bulk-bar .bulk-field {
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+    }
+    .bulk-bar .bulk-label {
+        font-size: 0.78rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: rgba(255,255,255,0.85);
+        white-space: nowrap;
+        margin: 0;
+    }
     .bulk-bar select {
         background: rgba(255,255,255,0.15);
         border: 1px solid rgba(255,255,255,0.3);
@@ -264,14 +278,29 @@
                     <i class="bi bi-check2-square"></i>
                     <span id="selectedCount">0</span> order(s) selected
                 </div>
-                <div class="d-flex align-items-center gap-2 bulk-actions">
-                    <select name="bulk_order_status" required>
-                        <option value="">Change Status To...</option>
-                        <option value="pending">Pending</option>
-                        <option value="processing">Processing</option>
-                        <option value="completed">Completed</option>
-                        <option value="cancelled">Cancelled</option>
-                    </select>
+                <div class="d-flex align-items-center gap-2 flex-wrap bulk-actions">
+                    <div class="bulk-field">
+                        <label class="bulk-label"><i class="bi bi-box-seam me-1"></i>Order:</label>
+                        <select name="bulk_order_status" id="bulkOrderStatus">
+                            <option value="">Order Status (No change)</option>
+                            <option value="pending">Pending</option>
+                            <option value="processing">Processing</option>
+                            <option value="completed">Completed</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                    </div>
+
+                    <div class="bulk-field">
+                        <label class="bulk-label"><i class="bi bi-credit-card me-1"></i>Payment:</label>
+                        <select name="bulk_payment_status" id="bulkPaymentStatus">
+                            <option value="">Payment Status (No change)</option>
+                            <option value="pending">Pending</option>
+                            <option value="completed">Completed</option>
+                            <option value="failed">Failed</option>
+                            <option value="refunded">Refunded</option>
+                        </select>
+                    </div>
+
                     <button type="submit" class="btn-bulk-apply">
                         <i class="bi bi-check-lg me-1"></i>Apply
                     </button>
@@ -334,7 +363,7 @@
                                 <td>
                                     @if($order->email_sent_at)
                                         <span class="text-success" title="Sent {{ $order->email_sent_at->format('M d, Y') }}"><i class="bi bi-check-circle-fill"></i></span>
-                                    @else
+                                     @else
                                         <span class="text-muted"><i class="bi bi-dash-circle"></i></span>
                                     @endif
                                 </td>
@@ -441,17 +470,32 @@
             alert('Please select at least one order.');
             return;
         }
-        var statusSelect = form.querySelector('[name="bulk_order_status"]');
-        if(!statusSelect.value){
+
+        var orderSelect = form.querySelector('[name="bulk_order_status"]');
+        var paymentSelect = form.querySelector('[name="bulk_payment_status"]');
+
+        var orderVal = orderSelect.value;
+        var paymentVal = paymentSelect.value;
+
+        if(!orderVal && !paymentVal){
             e.preventDefault();
-            alert('Please select a status to apply.');
+            alert('Please select at least one status (Order Status or Payment Status) to apply.');
             return;
         }
-        var label = statusSelect.options[statusSelect.selectedIndex].text;
-        if(!confirm('Update ' + selected.length + ' order(s) to "' + label + '"?')){
+
+        var labels = [];
+        if(orderVal){
+            labels.push('Order Status to "' + orderSelect.options[orderSelect.selectedIndex].text + '"');
+        }
+        if(paymentVal){
+            labels.push('Payment Status to "' + paymentSelect.options[paymentSelect.selectedIndex].text + '"');
+        }
+
+        if(!confirm('Update ' + labels.join(' and ') + ' for ' + selected.length + ' order(s)?')){
             e.preventDefault();
         }
     });
 })();
 </script>
 @endpush
+

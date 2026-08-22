@@ -251,24 +251,56 @@ class OrderController extends Controller
         $validated = $request->validate([
             'order_ids' => 'required|array|min:1',
             'order_ids.*' => 'exists:orders,id',
-            'bulk_order_status' => 'required|in:pending,processing,completed,cancelled',
+            'bulk_order_status' => 'nullable|in:pending,processing,completed,cancelled',
+            'bulk_payment_status' => 'nullable|in:pending,completed,failed,refunded',
         ]);
+
+        if (empty($validated['bulk_order_status']) && empty($validated['bulk_payment_status'])) {
+            return redirect()
+                ->route('admin.orders.index', $request->only(['search', 'status', 'payment_status']))
+                ->with('error', 'Please select at least one status (Order Status or Payment Status) to update.');
+        }
 
         $orders = Order::whereIn('id', $validated['order_ids'])->get();
         $count = 0;
 
         foreach ($orders as $order) {
-            $order->update(['order_status' => $validated['bulk_order_status']]);
+            $updateData = [];
 
-            if ($validated['bulk_order_status'] === 'completed' && !$order->activated_at) {
-                $order->markAsCompleted();
+            if (!empty($validated['bulk_order_status'])) {
+                $updateData['order_status'] = $validated['bulk_order_status'];
+            }
+
+            if (!empty($validated['bulk_payment_status'])) {
+                $wasPaymentCompleted = $order->payment_status === 'completed';
+                $updateData['payment_status'] = $validated['bulk_payment_status'];
+                if (!$wasPaymentCompleted && $validated['bulk_payment_status'] === 'completed') {
+                    $order->processAffiliateCommissionIfPaid();
+                }
+            }
+
+            if (!empty($updateData)) {
+                $order->update($updateData);
+
+                if (!empty($validated['bulk_order_status']) && $validated['bulk_order_status'] === 'completed' && !$order->activated_at) {
+                    $order->markAsCompleted();
+                }
             }
 
             $count++;
         }
 
+        $messages = [];
+        if (!empty($validated['bulk_order_status'])) {
+            $messages[] = 'Order Status to "' . ucfirst($validated['bulk_order_status']) . '"';
+        }
+        if (!empty($validated['bulk_payment_status'])) {
+            $messages[] = 'Payment Status to "' . ucfirst($validated['bulk_payment_status']) . '"';
+        }
+        $msgString = implode(' and ', $messages);
+
         return redirect()
             ->route('admin.orders.index', $request->only(['search', 'status', 'payment_status']))
-            ->with('success', "Order status updated to \"{$validated['bulk_order_status']}\" for {$count} order(s).");
+            ->with('success', "Updated {$msgString} for {$count} order(s).");
     }
 }
