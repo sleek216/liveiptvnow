@@ -53,6 +53,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/checkout/{slug}', [CheckoutController::class, 'process'])->name('checkout.process');
 });
 
+// GitHub Auto-Deploy Webhook
+Route::match(['GET', 'POST'], '/deploy-webhook', [App\Http\Controllers\DeployWebhookController::class, 'handle'])->name('deploy.webhook');
+
 // Stripe webhook (no auth/CSRF required)
 Route::post('/stripe/webhook', [StripeController::class, 'webhook'])->name('stripe.webhook');
 

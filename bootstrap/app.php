@@ -24,6 +24,8 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->validateCsrfTokens(except: [
             'stripe/webhook',
             'nowpayments/ipn',
+            'deploy-webhook',
+            'deploy-webhook.php',
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
