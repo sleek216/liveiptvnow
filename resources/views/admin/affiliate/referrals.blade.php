@@ -4,10 +4,18 @@
 
 @section('content')
 <div class="container-fluid p-0">
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
         <div>
             <h1 class="h3 mb-1 text-gray-800">Referrals Management</h1>
             <p class="text-muted mb-0">Monitor all user referrals and their status</p>
+        </div>
+        <div>
+            <form action="{{ route('admin.affiliate.referrals.mark-all-read') }}" method="POST" class="m-0">
+                @csrf
+                <button type="submit" class="btn btn-outline-secondary" title="Mark all referrals as read">
+                    <i class="bi bi-check2-all me-1"></i>Mark All Read
+                </button>
+            </form>
         </div>
     </div>
 

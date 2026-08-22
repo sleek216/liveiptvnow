@@ -518,24 +518,100 @@
                 </nav>
             </div>
             
-            <div class="user-dropdown dropdown">
-                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                    <div class="user-avatar">{{ substr(auth()->user()->name, 0, 1) }}</div>
-                    <span>{{ auth()->user()->name }}</span>
-                    <i class="bi bi-chevron-down"></i>
-                </a>
-                <ul class="dropdown-menu dropdown-menu-end">
-                    <li><a class="dropdown-item" href="{{ route('profile') }}"><i class="bi bi-person me-2"></i>Profile</a></li>
-                    <li><hr class="dropdown-divider"></li>
-                    <li>
-                        <form action="{{ route('admin.logout') }}" method="POST">
-                            @csrf
-                            <button type="submit" class="dropdown-item text-danger">
-                                <i class="bi bi-box-arrow-right me-2"></i>Logout
-                            </button>
-                        </form>
-                    </li>
-                </ul>
+            <div class="d-flex align-items-center gap-3">
+                @php
+                    $totalUnread = ($adminCounts['orders'] ?? 0) + ($adminCounts['contacts'] ?? 0) + ($adminCounts['users'] ?? 0) + ($adminCounts['referrals'] ?? 0);
+                @endphp
+                
+                <!-- Notification / Mark All Read Dropdown -->
+                <div class="dropdown">
+                    <button class="btn btn-light position-relative rounded-circle p-2" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="Notifications" style="width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; border: 1px solid #e2e8f0;">
+                        <i class="bi bi-bell fs-5 text-secondary"></i>
+                        @if($totalUnread > 0)
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.65rem;">
+                            {{ $totalUnread > 99 ? '99+' : $totalUnread }}
+                        </span>
+                        @endif
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end shadow-sm p-2" style="min-width: 280px; border-radius: 0.75rem;">
+                        <li class="px-3 py-2 d-flex justify-content-between align-items-center border-bottom">
+                            <span class="fw-bold" style="font-size: 0.85rem;">Notifications</span>
+                            @if($totalUnread > 0)
+                            <form action="{{ route('admin.notifications.mark-all-read') }}" method="POST" class="m-0">
+                                @csrf
+                                <button type="submit" class="btn btn-link btn-sm text-primary p-0 text-decoration-none" style="font-size: 0.75rem;">
+                                    <i class="bi bi-check2-all me-1"></i>Mark All Read
+                                </button>
+                            </form>
+                            @else
+                            <span class="badge bg-success bg-opacity-10 text-success" style="font-size: 0.7rem;">All clear</span>
+                            @endif
+                        </li>
+                        
+                        @if(($adminCounts['orders'] ?? 0) > 0)
+                        <li>
+                            <a class="dropdown-item d-flex justify-content-between align-items-center py-2 px-3 rounded" href="{{ route('admin.orders.index') }}">
+                                <span style="font-size: 0.82rem;"><i class="bi bi-cart3 text-danger me-2"></i>New Orders</span>
+                                <span class="badge bg-danger rounded-pill">{{ $adminCounts['orders'] }}</span>
+                            </a>
+                        </li>
+                        @endif
+
+                        @if(($adminCounts['contacts'] ?? 0) > 0)
+                        <li>
+                            <a class="dropdown-item d-flex justify-content-between align-items-center py-2 px-3 rounded" href="{{ route('admin.contacts.index') }}">
+                                <span style="font-size: 0.82rem;"><i class="bi bi-envelope-fill text-danger me-2"></i>New Contacts</span>
+                                <span class="badge bg-danger rounded-pill">{{ $adminCounts['contacts'] }}</span>
+                            </a>
+                        </li>
+                        @endif
+
+                        @if(($adminCounts['users'] ?? 0) > 0)
+                        <li>
+                            <a class="dropdown-item d-flex justify-content-between align-items-center py-2 px-3 rounded" href="{{ route('admin.users.index') }}">
+                                <span style="font-size: 0.82rem;"><i class="bi bi-people text-primary me-2"></i>New Users</span>
+                                <span class="badge bg-primary rounded-pill">{{ $adminCounts['users'] }}</span>
+                            </a>
+                        </li>
+                        @endif
+
+                        @if(($adminCounts['referrals'] ?? 0) > 0)
+                        <li>
+                            <a class="dropdown-item d-flex justify-content-between align-items-center py-2 px-3 rounded" href="{{ route('admin.affiliate.referrals') }}">
+                                <span style="font-size: 0.82rem;"><i class="bi bi-link-45deg text-info me-2"></i>New Referrals</span>
+                                <span class="badge bg-info rounded-pill">{{ $adminCounts['referrals'] }}</span>
+                            </a>
+                        </li>
+                        @endif
+
+                        @if($totalUnread === 0)
+                        <li class="px-3 py-3 text-center text-muted" style="font-size: 0.8rem;">
+                            <i class="bi bi-bell-slash d-block fs-4 text-muted mb-1 opacity-50"></i>
+                            No unread notifications
+                        </li>
+                        @endif
+                    </ul>
+                </div>
+
+                <div class="user-dropdown dropdown">
+                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                        <div class="user-avatar">{{ substr(auth()->user()->name, 0, 1) }}</div>
+                        <span>{{ auth()->user()->name }}</span>
+                        <i class="bi bi-chevron-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="{{ route('profile') }}"><i class="bi bi-person me-2"></i>Profile</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <form action="{{ route('admin.logout') }}" method="POST">
+                                @csrf
+                                <button type="submit" class="dropdown-item text-danger">
+                                    <i class="bi bi-box-arrow-right me-2"></i>Logout
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </header>
 

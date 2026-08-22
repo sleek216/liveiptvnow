@@ -34,6 +34,14 @@ class UserController extends Controller
         return view('admin.users.index', compact('users'));
     }
 
+    public function markAllAsRead(): RedirectResponse
+    {
+        \App\Models\Setting::set('admin_last_read_users_at', now()->toDateTimeString());
+        return redirect()
+            ->back()
+            ->with('success', 'Marked all new users as read. Count reset to 0.');
+    }
+
     public function show(User $user): View
     {
         $user->load(['orders.package']);

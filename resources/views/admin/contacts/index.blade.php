@@ -7,10 +7,18 @@
 @endsection
 
 @section('content')
-<div class="d-flex justify-content-between align-items-center mb-4">
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
     <div>
         <h1 class="page-title">Contact Messages</h1>
         <p class="text-muted mb-0">Manage customer inquiries and support requests</p>
+    </div>
+    <div>
+        <form action="{{ route('admin.contacts.mark-all-read') }}" method="POST" class="m-0">
+            @csrf
+            <button type="submit" class="btn btn-outline-secondary" title="Mark all new contact messages as read">
+                <i class="bi bi-check2-all me-1"></i>Mark All Read
+            </button>
+        </form>
     </div>
 </div>
 

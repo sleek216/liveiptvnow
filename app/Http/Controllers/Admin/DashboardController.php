@@ -65,4 +65,16 @@ class DashboardController extends Controller
 
         return view('admin.dashboard', compact('stats', 'recentOrders', 'recentUsers', 'monthlyRevenue', 'period'));
     }
+
+    public function markAllNotificationsAsRead(): \Illuminate\Http\RedirectResponse
+    {
+        $ordersCount = Order::where('is_read', false)->update(['is_read' => true]);
+        $contactsCount = Contact::where('status', 'new')->update(['status' => 'read']);
+        \App\Models\Setting::set('admin_last_read_users_at', now()->toDateTimeString());
+        \App\Models\Setting::set('admin_last_read_referrals_at', now()->toDateTimeString());
+
+        return redirect()
+            ->back()
+            ->with('success', "All notifications marked as read ({$ordersCount} orders, {$contactsCount} contacts). Badges reset to 0.");
+    }
 }

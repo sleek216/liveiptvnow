@@ -43,6 +43,14 @@ class OrderController extends Controller
         return view('admin.orders.index', compact('orders'));
     }
 
+    public function markAllAsRead(): RedirectResponse
+    {
+        $count = Order::where('is_read', false)->update(['is_read' => true]);
+        return redirect()
+            ->back()
+            ->with('success', "Marked {$count} unread order(s) as read. Count reset to 0.");
+    }
+
     public function show(Order $order): View
     {
         $order->load(['user', 'package', 'countries']);

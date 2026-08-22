@@ -30,9 +30,14 @@ class AdminSidebarCounts
             }
 
             if (Schema::hasTable('users')) {
-                $counts['users'] = User::where('is_admin', false)
-                    ->where('created_at', '>=', now()->subDays(7))
-                    ->count();
+                $lastReadUsers = \App\Models\Setting::get('admin_last_read_users_at');
+                $userQuery = User::where('is_admin', false);
+                if ($lastReadUsers) {
+                    $userQuery->where('created_at', '>', $lastReadUsers);
+                } else {
+                    $userQuery->where('created_at', '>=', now()->subDays(7));
+                }
+                $counts['users'] = $userQuery->count();
             }
 
             if (Schema::hasTable('contacts')) {
@@ -48,7 +53,14 @@ class AdminSidebarCounts
             }
 
             if (Schema::hasTable('referrals')) {
-                $counts['referrals'] = Referral::where('created_at', '>=', now()->subDays(7))->count();
+                $lastReadReferrals = \App\Models\Setting::get('admin_last_read_referrals_at');
+                $refQuery = Referral::query();
+                if ($lastReadReferrals) {
+                    $refQuery->where('created_at', '>', $lastReadReferrals);
+                } else {
+                    $refQuery->where('created_at', '>=', now()->subDays(7));
+                }
+                $counts['referrals'] = $refQuery->count();
             }
 
             $counts['affiliate_total'] = $counts['commissions'] + $counts['payouts'] + $counts['referrals'];

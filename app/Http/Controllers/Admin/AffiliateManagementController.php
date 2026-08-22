@@ -56,6 +56,14 @@ class AffiliateManagementController extends Controller
         return view('admin.affiliate.referrals', compact('referrals'));
     }
 
+    public function markReferralsAsRead(): RedirectResponse
+    {
+        Setting::set('admin_last_read_referrals_at', now()->toDateTimeString());
+        return redirect()
+            ->back()
+            ->with('success', 'Marked all referrals as read. Count reset to 0.');
+    }
+
     /**
      * Show all affiliates
      */

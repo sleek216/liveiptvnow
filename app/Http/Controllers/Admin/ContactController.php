@@ -41,6 +41,14 @@ class ContactController extends Controller
         return view('admin.contacts.index', compact('contacts', 'stats'));
     }
 
+    public function markAllAsRead(): RedirectResponse
+    {
+        $count = Contact::where('status', 'new')->update(['status' => 'read']);
+        return redirect()
+            ->back()
+            ->with('success', "Marked {$count} new contact message(s) as read. Count reset to 0.");
+    }
+
     public function show(Contact $contact): View
     {
         // Mark as read if it's new

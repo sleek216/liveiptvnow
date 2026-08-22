@@ -158,6 +158,7 @@ Route::prefix('my-secret-portal-9821')->name('admin.')->group(function () {
         Route::get('orders/create', [AdminOrderController::class, 'create'])->name('orders.create');
         Route::get('orders/search-user', [AdminOrderController::class, 'searchUser'])->name('orders.search-user'); // For searching user by email/name
         Route::post('orders/bulk-status', [AdminOrderController::class, 'bulkUpdateStatus'])->name('orders.bulk-status');
+        Route::post('orders/mark-all-read', [AdminOrderController::class, 'markAllAsRead'])->name('orders.mark-all-read');
         Route::post('orders', [AdminOrderController::class, 'store'])->name('orders.store');
         Route::get('orders/{order}', [AdminOrderController::class, 'show'])->name('orders.show');
         Route::get('orders/{order}/edit', [AdminOrderController::class, 'edit'])->name('orders.edit');
@@ -171,6 +172,7 @@ Route::prefix('my-secret-portal-9821')->name('admin.')->group(function () {
         // Users Management
         Route::get('users', [AdminUserController::class, 'index'])->name('users.index');
         Route::get('users/create', [AdminUserController::class, 'create'])->name('users.create');
+        Route::post('users/mark-all-read', [AdminUserController::class, 'markAllAsRead'])->name('users.mark-all-read');
         Route::post('users', [AdminUserController::class, 'store'])->name('users.store');
         Route::get('users/{user}', [AdminUserController::class, 'show'])->name('users.show');
         Route::get('users/{user}/edit', [AdminUserController::class, 'edit'])->name('users.edit');
@@ -178,6 +180,9 @@ Route::prefix('my-secret-portal-9821')->name('admin.')->group(function () {
         Route::post('users/{user}/reset-password', [AdminUserController::class, 'resetPassword'])->name('users.reset-password');
         Route::post('users/{user}/commission-rate', [AdminUserController::class, 'updateCommissionRate'])->name('users.update-commission-rate');
         Route::delete('users/{user}', [AdminUserController::class, 'destroy'])->name('users.destroy');
+
+        // Global Mark All Read
+        Route::post('notifications/mark-all-read', [AdminDashboardController::class, 'markAllNotificationsAsRead'])->name('notifications.mark-all-read');
 
         // Countries Management
         Route::resource('countries', AdminCountryController::class);
@@ -216,6 +221,7 @@ Route::prefix('my-secret-portal-9821')->name('admin.')->group(function () {
 
         // Contacts Management
         Route::get('contacts', [AdminContactController::class, 'index'])->name('contacts.index');
+        Route::post('contacts/mark-all-read', [AdminContactController::class, 'markAllAsRead'])->name('contacts.mark-all-read');
         Route::get('contacts/{contact}', [AdminContactController::class, 'show'])->name('contacts.show');
         Route::put('contacts/{contact}/status', [AdminContactController::class, 'updateStatus'])->name('contacts.update-status');
         Route::delete('contacts/{contact}', [AdminContactController::class, 'destroy'])->name('contacts.destroy');
@@ -224,6 +230,7 @@ Route::prefix('my-secret-portal-9821')->name('admin.')->group(function () {
         Route::prefix('affiliate')->name('affiliate.')->group(function () {
             Route::get('/', [AffiliateManagementController::class, 'index'])->name('index');
             Route::get('/referrals', [AffiliateManagementController::class, 'referrals'])->name('referrals');
+            Route::post('/referrals/mark-all-read', [AffiliateManagementController::class, 'markReferralsAsRead'])->name('referrals.mark-all-read');
             Route::get('/affiliates', [AffiliateManagementController::class, 'affiliates'])->name('affiliates');
             Route::post('/affiliates/{affiliate}/toggle', [AffiliateManagementController::class, 'toggleStatus'])->name('affiliates.toggle');
             Route::post('/affiliates/{affiliate}/commission-rate', [AffiliateManagementController::class, 'updateCommissionRate'])->name('affiliates.commission-rate');

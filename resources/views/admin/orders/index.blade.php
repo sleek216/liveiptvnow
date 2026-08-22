@@ -229,9 +229,17 @@
             <h1 class="page-title">Orders</h1>
             <p class="text-muted mb-0">Manage customer orders</p>
         </div>
-        <a href="{{ route('admin.orders.create') }}" class="btn btn-primary">
-            <i class="bi bi-plus-circle me-1"></i>Create Order
-        </a>
+        <div class="d-flex gap-2">
+            <form action="{{ route('admin.orders.mark-all-read') }}" method="POST" class="m-0">
+                @csrf
+                <button type="submit" class="btn btn-outline-secondary" title="Mark all unread orders as read">
+                    <i class="bi bi-check2-all me-1"></i>Mark All Read
+                </button>
+            </form>
+            <a href="{{ route('admin.orders.create') }}" class="btn btn-primary">
+                <i class="bi bi-plus-circle me-1"></i>Create Order
+            </a>
+        </div>
     </div>
 
     <!-- Filters -->
