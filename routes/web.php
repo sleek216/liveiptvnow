@@ -131,103 +131,112 @@ Route::middleware('auth')->group(function () {
     });
 });
 
-// Admin Routes
-Route::prefix('admin')->middleware(['admin', 'admin.module'])->name('admin.')->group(function () {
-    // Dashboard
-    Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
+// Admin Secret Portal Routes
+Route::prefix('my-secret-portal-9821')->name('admin.')->group(function () {
+    // Admin Guest Routes (Secret Login)
+    Route::get('/login', [App\Http\Controllers\Admin\AuthController::class, 'showLogin'])->name('login');
+    Route::post('/login', [App\Http\Controllers\Admin\AuthController::class, 'login'])->name('login.submit');
 
-    // Packages Management
-    Route::resource('packages', AdminPackageController::class);
-    Route::post('packages/{package}/toggle-active', [AdminPackageController::class, 'toggleActive'])->name('packages.toggle-active');
+    // Authenticated Admin Routes
+    Route::middleware(['admin', 'admin.module'])->group(function () {
+        Route::post('/logout', [App\Http\Controllers\Admin\AuthController::class, 'logout'])->name('logout');
 
-    // Orders Management
-    Route::get('orders', [AdminOrderController::class, 'index'])->name('orders.index');
-    Route::get('orders/create', [AdminOrderController::class, 'create'])->name('orders.create');
-    Route::get('orders/search-user', [AdminOrderController::class, 'searchUser'])->name('orders.search-user'); // For searching user by email/name
-    Route::post('orders/bulk-status', [AdminOrderController::class, 'bulkUpdateStatus'])->name('orders.bulk-status');
-    Route::post('orders', [AdminOrderController::class, 'store'])->name('orders.store');
-    Route::get('orders/{order}', [AdminOrderController::class, 'show'])->name('orders.show');
-    Route::get('orders/{order}/edit', [AdminOrderController::class, 'edit'])->name('orders.edit');
-    Route::put('orders/{order}/status', [AdminOrderController::class, 'updateStatus'])->name('orders.update-status');
-    Route::put('orders/{order}/payment-status', [AdminOrderController::class, 'updatePaymentStatus'])->name('orders.update-payment-status');
-    Route::put('orders/{order}', [AdminOrderController::class, 'update'])->name('orders.update');
-    Route::post('orders/{order}/send-email', [AdminOrderController::class, 'sendEmail'])->name('orders.send-email');
-    Route::get('orders/{order}/invoice', [AdminOrderController::class, 'invoice'])->name('orders.invoice');
-    Route::delete('orders/{order}', [AdminOrderController::class, 'destroy'])->name('orders.destroy');
+        // Dashboard
+        Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
 
-    // Users Management
-    Route::get('users', [AdminUserController::class, 'index'])->name('users.index');
-    Route::get('users/create', [AdminUserController::class, 'create'])->name('users.create');
-    Route::post('users', [AdminUserController::class, 'store'])->name('users.store');
-    Route::get('users/{user}', [AdminUserController::class, 'show'])->name('users.show');
-    Route::get('users/{user}/edit', [AdminUserController::class, 'edit'])->name('users.edit');
-    Route::put('users/{user}', [AdminUserController::class, 'update'])->name('users.update');
-    Route::post('users/{user}/reset-password', [AdminUserController::class, 'resetPassword'])->name('users.reset-password');
-    Route::post('users/{user}/commission-rate', [AdminUserController::class, 'updateCommissionRate'])->name('users.update-commission-rate');
-    Route::delete('users/{user}', [AdminUserController::class, 'destroy'])->name('users.destroy');
+        // Packages Management
+        Route::resource('packages', AdminPackageController::class);
+        Route::post('packages/{package}/toggle-active', [AdminPackageController::class, 'toggleActive'])->name('packages.toggle-active');
 
-    // Countries Management
-    Route::resource('countries', AdminCountryController::class);
-    Route::post('countries/{country}/toggle-active', [AdminCountryController::class, 'toggleActive'])->name('countries.toggle-active');
+        // Orders Management
+        Route::get('orders', [AdminOrderController::class, 'index'])->name('orders.index');
+        Route::get('orders/create', [AdminOrderController::class, 'create'])->name('orders.create');
+        Route::get('orders/search-user', [AdminOrderController::class, 'searchUser'])->name('orders.search-user'); // For searching user by email/name
+        Route::post('orders/bulk-status', [AdminOrderController::class, 'bulkUpdateStatus'])->name('orders.bulk-status');
+        Route::post('orders', [AdminOrderController::class, 'store'])->name('orders.store');
+        Route::get('orders/{order}', [AdminOrderController::class, 'show'])->name('orders.show');
+        Route::get('orders/{order}/edit', [AdminOrderController::class, 'edit'])->name('orders.edit');
+        Route::put('orders/{order}/status', [AdminOrderController::class, 'updateStatus'])->name('orders.update-status');
+        Route::put('orders/{order}/payment-status', [AdminOrderController::class, 'updatePaymentStatus'])->name('orders.update-payment-status');
+        Route::put('orders/{order}', [AdminOrderController::class, 'update'])->name('orders.update');
+        Route::post('orders/{order}/send-email', [AdminOrderController::class, 'sendEmail'])->name('orders.send-email');
+        Route::get('orders/{order}/invoice', [AdminOrderController::class, 'invoice'])->name('orders.invoice');
+        Route::delete('orders/{order}', [AdminOrderController::class, 'destroy'])->name('orders.destroy');
 
-    // Settings
-    Route::get('settings', [AdminSettingsController::class, 'index'])->name('settings.index');
-    Route::put('settings', [AdminSettingsController::class, 'update'])->name('settings.update');
-    Route::get('settings/stripe', [AdminSettingsController::class, 'stripe'])->name('settings.stripe');
-    Route::put('settings/stripe', [AdminSettingsController::class, 'updateStripe'])->name('settings.update-stripe');
-    Route::get('settings/email', [AdminSettingsController::class, 'email'])->name('settings.email');
-    Route::put('settings/email', [AdminSettingsController::class, 'updateEmail'])->name('settings.update-email');
-    Route::post('settings/email/test', [AdminSettingsController::class, 'testEmail'])->name('settings.test-email');
-    Route::get('settings/nowpayments', [AdminSettingsController::class, 'nowpayments'])->name('settings.nowpayments');
-    Route::put('settings/nowpayments', [AdminSettingsController::class, 'updateNowpayments'])->name('settings.update-nowpayments');
-    Route::post('settings/nowpayments/test', [AdminSettingsController::class, 'testNowpayments'])->name('settings.test-nowpayments');
-    Route::get('settings/backup', [AdminSettingsController::class, 'exportBackup'])->name('settings.backup');
+        // Users Management
+        Route::get('users', [AdminUserController::class, 'index'])->name('users.index');
+        Route::get('users/create', [AdminUserController::class, 'create'])->name('users.create');
+        Route::post('users', [AdminUserController::class, 'store'])->name('users.store');
+        Route::get('users/{user}', [AdminUserController::class, 'show'])->name('users.show');
+        Route::get('users/{user}/edit', [AdminUserController::class, 'edit'])->name('users.edit');
+        Route::put('users/{user}', [AdminUserController::class, 'update'])->name('users.update');
+        Route::post('users/{user}/reset-password', [AdminUserController::class, 'resetPassword'])->name('users.reset-password');
+        Route::post('users/{user}/commission-rate', [AdminUserController::class, 'updateCommissionRate'])->name('users.update-commission-rate');
+        Route::delete('users/{user}', [AdminUserController::class, 'destroy'])->name('users.destroy');
 
-    // Coupons Management
-    Route::resource('coupons', AdminCouponController::class);
-    Route::post('coupons/{coupon}/toggle-active', [AdminCouponController::class, 'toggleActive'])->name('coupons.toggle-active');
+        // Countries Management
+        Route::resource('countries', AdminCountryController::class);
+        Route::post('countries/{country}/toggle-active', [AdminCountryController::class, 'toggleActive'])->name('countries.toggle-active');
 
-    // Blogs Management
-    Route::resource('blogs', AdminBlogController::class);
-    Route::post('blogs/{blog}/toggle-active', [AdminBlogController::class, 'toggleActive'])->name('blogs.toggle-active');
-    Route::post('blogs/{blog}/toggle-featured', [AdminBlogController::class, 'toggleFeatured'])->name('blogs.toggle-featured');
+        // Settings
+        Route::get('settings', [AdminSettingsController::class, 'index'])->name('settings.index');
+        Route::put('settings', [AdminSettingsController::class, 'update'])->name('settings.update');
+        Route::get('settings/stripe', [AdminSettingsController::class, 'stripe'])->name('settings.stripe');
+        Route::put('settings/stripe', [AdminSettingsController::class, 'updateStripe'])->name('settings.update-stripe');
+        Route::get('settings/email', [AdminSettingsController::class, 'email'])->name('settings.email');
+        Route::put('settings/email', [AdminSettingsController::class, 'updateEmail'])->name('settings.update-email');
+        Route::post('settings/email/test', [AdminSettingsController::class, 'testEmail'])->name('settings.test-email');
+        Route::get('settings/nowpayments', [AdminSettingsController::class, 'nowpayments'])->name('settings.nowpayments');
+        Route::put('settings/nowpayments', [AdminSettingsController::class, 'updateNowpayments'])->name('settings.update-nowpayments');
+        Route::post('settings/nowpayments/test', [AdminSettingsController::class, 'testNowpayments'])->name('settings.test-nowpayments');
+        Route::get('settings/backup', [AdminSettingsController::class, 'exportBackup'])->name('settings.backup');
 
-    // Announcement Bar
-    Route::get('announcement', [App\Http\Controllers\Admin\AnnouncementController::class, 'index'])->name('announcement.index');
-    Route::put('announcement', [App\Http\Controllers\Admin\AnnouncementController::class, 'update'])->name('announcement.update');
+        // Coupons Management
+        Route::resource('coupons', AdminCouponController::class);
+        Route::post('coupons/{coupon}/toggle-active', [AdminCouponController::class, 'toggleActive'])->name('coupons.toggle-active');
 
-    // Security & 2FA
-    Route::get('security', [AdminSecurityController::class, 'index'])->name('security.index');
-    Route::post('security/enable', [AdminSecurityController::class, 'enable'])->name('security.enable');
-    Route::post('security/disable', [AdminSecurityController::class, 'disable'])->name('security.disable');
+        // Blogs Management
+        Route::resource('blogs', AdminBlogController::class);
+        Route::post('blogs/{blog}/toggle-active', [AdminBlogController::class, 'toggleActive'])->name('blogs.toggle-active');
+        Route::post('blogs/{blog}/toggle-featured', [AdminBlogController::class, 'toggleFeatured'])->name('blogs.toggle-featured');
 
-    // Contacts Management
-    Route::get('contacts', [AdminContactController::class, 'index'])->name('contacts.index');
-    Route::get('contacts/{contact}', [AdminContactController::class, 'show'])->name('contacts.show');
-    Route::put('contacts/{contact}/status', [AdminContactController::class, 'updateStatus'])->name('contacts.update-status');
-    Route::delete('contacts/{contact}', [AdminContactController::class, 'destroy'])->name('contacts.destroy');
+        // Announcement Bar
+        Route::get('announcement', [App\Http\Controllers\Admin\AnnouncementController::class, 'index'])->name('announcement.index');
+        Route::put('announcement', [App\Http\Controllers\Admin\AnnouncementController::class, 'update'])->name('announcement.update');
 
-    // Affiliate Management
-    Route::prefix('affiliate')->name('affiliate.')->group(function () {
-        Route::get('/', [AffiliateManagementController::class, 'index'])->name('index');
-        Route::get('/referrals', [AffiliateManagementController::class, 'referrals'])->name('referrals');
-        Route::get('/affiliates', [AffiliateManagementController::class, 'affiliates'])->name('affiliates');
-        Route::post('/affiliates/{affiliate}/toggle', [AffiliateManagementController::class, 'toggleStatus'])->name('affiliates.toggle');
-        Route::post('/affiliates/{affiliate}/commission-rate', [AffiliateManagementController::class, 'updateCommissionRate'])->name('affiliates.commission-rate');
-        Route::post('/affiliates/{affiliate}/pay', [AffiliateManagementController::class, 'payAffiliate'])->name('affiliates.pay');
+        // Security & 2FA
+        Route::get('security', [AdminSecurityController::class, 'index'])->name('security.index');
+        Route::post('security/enable', [AdminSecurityController::class, 'enable'])->name('security.enable');
+        Route::post('security/disable', [AdminSecurityController::class, 'disable'])->name('security.disable');
 
-        Route::get('/commissions', [AffiliateManagementController::class, 'commissions'])->name('commissions');
-        Route::post('/commissions/{commission}/approve', [AffiliateManagementController::class, 'approveCommission'])->name('commissions.approve');
-        Route::post('/commissions/{commission}/reject', [AffiliateManagementController::class, 'rejectCommission'])->name('commissions.reject');
-        Route::post('/commissions/{commission}/pay', [AffiliateManagementController::class, 'payCommission'])->name('commissions.pay');
+        // Contacts Management
+        Route::get('contacts', [AdminContactController::class, 'index'])->name('contacts.index');
+        Route::get('contacts/{contact}', [AdminContactController::class, 'show'])->name('contacts.show');
+        Route::put('contacts/{contact}/status', [AdminContactController::class, 'updateStatus'])->name('contacts.update-status');
+        Route::delete('contacts/{contact}', [AdminContactController::class, 'destroy'])->name('contacts.destroy');
 
-        Route::get('/payouts', [AffiliateManagementController::class, 'payouts'])->name('payouts');
-        Route::post('/payouts/{payout}/approve', [AffiliateManagementController::class, 'approvePayout'])->name('payouts.approve');
-        Route::post('/payouts/{payout}/complete', [AffiliateManagementController::class, 'completePayout'])->name('payouts.complete');
-        Route::post('/payouts/{payout}/reject', [AffiliateManagementController::class, 'rejectPayout'])->name('payouts.reject');
+        // Affiliate Management
+        Route::prefix('affiliate')->name('affiliate.')->group(function () {
+            Route::get('/', [AffiliateManagementController::class, 'index'])->name('index');
+            Route::get('/referrals', [AffiliateManagementController::class, 'referrals'])->name('referrals');
+            Route::get('/affiliates', [AffiliateManagementController::class, 'affiliates'])->name('affiliates');
+            Route::post('/affiliates/{affiliate}/toggle', [AffiliateManagementController::class, 'toggleStatus'])->name('affiliates.toggle');
+            Route::post('/affiliates/{affiliate}/commission-rate', [AffiliateManagementController::class, 'updateCommissionRate'])->name('affiliates.commission-rate');
+            Route::post('/affiliates/{affiliate}/pay', [AffiliateManagementController::class, 'payAffiliate'])->name('affiliates.pay');
 
-        Route::get('/settings', [AffiliateManagementController::class, 'settings'])->name('settings');
-        Route::put('/settings', [AffiliateManagementController::class, 'updateSettings'])->name('settings.update');
+            Route::get('/commissions', [AffiliateManagementController::class, 'commissions'])->name('commissions');
+            Route::post('/commissions/{commission}/approve', [AffiliateManagementController::class, 'approveCommission'])->name('commissions.approve');
+            Route::post('/commissions/{commission}/reject', [AffiliateManagementController::class, 'rejectCommission'])->name('commissions.reject');
+            Route::post('/commissions/{commission}/pay', [AffiliateManagementController::class, 'payCommission'])->name('commissions.pay');
+
+            Route::get('/payouts', [AffiliateManagementController::class, 'payouts'])->name('payouts');
+            Route::post('/payouts/{payout}/approve', [AffiliateManagementController::class, 'approvePayout'])->name('payouts.approve');
+            Route::post('/payouts/{payout}/complete', [AffiliateManagementController::class, 'completePayout'])->name('payouts.complete');
+            Route::post('/payouts/{payout}/reject', [AffiliateManagementController::class, 'rejectPayout'])->name('payouts.reject');
+
+            Route::get('/settings', [AffiliateManagementController::class, 'settings'])->name('settings');
+            Route::put('/settings', [AffiliateManagementController::class, 'updateSettings'])->name('settings.update');
+        });
     });
 });
 

@@ -155,7 +155,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.toggle-status').forEach(btn => {
         btn.addEventListener('click', function() {
             const id = this.getAttribute('data-id');
-            fetch(`/admin/blogs/${id}/toggle-active`, {
+            fetch(`{{ url('my-secret-portal-9821/blogs') }}/${id}/toggle-active`, {
                 method: 'POST',
                 headers: {
                     'X-CSRF-TOKEN': csrfToken,
@@ -177,7 +177,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.toggle-featured').forEach(btn => {
         btn.addEventListener('click', function() {
             const id = this.getAttribute('data-id');
-            fetch(`/admin/blogs/${id}/toggle-featured`, {
+            fetch(`{{ url('my-secret-portal-9821/blogs') }}/${id}/toggle-featured`, {
                 method: 'POST',
                 headers: {
                     'X-CSRF-TOKEN': csrfToken,
