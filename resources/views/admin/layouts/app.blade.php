@@ -142,6 +142,34 @@
         .form-label { font-weight: 500; color: #475569; margin-bottom: 0.5rem; }
         .alert { border: none; border-radius: 0.5rem; }
         
+        /* ── Pagination ── */
+        .pagination { margin: 0; gap: 4px; }
+        .page-item .page-link {
+            border-radius: 0.5rem !important;
+            border: 1px solid #e2e8f0;
+            color: #475569;
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: 0.4rem 0.75rem;
+            transition: all 0.15s ease;
+        }
+        .page-item .page-link:hover {
+            background: #f1f5f9;
+            color: var(--primary-color);
+            border-color: #cbd5e1;
+        }
+        .page-item.active .page-link {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+            color: #fff;
+            box-shadow: 0 2px 6px rgba(99, 102, 241, 0.3);
+        }
+        .page-item.disabled .page-link {
+            background: #f8fafc;
+            color: #94a3b8;
+            border-color: #e2e8f0;
+        }
+        
         /* ── User Dropdown ── */
         .user-dropdown { position: relative; }
         .user-dropdown .dropdown-toggle {
