@@ -26,6 +26,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        if (app()->environment('production') || request()->isSecure() || request()->header('X-Forwarded-Proto') === 'https' || str_starts_with(config('app.url', ''), 'https://')) {
+            \Illuminate\Support\Facades\URL::forceScheme('https');
+        }
+
         // Sync uploads from public to public_html on cPanel if needed
         if (is_dir(base_path('public/uploads')) && is_dir(base_path('public_html'))) {
             if (!is_dir(base_path('public_html/uploads'))) {
