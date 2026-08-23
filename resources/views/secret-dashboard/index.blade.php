@@ -186,25 +186,26 @@
 
         /* Alerts */
         .alert {
-            padding: 14px 18px;
-            border-radius: 12px;
+            padding: 16px 20px;
+            border-radius: 14px;
             margin-bottom: 24px;
             display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 0.9rem;
+            align-items: flex-start;
+            gap: 14px;
+            font-size: 0.925rem;
             font-weight: 500;
+            box-shadow: var(--shadow-sm);
         }
 
         .alert-success {
             background: var(--g-green-bg);
-            border: 2px solid rgba(30, 142, 62, 0.3);
+            border: 2px solid rgba(30, 142, 62, 0.4);
             color: #137333;
         }
 
         .alert-error {
             background: var(--g-red-bg);
-            border: 2px solid rgba(217, 48, 37, 0.3);
+            border: 2px solid rgba(217, 48, 37, 0.4);
             color: #c5221f;
         }
 
@@ -858,7 +859,7 @@
                     <span class="secret-badge"><i class="ph-fill ph-lock-key"></i> Secret Portal</span>
                 </div>
                 <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 2px;">
-                    Automated IPTV line generation & order delivery management
+                    Official XUI.ONE REST API & automated customer fulfillment
                 </p>
             </div>
         </div>
@@ -866,7 +867,7 @@
         <div class="topbar-actions">
             <button type="button" class="btn btn-secondary btn-sm" onclick="switchTab('settings')">
                 <i class="ph-bold ph-gear-six"></i>
-                <span>Panel Settings</span>
+                <span>API Settings</span>
             </button>
             <a href="{{ route('home') }}" target="_blank" class="btn btn-secondary btn-sm">
                 <i class="ph-bold ph-arrow-square-out"></i>
@@ -878,15 +879,18 @@
     <!-- Flash Messages -->
     @if(session('success'))
         <div class="alert alert-success">
-            <i class="ph-fill ph-check-circle" style="font-size: 20px;"></i>
+            <i class="ph-fill ph-check-circle" style="font-size: 24px; flex-shrink: 0;"></i>
             <div>{{ session('success') }}</div>
         </div>
     @endif
 
     @if(session('error'))
         <div class="alert alert-error">
-            <i class="ph-fill ph-warning-circle" style="font-size: 20px;"></i>
-            <div>{{ session('error') }}</div>
+            <i class="ph-fill ph-warning-circle" style="font-size: 24px; flex-shrink: 0;"></i>
+            <div>
+                <strong>Action Notice:</strong>
+                <div style="margin-top: 4px;">{{ session('error') }}</div>
+            </div>
         </div>
     @endif
 
@@ -947,7 +951,7 @@
         </button>
         <button class="tab-btn" id="tab-btn-settings" onclick="switchTab('settings')">
             <i class="ph-bold ph-sliders-horizontal"></i>
-            <span>XUI / Xtream Settings</span>
+            <span>XUI API Settings</span>
         </button>
         <button class="tab-btn" id="tab-btn-generator" onclick="switchTab('generator')">
             <i class="ph-bold ph-magic-wand"></i>
@@ -1056,9 +1060,9 @@
                                             <!-- 1-Click Generate Button -->
                                             <form method="POST" action="{{ route('secret.reseller.generate', $order) }}" style="display: inline;" onsubmit="showButtonLoading(this)">
                                                 @csrf
-                                                <button type="submit" class="btn btn-primary btn-sm">
+                                                <button type="submit" class="btn btn-primary btn-sm" title="Generate Line on XUI Panel & Deliver Email">
                                                     <i class="ph-bold ph-lightning"></i>
-                                                    <span>Generate & Deliver</span>
+                                                    <span>Generate on XUI</span>
                                                 </button>
                                             </form>
                                         @else
@@ -1114,45 +1118,65 @@
         <div class="settings-grid">
             <div class="card">
                 <h2 class="card-title">
-                    <i class="ph-bold ph-plugs-connected" style="color: var(--g-blue);"></i>
-                    XUI / Xtream Codes Panel Connection
+                    <i class="ph-bold ph-key" style="color: var(--g-blue);"></i>
+                    XUI.ONE Official API Settings
                 </h2>
                 <p class="card-desc">
-                    Configure your XUI.ONE Panel connection (e.g. <strong>http://kytv.xyz/HckqYJZU</strong>) to automate account creation and delivery.
+                    Enter your XUI.ONE <strong>API Key</strong> and <strong>API URL</strong> to enable direct 1-click line creation.
                 </p>
 
                 <form method="POST" action="{{ route('secret.reseller.settings.update') }}">
                     @csrf
                     
                     <div class="form-group">
-                        <label class="form-label">XUI Panel URL</label>
-                        <input type="text" name="panel_url" class="form-control" id="cfg_panel_url" value="{{ $settings['panel_url'] }}" placeholder="http://kytv.xyz/HckqYJZU">
+                        <label class="form-label">XUI.ONE API Key</label>
+                        <input type="text" name="api_key" class="form-control" id="cfg_api_key" value="{{ $settings['api_key'] }}" placeholder="Enter your XUI API Key">
                         <small style="color: var(--text-muted); font-size: 0.775rem; margin-top: 4px; display: block;">
-                            Your XUI panel reseller login URL with secret key (e.g. <code>http://kytv.xyz/HckqYJZU</code>).
+                            Your unique Reseller API Key from XUI.ONE Edit Profile.
+                        </small>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">XUI.ONE API URL</label>
+                        <input type="text" name="api_url" class="form-control" id="cfg_api_url" value="{{ $settings['api_url'] }}" placeholder="http://your-server-api-url:80/path/">
+                        <small style="color: var(--text-muted); font-size: 0.775rem; margin-top: 4px; display: block;">
+                            The dedicated API URL from your XUI Edit Profile.
                         </small>
                     </div>
 
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
                         <div class="form-group">
-                            <label class="form-label">Reseller Username / Owner</label>
-                            <input type="text" name="username" class="form-control" id="cfg_username" value="{{ $settings['username'] }}" placeholder="e.g. Hasil47228">
+                            <label class="form-label">Panel Login URL (Fallback)</label>
+                            <input type="text" name="panel_url" class="form-control" id="cfg_panel_url" value="{{ $settings['panel_url'] }}" placeholder="http://your-panel-url.com/path">
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label">Reseller Password</label>
-                            <input type="password" name="password" class="form-control" id="cfg_password" placeholder="{{ !empty($settings['password']) ? '•••••••••••• (Saved)' : 'Enter your XUI password' }}">
+                            <label class="form-label">Reseller Username / Owner</label>
+                            <input type="text" name="username" class="form-control" id="cfg_username" value="{{ $settings['username'] }}" placeholder="Your reseller username">
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                        <div class="form-group">
+                            <label class="form-label">Reseller Password (Optional)</label>
+                            <input type="password" name="password" class="form-control" id="cfg_password" placeholder="{{ !empty($settings['password']) ? '•••••••••••• (Saved)' : 'Optional if API Key is set' }}">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Default Package ID</label>
+                            <input type="text" name="default_package_id" class="form-control" value="{{ $settings['default_package_id'] ?? '1' }}" placeholder="1">
                         </div>
                     </div>
 
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
                         <div class="form-group">
                             <label class="form-label">Default Client Portal DNS</label>
-                            <input type="text" name="portal_dns" class="form-control" value="{{ $settings['portal_dns'] }}" placeholder="http://kytv.xyz:8080">
+                            <input type="text" name="portal_dns" class="form-control" value="{{ $settings['portal_dns'] }}" placeholder="http://your-iptv-dns.com:8080">
                         </div>
 
                         <div class="form-group">
                             <label class="form-label">Username Prefix for Created Lines</label>
-                            <input type="text" name="user_prefix" class="form-control" value="{{ $settings['user_prefix'] ?? 'bestuser' }}" placeholder="e.g. bestuser">
+                            <input type="text" name="user_prefix" class="form-control" value="{{ $settings['user_prefix'] ?? 'user' }}" placeholder="e.g. user">
                         </div>
                     </div>
 
@@ -1185,12 +1209,12 @@
                     <div style="display: flex; gap: 12px; margin-top: 24px;">
                         <button type="submit" class="btn btn-primary">
                             <i class="ph-bold ph-floppy-disk"></i>
-                            <span>Save Settings</span>
+                            <span>Save API Settings</span>
                         </button>
 
                         <button type="button" class="btn btn-secondary" onclick="testPanelConnection()">
                             <i class="ph-bold ph-broadcast"></i>
-                            <span>Test Live Connection</span>
+                            <span>Test Live API Connection</span>
                         </button>
                     </div>
 
@@ -1204,12 +1228,13 @@
                 <div class="card" style="margin-bottom: 20px;">
                     <h3 class="card-title" style="font-size: 1rem;">
                         <i class="ph-bold ph-shield-check" style="color: var(--g-green);"></i>
-                        XUI.ONE Automation Guide
+                        XUI.ONE API Integration
                     </h3>
                     <ul style="padding-left: 18px; color: var(--text-muted); font-size: 0.825rem; line-height: 1.7; margin-top: 10px;">
-                        <li>Connected directly to your XUI Panel: <strong>kytv.xyz</strong></li>
-                        <li>Creates user accounts with username prefix (e.g. <code>bestuserXXXX</code>) and random 8-char secure passwords.</li>
-                        <li>Uses your reseller account <strong>{{ $settings['username'] ?: 'Hasil47228' }}</strong> to deduct credits automatically.</li>
+                        <li>Enter your official <strong>API Key</strong> and <strong>API URL</strong> in the form.</li>
+                        <li>All credentials are stored securely in your private database.</li>
+                        <li>Creates user accounts with your custom prefix and random 8-char secure passwords.</li>
+                        <li>Deducts credits automatically from your reseller account.</li>
                     </ul>
                 </div>
 
@@ -1242,23 +1267,23 @@
 
             <div class="form-group">
                 <label class="form-label">Customer Name</label>
-                <input type="text" id="quick_name" class="form-control" placeholder="e.g. John Doe" oninput="updateQuickPreview()">
+                <input type="text" id="quick_name" class="form-control" placeholder="e.g. John Doe">
             </div>
 
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
                 <div class="form-group">
                     <label class="form-label">Username</label>
-                    <input type="text" id="quick_user" class="form-control" placeholder="e.g. bestuser9821" oninput="updateQuickPreview()">
+                    <input type="text" id="quick_user" class="form-control" placeholder="e.g. user9821">
                 </div>
                 <div class="form-group">
                     <label class="form-label">Password</label>
-                    <input type="text" id="quick_pass" class="form-control" placeholder="Auto-generated if blank" oninput="updateQuickPreview()">
+                    <input type="text" id="quick_pass" class="form-control" placeholder="Auto-generated if blank">
                 </div>
             </div>
 
             <div class="form-group">
                 <label class="form-label">Portal DNS</label>
-                <input type="text" id="quick_dns" class="form-control" value="{{ $settings['portal_dns'] }}" oninput="updateQuickPreview()">
+                <input type="text" id="quick_dns" class="form-control" value="{{ $settings['portal_dns'] }}">
             </div>
 
             <div style="margin-top: 20px;">
@@ -1485,7 +1510,7 @@
         form.action = `/secret-reseller-hub-8829/manual-deliver/${order.id}`;
 
         document.getElementById('mm_order_info').innerHTML = `Order <strong>#${order.order_number}</strong> for <strong>${order.customer_name}</strong> (${order.customer_email})`;
-        const userPrefix = '{{ $settings['user_prefix'] ?? 'bestuser' }}';
+        const userPrefix = '{{ $settings['user_prefix'] ?? 'user' }}';
         document.getElementById('mm_user').value = creds && creds.username ? creds.username : (userPrefix + Math.floor(1000 + Math.random() * 9000));
         document.getElementById('mm_pass').value = creds && creds.password ? creds.password : Math.random().toString(36).slice(-8);
         document.getElementById('mm_portal').value = creds && creds.portal_url ? creds.portal_url : '{{ $settings['portal_dns'] }}';
@@ -1511,13 +1536,15 @@
 
     // Test XUI Panel connection
     function testPanelConnection() {
+        const apiKey = document.getElementById('cfg_api_key') ? document.getElementById('cfg_api_key').value : '';
+        const apiUrl = document.getElementById('cfg_api_url') ? document.getElementById('cfg_api_url').value : '';
         const url = document.getElementById('cfg_panel_url').value;
         const user = document.getElementById('cfg_username').value;
         const pass = document.getElementById('cfg_password').value;
         const box = document.getElementById('testConnectionBox');
 
         box.style.display = 'block';
-        box.innerHTML = `<span style="color: var(--g-blue);"><i class="ph-bold ph-spinner ph-spin"></i> Connecting to ${url || 'server'}...</span>`;
+        box.innerHTML = `<span style="color: var(--g-blue);"><i class="ph-bold ph-spinner ph-spin"></i> Connecting & authenticating to XUI API...</span>`;
 
         fetch('{{ route('secret.reseller.test-connection') }}', {
             method: 'POST',
@@ -1526,6 +1553,8 @@
                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
             },
             body: JSON.stringify({
+                api_key: apiKey,
+                api_url: apiUrl,
                 panel_url: url,
                 username: user,
                 password: pass
@@ -1536,7 +1565,7 @@
             if (data.success) {
                 box.innerHTML = `<span style="color: var(--g-green); font-weight: 700;"><i class="ph-bold ph-check-circle"></i> ${data.message}</span>`;
                 if (data.data) {
-                    box.innerHTML += `<div style="margin-top: 8px; color: var(--text-muted); font-size: 0.75rem;">Status: ${JSON.stringify(data.data)}</div>`;
+                    box.innerHTML += `<div style="margin-top: 8px; color: var(--text-muted); font-size: 0.75rem;">Diagnostics: ${JSON.stringify(data.data)}</div>`;
                 }
             } else {
                 box.innerHTML = `<span style="color: var(--g-red); font-weight: 700;"><i class="ph-bold ph-x-circle"></i> ${data.message}</span>`;
@@ -1552,13 +1581,13 @@
         const btn = form.querySelector('button[type="submit"]');
         if (btn) {
             btn.disabled = true;
-            btn.innerHTML = `<i class="ph-bold ph-spinner ph-spin"></i> Generating...`;
+            btn.innerHTML = `<i class="ph-bold ph-spinner ph-spin"></i> Creating on XUI...`;
         }
     }
 
     // Instant Scratchpad Generator
     function generateQuickLine() {
-        const userPrefix = '{{ $settings['user_prefix'] ?? 'bestuser' }}';
+        const userPrefix = '{{ $settings['user_prefix'] ?? 'user' }}';
         const user = document.getElementById('quick_user').value || (userPrefix + Math.floor(1000 + Math.random() * 9000));
         const pass = document.getElementById('quick_pass').value || Math.random().toString(36).slice(-8);
         const dns = (document.getElementById('quick_dns').value || '{{ $settings['portal_dns'] }}').replace(/\/$/, '');

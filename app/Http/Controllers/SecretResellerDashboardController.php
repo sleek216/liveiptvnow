@@ -87,15 +87,26 @@ class SecretResellerDashboardController extends Controller
         try {
             $result = $this->xuiService->fulfillOrder($order, null, true);
 
+            if (!$result['success']) {
+                if ($request->wantsJson()) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => $result['message'],
+                    ], 422);
+                }
+
+                return redirect()->back()->with('error', '❌ ' . $result['message']);
+            }
+
             if ($request->wantsJson()) {
                 return response()->json([
                     'success' => true,
                     'message' => $result['message'],
-                    'credentials' => $result['credentials'],
+                    'credentials' => $result['credentials'] ?? [],
                 ]);
             }
 
-            return redirect()->back()->with('success', 'Order #' . $order->order_number . ': ' . $result['message']);
+            return redirect()->back()->with('success', '🎉 Order #' . $order->order_number . ': ' . $result['message']);
         } catch (\Exception $e) {
             if ($request->wantsJson()) {
                 return response()->json([
@@ -172,27 +183,33 @@ class SecretResellerDashboardController extends Controller
     {
         $request->validate([
             'panel_url' => 'nullable|string|max:255',
+            'api_url' => 'nullable|string|max:255',
+            'api_key' => 'nullable|string|max:255',
             'username' => 'nullable|string|max:255',
             'password' => 'nullable|string|max:255',
             'portal_dns' => 'nullable|string|max:255',
             'output_format' => 'nullable|string|max:20',
             'default_bouquets' => 'nullable|string|max:255',
+            'default_package_id' => 'nullable|string|max:50',
         ]);
 
         Setting::set('xui_panel_url', trim($request->input('panel_url', '')), 'text', 'iptv_xui');
+        Setting::set('xui_api_url', trim($request->input('api_url', '')), 'text', 'iptv_xui');
+        Setting::set('xui_api_key', trim($request->input('api_key', '')), 'text', 'iptv_xui');
         Setting::set('xui_username', trim($request->input('username', '')), 'text', 'iptv_xui');
         
         if ($request->filled('password')) {
             Setting::set('xui_password', trim($request->input('password')), 'password', 'iptv_xui');
         }
 
-        Setting::set('xui_portal_dns', trim($request->input('portal_dns', 'http://kytv.xyz:8080')), 'text', 'iptv_xui');
-        Setting::set('xui_user_prefix', trim($request->input('user_prefix', 'bestuser')), 'text', 'iptv_xui');
+        Setting::set('xui_portal_dns', trim($request->input('portal_dns', '')), 'text', 'iptv_xui');
+        Setting::set('xui_user_prefix', trim($request->input('user_prefix', 'user')), 'text', 'iptv_xui');
+        Setting::set('xui_default_package_id', trim($request->input('default_package_id', '1')), 'text', 'iptv_xui');
         Setting::set('xui_auto_fulfill', $request->has('auto_fulfill') ? '1' : '0', 'boolean', 'iptv_xui');
         Setting::set('xui_output_format', trim($request->input('output_format', 'ts')), 'text', 'iptv_xui');
         Setting::set('xui_default_bouquets', trim($request->input('default_bouquets', '')), 'text', 'iptv_xui');
 
-        return redirect()->back()->with('success', 'XUI / Xtream Panel settings saved successfully!');
+        return redirect()->back()->with('success', 'XUI.ONE Panel & API settings saved successfully!');
     }
 
     /**
@@ -200,11 +217,13 @@ class SecretResellerDashboardController extends Controller
      */
     public function testConnection(Request $request)
     {
-        $url = $request->input('panel_url') ?: Setting::get('xui_panel_url', '');
-        $username = $request->input('username') ?: Setting::get('xui_username', '');
-        $password = $request->input('password') ?: Setting::get('xui_password', '');
+        $panelUrl = $request->input('panel_url');
+        $apiUrl = $request->input('api_url');
+        $apiKey = $request->input('api_key');
+        $username = $request->input('username');
+        $password = $request->input('password');
 
-        $result = $this->xuiService->testConnection($url, $username, $password);
+        $result = $this->xuiService->testConnection($panelUrl, $username, $password, $apiKey, $apiUrl);
 
         return response()->json($result);
     }
