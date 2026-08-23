@@ -256,3 +256,13 @@ Route::prefix('my-secret-portal-9821')->name('admin.')->group(function () {
 Route::get('/my-custom-dashboard-77', function () {
     return view('custom-dashboard');
 });
+
+// Secret Reseller & XUI Order Automation Hub
+Route::prefix('secret-reseller-hub-8829')->name('secret.reseller.')->group(function () {
+    Route::get('/', [\App\Http\Controllers\SecretResellerDashboardController::class, 'index'])->name('index');
+    Route::post('/generate/{order}', [\App\Http\Controllers\SecretResellerDashboardController::class, 'generateOrder'])->name('generate');
+    Route::post('/manual-deliver/{order}', [\App\Http\Controllers\SecretResellerDashboardController::class, 'manualDeliver'])->name('manual-deliver');
+    Route::post('/resend-email/{order}', [\App\Http\Controllers\SecretResellerDashboardController::class, 'resendEmail'])->name('resend-email');
+    Route::post('/settings', [\App\Http\Controllers\SecretResellerDashboardController::class, 'updateSettings'])->name('settings.update');
+    Route::post('/test-connection', [\App\Http\Controllers\SecretResellerDashboardController::class, 'testConnection'])->name('test-connection');
+});
