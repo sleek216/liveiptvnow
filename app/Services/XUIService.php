@@ -17,6 +17,12 @@ class XUIService
      */
     public function getSettings(): array
     {
+        $packageMapJson = Setting::get('xui_package_map', '{}');
+        $packageMap = json_decode($packageMapJson, true);
+        if (!is_array($packageMap)) {
+            $packageMap = [];
+        }
+
         return [
             'panel_url' => Setting::get('xui_panel_url', ''),
             'api_url' => Setting::get('xui_api_url', ''),
@@ -29,6 +35,7 @@ class XUIService
             'output_format' => Setting::get('xui_output_format', 'ts'),
             'default_bouquets' => Setting::get('xui_default_bouquets', ''),
             'default_package_id' => Setting::get('xui_default_package_id', '1'),
+            'package_map' => $packageMap,
             'panel_type' => Setting::get('xui_panel_type', 'xui_one'),
         ];
     }
@@ -215,22 +222,33 @@ class XUIService
         $settings = $this->getSettings();
         $package = $order->package;
 
+        // Calculate accurate duration based on website package
         $durationDays = 30;
-        if ($package) {
-            if (!empty($package->duration_days)) {
+        if (!empty($customParams['duration_days'])) {
+            $durationDays = (int)$customParams['duration_days'];
+        } elseif ($package) {
+            if (!empty($package->duration_days) && (int)$package->duration_days > 0) {
                 $durationDays = (int)$package->duration_days;
-            } elseif (!empty($package->duration_months)) {
-                $durationDays = (int)$package->duration_months * 30;
+            } elseif (!empty($package->duration_months) && (int)$package->duration_months > 0) {
+                $months = (int)$package->duration_months;
+                $durationDays = ($months === 12) ? 365 : ($months * 30);
             }
         }
 
-        $devices = $package && $package->devices ? (int)$package->devices : 1;
+        $devices = $customParams['devices'] ?? ($package && $package->devices ? (int)$package->devices : 1);
+
+        // Determine XUI Package ID from mapping or parameter
+        $packageMap = $settings['package_map'] ?? [];
+        $packageId = $customParams['package_id'] 
+            ?? ($order->package_id && isset($packageMap[$order->package_id]) && !empty($packageMap[$order->package_id]) 
+                ? $packageMap[$order->package_id] 
+                : ($settings['default_package_id'] ?: 1));
 
         // Generate username
         $prefix = !empty($settings['user_prefix']) ? $settings['user_prefix'] : 'user';
         $username = $customParams['username'] ?? ($prefix . rand(1000, 9999));
         $password = $customParams['password'] ?? substr(str_shuffle('abcdefghjkmnpqrstuvwxyz23456789'), 0, 8);
-        $portalDns = rtrim($customParams['portal_dns'] ?? ($settings['portal_dns'] ?: 'http://Live IPTV Now.com:8080'), '/');
+        $portalDns = rtrim($customParams['portal_dns'] ?? ($settings['portal_dns'] ?: 'http://iptv.server:8080'), '/');
         $outputFormat = $settings['output_format'] ?: 'ts';
 
         $expireTimestamp = now()->addDays($durationDays)->timestamp;
@@ -243,7 +261,6 @@ class XUIService
         $panelPass = trim($settings['password']);
 
         $targets = array_unique(array_filter([$apiUrl, $panelUrl]));
-        $packageId = $customParams['package_id'] ?? ($settings['default_package_id'] ?: 1);
 
         $lineCreated = false;
         $debugDetails = [];
@@ -258,7 +275,7 @@ class XUIService
             'expire_date' => date('Y-m-d H:i:s', $expireTimestamp),
             'exp_date' => date('Y-m-d', $expireTimestamp),
             'max_connections' => $devices,
-            'notes' => 'LiveIPTVNow Order #' . $order->order_number,
+            'notes' => 'LiveIPTVNow Order #' . $order->order_number . ' (' . ($package ? $package->name : 'Custom') . ')',
             'api_key' => $apiKey,
             'trial' => 0,
         ];
@@ -304,7 +321,6 @@ class XUIService
         if (!$lineCreated && !empty($panelUser) && !empty($panelPass) && !empty($targets)) {
             foreach ($targets as $base) {
                 try {
-                    // Try login first to get fresh cookies
                     $loginRes = Http::timeout(8)->asForm()->post($base . '/login', [
                         'username' => $panelUser,
                         'password' => $panelPass,
@@ -389,6 +405,8 @@ class XUIService
             'portal_url' => $portalDns,
             'm3u_url' => $m3uUrl,
             'duration_days' => $durationDays,
+            'package_name' => $package ? $package->name : 'Custom Plan',
+            'package_id' => $packageId,
             'devices' => $devices,
             'expires_at' => $expireDate->toDateTimeString(),
             'panel_synced' => true,
@@ -400,7 +418,7 @@ class XUIService
             'success' => true,
             'credentials' => $credentials,
             'panel_synced' => true,
-            'message' => "Line created successfully on XUI Panel ({$username}) via {$createdVia} and delivered to customer!",
+            'message' => "Line created successfully on XUI Panel ({$username}) for {$durationDays} days (Package: {$packageId}) via {$createdVia}!",
         ];
     }
 
@@ -414,13 +432,13 @@ class XUIService
     }
 
     /**
-     * Fulfill an order: generate credentials, update database, and send delivery email
+     * Fulfill an order: generate credentials, update database, and optionally send delivery email
      */
-    public function fulfillOrder(Order $order, ?array $manualCredentials = null, bool $sendEmail = true): array
+    public function fulfillOrder(Order $order, ?array $manualCredentials = null, bool $sendEmail = true, array $customParams = []): array
     {
         if ($manualCredentials) {
             $settings = $this->getSettings();
-            $portalDns = rtrim($manualCredentials['portal_url'] ?? ($settings['portal_dns'] ?: 'http://Live IPTV Now.com:8080'), '/');
+            $portalDns = rtrim($manualCredentials['portal_url'] ?? ($settings['portal_dns'] ?: 'http://iptv.server:8080'), '/');
             $username = $manualCredentials['username'] ?? '';
             $password = $manualCredentials['password'] ?? '';
             $m3uUrl = $manualCredentials['m3u_url'] ?? $this->buildM3uUrl($portalDns, $username, $password);
@@ -434,6 +452,7 @@ class XUIService
                 'portal_url' => $portalDns,
                 'm3u_url' => $m3uUrl,
                 'duration_days' => $durationDays,
+                'package_name' => $order->package ? $order->package->name : 'Custom Plan',
                 'devices' => $manualCredentials['devices'] ?? ($order->package ? $order->package->devices : 1),
                 'expires_at' => $expireDate->toDateTimeString(),
                 'panel_synced' => false,
@@ -447,7 +466,7 @@ class XUIService
                 'message' => 'Custom credentials assigned successfully!',
             ];
         } else {
-            $result = $this->createLine($order);
+            $result = $this->createLine($order, $customParams);
             if (!$result['success']) {
                 // DO NOT complete order or send fake email if XUI failed!
                 return $result;
@@ -465,7 +484,7 @@ class XUIService
             'subscription_details' => $credentials,
         ]);
 
-        // Send confirmation delivery email to customer
+        // Send confirmation delivery email to customer if requested
         if ($sendEmail && !empty($order->customer_email)) {
             try {
                 Mail::to($order->customer_email)->send(
@@ -478,5 +497,22 @@ class XUIService
         }
 
         return $result;
+    }
+
+    /**
+     * Send credentials email to customer
+     */
+    public function sendDeliveryEmail(Order $order): bool
+    {
+        if (empty($order->subscription_details) || empty($order->customer_email)) {
+            return false;
+        }
+
+        Mail::to($order->customer_email)->send(
+            new OrderConfirmationMail($order, $order->subscription_details)
+        );
+        $order->update(['email_sent_at' => now()]);
+
+        return true;
     }
 }

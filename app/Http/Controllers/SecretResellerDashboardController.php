@@ -62,9 +62,10 @@ class SecretResellerDashboardController extends Controller
         $completedOrders = Order::where('order_status', 'completed')->whereNotNull('subscription_details')->count();
         $totalRevenue = Order::where('payment_status', 'completed')->sum('amount');
 
-        // Settings and packages
+        // Settings, packages, and package mapping
         $settings = $this->xuiService->getSettings();
-        $packages = Package::where('is_active', true)->get();
+        $packages = Package::where('is_active', true)->orderBy('price', 'asc')->get();
+        $packageMap = $settings['package_map'] ?? [];
 
         return view('secret-dashboard.index', compact(
             'orders',
@@ -74,6 +75,7 @@ class SecretResellerDashboardController extends Controller
             'totalRevenue',
             'settings',
             'packages',
+            'packageMap',
             'statusFilter',
             'searchQuery'
         ));
@@ -85,7 +87,15 @@ class SecretResellerDashboardController extends Controller
     public function generateOrder(Request $request, Order $order)
     {
         try {
-            $result = $this->xuiService->fulfillOrder($order, null, true);
+            $sendEmail = $request->boolean('send_email', false);
+            $customParams = array_filter([
+                'package_id' => $request->input('package_id'),
+                'username' => $request->input('custom_username'),
+                'password' => $request->input('custom_password'),
+                'duration_days' => $request->input('duration_days'),
+            ]);
+
+            $result = $this->xuiService->fulfillOrder($order, null, $sendEmail, $customParams);
 
             if (!$result['success']) {
                 if ($request->wantsJson()) {
@@ -106,7 +116,7 @@ class SecretResellerDashboardController extends Controller
                 ]);
             }
 
-            return redirect()->back()->with('success', '🎉 Order #' . $order->order_number . ': ' . $result['message']);
+            return redirect()->back()->with('success', '🎉 Order #' . $order->order_number . ': ' . $result['message'] . ($sendEmail ? ' Credentials emailed to customer!' : ''));
         } catch (\Exception $e) {
             if ($request->wantsJson()) {
                 return response()->json([
@@ -117,6 +127,37 @@ class SecretResellerDashboardController extends Controller
 
             return redirect()->back()->with('error', 'Failed to generate order: ' . $e->getMessage());
         }
+    }
+
+    /**
+     * Send or Resend Delivery Email with IPTV credentials to customer
+     */
+    public function sendEmail(Request $request, Order $order)
+    {
+        if (empty($order->subscription_details)) {
+            return redirect()->back()->with('error', 'Cannot send email: Please generate IPTV credentials for this order first!');
+        }
+
+        try {
+            $this->xuiService->sendDeliveryEmail($order);
+
+            return redirect()->back()->with('success', '✉️ Delivery email with IPTV credentials sent successfully to ' . $order->customer_email . '!');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Failed to send customer email: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Save Package Mapping (Website Package -> XUI Package ID)
+     */
+    public function updatePackageMapping(Request $request)
+    {
+        $packageMap = $request->input('package_map', []);
+        if (is_array($packageMap)) {
+            Setting::set('xui_package_map', json_encode($packageMap), 'json', 'iptv_xui');
+        }
+
+        return redirect()->back()->with('success', '🎉 Package mappings saved successfully! Each website plan will now auto-create with its mapped XUI package.');
     }
 
     /**
@@ -134,7 +175,7 @@ class SecretResellerDashboardController extends Controller
         ]);
 
         try {
-            $sendEmail = $request->boolean('send_email', true);
+            $sendEmail = $request->boolean('send_email', false);
             $manualData = [
                 'username' => trim($request->username),
                 'password' => trim($request->password),
@@ -156,24 +197,7 @@ class SecretResellerDashboardController extends Controller
      */
     public function resendEmail(Order $order)
     {
-        if (empty($order->subscription_details)) {
-            return redirect()->back()->with('error', 'Cannot resend email: No IPTV credentials generated for this order yet.');
-        }
-
-        if (empty($order->customer_email)) {
-            return redirect()->back()->with('error', 'Order has no customer email address.');
-        }
-
-        try {
-            Mail::to($order->customer_email)->send(
-                new OrderConfirmationMail($order, $order->subscription_details)
-            );
-            $order->update(['email_sent_at' => now()]);
-
-            return redirect()->back()->with('success', 'Delivery email resent successfully to ' . $order->customer_email);
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Failed to send email: ' . $e->getMessage());
-        }
+        return $this->sendEmail(request(), $order);
     }
 
     /**

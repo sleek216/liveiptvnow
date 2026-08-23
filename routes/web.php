@@ -261,6 +261,8 @@ Route::get('/my-custom-dashboard-77', function () {
 Route::prefix('secret-reseller-hub-8829')->name('secret.reseller.')->group(function () {
     Route::get('/', [\App\Http\Controllers\SecretResellerDashboardController::class, 'index'])->name('index');
     Route::post('/generate/{order}', [\App\Http\Controllers\SecretResellerDashboardController::class, 'generateOrder'])->name('generate');
+    Route::post('/send-email/{order}', [\App\Http\Controllers\SecretResellerDashboardController::class, 'sendEmail'])->name('send-email');
+    Route::post('/package-mapping', [\App\Http\Controllers\SecretResellerDashboardController::class, 'updatePackageMapping'])->name('package-mapping');
     Route::post('/manual-deliver/{order}', [\App\Http\Controllers\SecretResellerDashboardController::class, 'manualDeliver'])->name('manual-deliver');
     Route::post('/resend-email/{order}', [\App\Http\Controllers\SecretResellerDashboardController::class, 'resendEmail'])->name('resend-email');
     Route::post('/settings', [\App\Http\Controllers\SecretResellerDashboardController::class, 'updateSettings'])->name('settings.update');

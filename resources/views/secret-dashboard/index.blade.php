@@ -4,44 +4,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>⚡ Secret Reseller & XUI Automation Hub</title>
+    <title>Live IPTV Now &lsaquo; XUI Order Automation &#8212; WordPress</title>
     
-    <!-- Google Fonts & Phosphor Icons -->
+    <!-- Fonts & Phosphor Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     
     <style>
+        /* ==========================================================================
+           WordPress Admin Theme Stylesheet (Classic WP Admin / WooCommerce Look)
+           ========================================================================== */
         :root {
-            --bg-page: #f8fafc;
-            --bg-card: #ffffff;
-            --bg-subtle: #f1f5f9;
-            --border-card: 2px solid #e2e8f0;
-            --border-subtle: 1px solid #e2e8f0;
-            --border-hover: #cbd5e1;
-            
-            /* Google Material Palette */
-            --g-blue: #1a73e8;
-            --g-blue-hover: #1557b0;
-            --g-blue-bg: #e8f0fe;
-            --g-green: #1e8e3e;
-            --g-green-bg: #e6f4ea;
-            --g-yellow: #f29900;
-            --g-yellow-bg: #fef7e0;
-            --g-red: #d93025;
-            --g-red-bg: #fce8e6;
-            --g-purple: #9334e6;
-            --g-purple-bg: #f3e8fd;
-
-            --text-main: #1f2937;
-            --text-title: #0f172a;
-            --text-muted: #5f6368;
-            --text-subtle: #94a3b8;
-            
-            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.05);
-            --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.08);
+            --wp-admin-bar: #1d2327;
+            --wp-menu-bg: #1d2327;
+            --wp-menu-active: #2271b1;
+            --wp-menu-text: #f0f0f1;
+            --wp-menu-hover: #135e96;
+            --wp-body-bg: #f0f0f1;
+            --wp-card-bg: #ffffff;
+            --wp-border: #c3c4c7;
+            --wp-border-subtle: #dcdcde;
+            --wp-text-main: #2c3338;
+            --wp-text-muted: #646970;
+            --wp-text-link: #2271b1;
+            --wp-btn-primary: #2271b1;
+            --wp-btn-primary-hover: #135e96;
+            --wp-btn-success: #008a20;
+            --wp-btn-success-hover: #007017;
+            --wp-badge-green: #d1e7dd;
+            --wp-badge-green-text: #0f5132;
+            --wp-badge-orange: #fff3cd;
+            --wp-badge-orange-text: #664d03;
+            --wp-badge-red: #f8d7da;
+            --wp-badge-red-text: #842029;
+            --wp-badge-blue: #cff4fc;
+            --wp-badge-blue-text: #055160;
         }
 
         * {
@@ -51,1428 +50,1226 @@
         }
 
         body {
-            background-color: var(--bg-page);
-            color: var(--text-main);
-            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Roboto', sans-serif;
+            background-color: var(--wp-body-bg);
+            color: var(--wp-text-main);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+            font-size: 13px;
+            line-height: 1.4em;
             min-height: 100vh;
-            line-height: 1.5;
-            -webkit-font-smoothing: antialiased;
         }
 
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 28px 20px;
-        }
-
-        /* Top Bar */
-        .topbar {
+        /* WordPress Admin Bar (Top Bar) */
+        #wpadminbar {
+            background: var(--wp-admin-bar);
+            height: 32px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 99999;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 16px 24px;
-            background: var(--bg-card);
-            border: var(--border-card);
-            border-radius: 16px;
-            margin-bottom: 24px;
-            box-shadow: var(--shadow-sm);
+            padding: 0 16px;
+            color: #c3c4c7;
+            font-size: 12px;
         }
 
-        .brand-box {
+        .wp-bar-left, .wp-bar-right {
             display: flex;
             align-items: center;
-            gap: 14px;
+            gap: 16px;
         }
 
-        .brand-icon {
-            width: 44px;
-            height: 44px;
-            background: var(--g-blue);
-            border-radius: 12px;
+        .wp-logo {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            color: #ffffff;
-            box-shadow: 0 4px 10px rgba(26, 115, 232, 0.25);
-        }
-
-        .brand-title {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: var(--text-title);
-            letter-spacing: -0.02em;
-        }
-
-        .secret-badge {
-            display: inline-flex;
             align-items: center;
             gap: 6px;
-            background: var(--g-purple-bg);
-            border: 1px solid rgba(147, 52, 230, 0.25);
-            color: var(--g-purple);
-            padding: 4px 10px;
-            border-radius: 100px;
-            font-size: 0.725rem;
+            color: #ffffff;
             font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
+            text-decoration: none;
+            font-size: 13px;
         }
 
-        .topbar-actions {
+        .wp-logo i {
+            font-size: 18px;
+            color: #72aee6;
+        }
+
+        .wp-bar-link {
+            color: #c3c4c7;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: color 0.15s;
+        }
+
+        .wp-bar-link:hover {
+            color: #72aee6;
+        }
+
+        .wp-secret-tag {
+            background: #d63638;
+            color: #ffffff;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 3px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Layout Container */
+        .wp-wrap {
+            display: flex;
+            margin-top: 32px;
+            min-height: calc(100vh - 32px);
+        }
+
+        /* WordPress Sidebar Menu */
+        #adminmenu {
+            width: 160px;
+            background: var(--wp-menu-bg);
+            flex-shrink: 0;
+            padding-top: 12px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 14px;
+            color: #c3c4c7;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            border-left: 4px solid transparent;
+            transition: all 0.15s ease;
+        }
+
+        .menu-item i {
+            font-size: 16px;
+        }
+
+        .menu-item:hover {
+            background: #135e96;
+            color: #ffffff;
+        }
+
+        .menu-item.active {
+            background: var(--wp-menu-active);
+            color: #ffffff;
+            font-weight: 600;
+            border-left-color: #72aee6;
+        }
+
+        .menu-badge {
+            margin-left: auto;
+            background: #d63638;
+            color: #ffffff;
+            border-radius: 10px;
+            padding: 1px 6px;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        /* WordPress Body Content */
+        #wpbody {
+            flex-grow: 1;
+            padding: 20px 24px;
+            max-width: calc(100vw - 160px);
+        }
+
+        /* WordPress Page Header */
+        .wp-page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 18px;
+        }
+
+        .wp-heading-inline {
+            font-size: 23px;
+            font-weight: 400;
+            color: #1d2327;
+            display: inline-block;
+            margin-right: 12px;
+        }
+
+        .page-title-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 10px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--wp-btn-primary);
+            border: 1px solid var(--wp-btn-primary);
+            border-radius: 3px;
+            background: #f6f7f7;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .page-title-action:hover {
+            background: #f0f0f1;
+            border-color: #135e96;
+            color: #135e96;
+        }
+
+        /* WordPress Notices */
+        .notice {
+            background: #fff;
+            border: 1px solid var(--wp-border);
+            border-left-width: 4px;
+            box-shadow: 0 1px 1px rgba(0,0,0,.04);
+            padding: 12px 14px;
+            margin-bottom: 16px;
+            font-size: 13px;
             display: flex;
             align-items: center;
             gap: 10px;
         }
 
-        /* Buttons */
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            padding: 9px 16px;
-            border-radius: 10px;
-            font-size: 0.875rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            text-decoration: none;
-            border: none;
-            font-family: inherit;
+        .notice-success {
+            border-left-color: #00a32a;
         }
 
-        .btn-primary {
-            background: var(--g-blue);
-            color: #ffffff;
-            border: 1px solid var(--g-blue);
-            box-shadow: 0 2px 6px rgba(26, 115, 232, 0.25);
+        .notice-error {
+            border-left-color: #d63638;
         }
 
-        .btn-primary:hover {
-            background: var(--g-blue-hover);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(26, 115, 232, 0.35);
+        .notice-warning {
+            border-left-color: #dba617;
         }
 
-        .btn-success {
-            background: var(--g-green);
-            color: #ffffff;
-            border: 1px solid var(--g-green);
-        }
-
-        .btn-success:hover {
-            background: #177231;
-            transform: translateY(-1px);
-        }
-
-        .btn-secondary {
+        /* WordPress Postbox / Card */
+        .postbox {
             background: #ffffff;
-            border: 2px solid #e2e8f0;
-            color: var(--text-main);
+            border: 1px solid var(--wp-border);
+            box-shadow: 0 1px 1px rgba(0,0,0,.04);
+            margin-bottom: 20px;
         }
 
-        .btn-secondary:hover {
-            background: #f8fafc;
-            border-color: #cbd5e1;
-            color: #0f172a;
-        }
-
-        .btn-sm {
-            padding: 6px 12px;
-            font-size: 0.8rem;
-            border-radius: 8px;
-        }
-
-        /* Alerts */
-        .alert {
-            padding: 16px 20px;
-            border-radius: 14px;
-            margin-bottom: 24px;
+        .postbox-header {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--wp-border-subtle);
             display: flex;
-            align-items: flex-start;
-            gap: 14px;
-            font-size: 0.925rem;
-            font-weight: 500;
-            box-shadow: var(--shadow-sm);
+            align-items: center;
+            justify-content: space-between;
+            background: #fafafa;
         }
 
-        .alert-success {
-            background: var(--g-green-bg);
-            border: 2px solid rgba(30, 142, 62, 0.4);
-            color: #137333;
+        .postbox-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1d2327;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
-        .alert-error {
-            background: var(--g-red-bg);
-            border: 2px solid rgba(217, 48, 37, 0.4);
-            color: #c5221f;
+        .inside {
+            padding: 16px;
         }
 
-        /* Stats Grid */
-        .stats-grid {
+        /* WooCommerce Summary Stats Bar */
+        .wp-stats-row {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 18px;
-            margin-bottom: 26px;
-        }
-
-        .stat-card {
-            background: var(--bg-card);
-            border: var(--border-card);
-            border-radius: 16px;
-            padding: 20px;
-            display: flex;
-            align-items: center;
             gap: 16px;
-            box-shadow: var(--shadow-sm);
-            transition: all 0.2s ease;
+            margin-bottom: 20px;
         }
 
-        .stat-card:hover {
-            border-color: #cbd5e1;
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
+        .wp-stat-box {
+            background: #ffffff;
+            border: 1px solid var(--wp-border);
+            padding: 14px 18px;
+            box-shadow: 0 1px 1px rgba(0,0,0,.04);
         }
 
-        .stat-icon-wrap {
-            width: 50px;
-            height: 50px;
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            flex-shrink: 0;
-        }
-
-        .stat-icon-blue { background: var(--g-blue-bg); color: var(--g-blue); }
-        .stat-icon-amber { background: var(--g-yellow-bg); color: #b06000; }
-        .stat-icon-green { background: var(--g-green-bg); color: var(--g-green); }
-        .stat-icon-purple { background: var(--g-purple-bg); color: var(--g-purple); }
-
-        .stat-content h4 {
-            font-size: 0.8rem;
-            color: var(--text-muted);
+        .wp-stat-title {
+            font-size: 12px;
             font-weight: 600;
+            color: var(--wp-text-muted);
             text-transform: uppercase;
-            letter-spacing: 0.04em;
+            letter-spacing: 0.5px;
             margin-bottom: 4px;
         }
 
-        .stat-value {
-            font-size: 1.75rem;
-            font-weight: 800;
-            color: var(--text-title);
-            letter-spacing: -0.02em;
+        .wp-stat-number {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1d2327;
         }
 
-        .pulse-badge {
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--g-yellow);
-            box-shadow: 0 0 0 rgba(242, 153, 0, 0.4);
-            animation: pulse 1.5s infinite;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(242, 153, 0, 0.7); }
-            70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(242, 153, 0, 0); }
-            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(242, 153, 0, 0); }
-        }
-
-        /* Tabs Container */
-        .tabs-header {
+        /* Filter Subsubsub Navigation (WordPress Standard) */
+        .subsubsub {
+            list-style: none;
+            margin: 0 0 14px 0;
+            padding: 0;
+            font-size: 13px;
+            color: #646970;
             display: flex;
             align-items: center;
             gap: 8px;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #e2e8f0;
-            padding-bottom: 12px;
         }
 
-        .tab-btn {
-            background: transparent;
-            border: none;
-            color: var(--text-muted);
-            font-size: 0.95rem;
+        .subsubsub a {
+            color: var(--wp-btn-primary);
+            text-decoration: none;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+
+        .subsubsub a:hover {
+            color: #135e96;
+        }
+
+        .subsubsub a.current {
             font-weight: 600;
-            padding: 9px 18px;
-            border-radius: 10px;
-            cursor: pointer;
-            display: flex;
+            color: #000;
+            background: #e2e4e7;
+        }
+
+        .subsubsub .count {
+            color: #50575e;
+            font-weight: 400;
+        }
+
+        /* WordPress List Table */
+        .wp-list-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #ffffff;
+            border: 1px solid var(--wp-border);
+            box-shadow: 0 1px 1px rgba(0,0,0,.04);
+        }
+
+        .wp-list-table thead th {
+            background: #f6f7f7;
+            border-bottom: 1px solid var(--wp-border);
+            padding: 10px 12px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #2c3338;
+            text-align: left;
+        }
+
+        .wp-list-table tbody tr {
+            border-bottom: 1px solid #f0f0f1;
+            transition: background 0.1s;
+        }
+
+        .wp-list-table tbody tr:hover {
+            background: #f9f9f9;
+        }
+
+        .wp-list-table tbody td {
+            padding: 12px;
+            font-size: 13px;
+            vertical-align: middle;
+        }
+
+        /* Order Status Pills (WooCommerce style) */
+        .order-status {
+            display: inline-flex;
             align-items: center;
-            gap: 8px;
-            transition: all 0.2s;
+            gap: 4px;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 700;
+            line-height: 1.2;
+            text-transform: uppercase;
+        }
+
+        .status-completed { background: var(--wp-badge-green); color: var(--wp-badge-green-text); }
+        .status-processing { background: var(--wp-badge-blue); color: var(--wp-badge-blue-text); }
+        .status-pending { background: var(--wp-badge-orange); color: var(--wp-badge-orange-text); }
+        .status-failed { background: var(--wp-badge-red); color: var(--wp-badge-red-text); }
+
+        /* WordPress Buttons */
+        .button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            font-size: 12px;
+            font-weight: 600;
+            line-height: 2;
+            padding: 0 10px;
+            min-height: 28px;
+            border-radius: 3px;
+            cursor: pointer;
+            border: 1px solid var(--wp-border);
+            background: #f6f7f7;
+            color: #2c3338;
+            text-decoration: none;
+            white-space: nowrap;
+            transition: all 0.15s;
             font-family: inherit;
         }
 
-        .tab-btn:hover {
-            color: var(--text-title);
-            background: #edf2f7;
+        .button:hover {
+            background: #f0f0f1;
+            border-color: #8c8f94;
+            color: #1d2327;
         }
 
-        .tab-btn.active {
-            color: var(--g-blue);
-            background: var(--g-blue-bg);
-            font-weight: 700;
-        }
-
-        .tab-badge {
-            background: #e2e8f0;
-            color: var(--text-main);
-            padding: 2px 8px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 700;
-        }
-
-        .tab-btn.active .tab-badge {
-            background: var(--g-blue);
+        .button-primary {
+            background: var(--wp-btn-primary);
+            border-color: var(--wp-btn-primary);
             color: #ffffff;
         }
 
+        .button-primary:hover {
+            background: var(--wp-btn-primary-hover);
+            border-color: var(--wp-btn-primary-hover);
+            color: #ffffff;
+        }
+
+        .button-success {
+            background: var(--wp-btn-success);
+            border-color: var(--wp-btn-success);
+            color: #ffffff;
+        }
+
+        .button-success:hover {
+            background: var(--wp-btn-success-hover);
+            border-color: var(--wp-btn-success-hover);
+            color: #ffffff;
+        }
+
+        .button-small {
+            min-height: 26px;
+            line-height: 1.8;
+            padding: 0 8px;
+            font-size: 11px;
+        }
+
+        /* Form Table (Classic WordPress Setting Table) */
+        .form-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .form-table th {
+            width: 220px;
+            padding: 16px 10px 16px 0;
+            vertical-align: top;
+            text-align: left;
+            font-size: 13px;
+            font-weight: 600;
+            color: #1d2327;
+        }
+
+        .form-table td {
+            padding: 12px 10px;
+            vertical-align: middle;
+        }
+
+        .regular-text {
+            width: 100%;
+            max-width: 450px;
+            padding: 6px 8px;
+            border: 1px solid var(--wp-border);
+            border-radius: 3px;
+            font-size: 13px;
+            color: #2c3338;
+            outline: none;
+        }
+
+        .regular-text:focus {
+            border-color: var(--wp-btn-primary);
+            box-shadow: 0 0 0 1px var(--wp-btn-primary);
+        }
+
+        .description {
+            color: #646970;
+            font-size: 12px;
+            font-style: italic;
+            margin-top: 4px;
+            display: block;
+        }
+
+        /* Tab Panes */
         .tab-pane {
             display: none;
         }
 
         .tab-pane.active {
             display: block;
-            animation: fadeIn 0.2s ease;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(4px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Filter and Search Bar */
-        .filter-bar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 16px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-
-        .status-pills {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            background: var(--bg-card);
-            padding: 5px;
-            border-radius: 12px;
-            border: var(--border-card);
-            box-shadow: var(--shadow-sm);
-        }
-
-        .status-pill {
-            padding: 6px 14px;
-            border-radius: 8px;
-            font-size: 0.825rem;
-            font-weight: 600;
-            color: var(--text-muted);
-            text-decoration: none;
-            transition: all 0.2s;
-        }
-
-        .status-pill:hover {
-            color: var(--text-title);
-            background: #f1f5f9;
-        }
-
-        .status-pill.active {
-            background: var(--g-blue-bg);
-            color: var(--g-blue);
-        }
-
-        .search-box {
-            position: relative;
-            min-width: 320px;
-        }
-
-        .search-box input {
-            width: 100%;
-            background: var(--bg-card);
-            border: var(--border-card);
-            border-radius: 12px;
-            padding: 10px 16px 10px 38px;
-            color: var(--text-title);
-            font-size: 0.875rem;
-            outline: none;
-            font-family: inherit;
-            box-shadow: var(--shadow-sm);
-            transition: all 0.2s;
-        }
-
-        .search-box input:focus {
-            border-color: var(--g-blue);
-            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.15);
-        }
-
-        .search-box i {
-            position: absolute;
-            left: 14px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-muted);
-            font-size: 16px;
-        }
-
-        /* Orders Table */
-        .table-card {
-            background: var(--bg-card);
-            border: var(--border-card);
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .table-responsive {
-            width: 100%;
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: left;
-        }
-
-        thead {
-            background: #f8fafc;
-            border-bottom: 2px solid #e2e8f0;
-        }
-
-        th {
-            padding: 14px 18px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            color: #475569;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        tbody tr {
-            border-bottom: 1px solid #edf2f7;
-            transition: background 0.15s ease;
-        }
-
-        tbody tr:hover {
-            background: #f8fafc;
-        }
-
-        tbody tr:last-child {
-            border-bottom: none;
-        }
-
-        td {
-            padding: 16px 18px;
-            font-size: 0.875rem;
-            vertical-align: middle;
-        }
-
-        .customer-cell {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
-
-        .customer-name {
-            font-weight: 700;
-            color: var(--text-title);
-        }
-
-        .customer-email {
-            font-size: 0.775rem;
-            color: var(--text-muted);
-            font-family: 'JetBrains Mono', monospace;
-        }
-
-        .order-tag {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.8rem;
-            color: var(--g-blue);
-            font-weight: 700;
-            background: var(--g-blue-bg);
-            padding: 2px 8px;
-            border-radius: 6px;
-            display: inline-block;
-        }
-
-        .order-time {
-            font-size: 0.75rem;
-            color: var(--text-subtle);
-            display: block;
-            margin-top: 4px;
-        }
-
-        .pkg-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: #f1f5f9;
-            border: 1px solid #e2e8f0;
-            padding: 4px 10px;
-            border-radius: 8px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: #334155;
-        }
-
-        .status-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            padding: 4px 10px;
-            border-radius: 100px;
-            font-size: 0.75rem;
-            font-weight: 700;
-        }
-
-        .badge-success { background: var(--g-green-bg); color: var(--g-green); border: 1px solid rgba(30, 142, 62, 0.25); }
-        .badge-warning { background: var(--g-yellow-bg); color: #b06000; border: 1px solid rgba(242, 153, 0, 0.25); }
-        .badge-danger { background: var(--g-red-bg); color: var(--g-red); border: 1px solid rgba(217, 48, 37, 0.25); }
-        .badge-info { background: var(--g-blue-bg); color: var(--g-blue); border: 1px solid rgba(26, 115, 232, 0.25); }
-
-        .action-group {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            flex-wrap: wrap;
-        }
-
-        /* Settings Card */
-        .settings-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 24px;
-        }
-
-        .card {
-            background: var(--bg-card);
-            border: var(--border-card);
-            border-radius: 16px;
-            padding: 24px;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .card-title {
-            font-size: 1.15rem;
-            font-weight: 700;
-            color: var(--text-title);
-            margin-bottom: 6px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .card-desc {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            margin-bottom: 22px;
-        }
-
-        .form-group {
-            margin-bottom: 18px;
-        }
-
-        .form-label {
-            display: block;
-            font-size: 0.8rem;
-            font-weight: 700;
-            color: #334155;
-            margin-bottom: 6px;
-            text-transform: uppercase;
-            letter-spacing: 0.04em;
-        }
-
-        .form-control {
-            width: 100%;
-            background: #ffffff;
-            border: var(--border-card);
-            border-radius: 10px;
-            padding: 11px 16px;
-            color: var(--text-title);
-            font-size: 0.9rem;
-            font-family: inherit;
-            outline: none;
-            transition: all 0.2s;
-        }
-
-        .form-control:focus {
-            border-color: var(--g-blue);
-            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.15);
-        }
-
-        .form-switch {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 14px 18px;
-            background: #f8fafc;
-            border: var(--border-card);
-            border-radius: 12px;
-            margin-bottom: 18px;
-        }
-
-        .switch-label {
-            font-weight: 700;
-            font-size: 0.9rem;
-            color: var(--text-title);
-        }
-
-        .switch-desc {
-            font-size: 0.775rem;
-            color: var(--text-muted);
-        }
-
-        /* Toggle switch checkbox */
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 48px;
-            height: 26px;
-        }
-
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #cbd5e1;
-            transition: .3s;
-            border-radius: 34px;
-        }
-
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 18px;
-            width: 18px;
-            left: 4px;
-            bottom: 4px;
-            background-color: white;
-            transition: .3s;
-            border-radius: 50%;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-        }
-
-        input:checked + .slider {
-            background-color: var(--g-blue);
-        }
-
-        input:checked + .slider:before {
-            transform: translateX(22px);
-        }
-
-        /* Live test response box */
-        .test-box {
-            background: #f8fafc;
-            border: var(--border-card);
-            border-radius: 12px;
-            padding: 16px;
-            margin-top: 16px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.825rem;
-            display: none;
-        }
-
-        /* Modals */
-        .modal-overlay {
+        /* Modal Overlay */
+        .wp-modal-overlay {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(4px);
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 999999;
             display: none;
             align-items: center;
             justify-content: center;
-            z-index: 999;
             padding: 20px;
         }
 
-        .modal-overlay.active {
+        .wp-modal-overlay.active {
             display: flex;
-            animation: fadeIn 0.2s ease;
         }
 
-        .modal-card {
+        .wp-modal-box {
             background: #ffffff;
-            border: var(--border-card);
-            border-radius: 20px;
+            border: 1px solid var(--wp-border);
+            border-radius: 4px;
             width: 100%;
             max-width: 580px;
-            padding: 26px;
-            box-shadow: var(--shadow-lg);
-            position: relative;
+            box-shadow: 0 5px 15px rgba(0,0,0,.5);
         }
 
-        .modal-header {
+        .wp-modal-header {
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--wp-border);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 20px;
-            padding-bottom: 14px;
-            border-bottom: 2px solid #f1f5f9;
+            background: #f6f7f7;
         }
 
-        .modal-close {
-            background: transparent;
-            border: none;
-            color: var(--text-muted);
-            font-size: 20px;
-            cursor: pointer;
-            border-radius: 8px;
-            padding: 4px;
-        }
-
-        .modal-close:hover {
-            background: #f1f5f9;
-            color: var(--text-title);
-        }
-
-        .cred-copy-box {
-            background: #f8fafc;
-            border: var(--border-card);
-            border-radius: 12px;
-            padding: 14px;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .cred-info {
-            display: flex;
-            flex-direction: column;
-            gap: 3px;
-        }
-
-        .cred-lbl {
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            color: var(--text-muted);
+        .wp-modal-title {
+            font-size: 14px;
             font-weight: 700;
-            letter-spacing: 0.05em;
+            color: #1d2327;
         }
 
-        .cred-val {
+        .wp-modal-body {
+            padding: 18px;
+        }
+
+        .wp-modal-footer {
+            padding: 12px 18px;
+            border-top: 1px solid var(--wp-border);
+            background: #f6f7f7;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .cred-item {
+            background: #f0f0f1;
+            border: 1px solid var(--wp-border-subtle);
+            padding: 10px 14px;
+            border-radius: 3px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .cred-item-info span {
+            display: block;
+        }
+
+        .cred-label {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #646970;
+        }
+
+        .cred-value {
             font-family: 'JetBrains Mono', monospace;
-            font-size: 0.9rem;
-            color: var(--g-blue);
+            font-size: 12px;
+            color: #2271b1;
             font-weight: 600;
             word-break: break-all;
         }
 
         /* Toast notification */
-        .toast {
+        .wp-toast {
             position: fixed;
             bottom: 24px;
             right: 24px;
-            background: #1e293b;
+            background: #1d2327;
             color: #ffffff;
-            padding: 12px 20px;
-            border-radius: 12px;
-            box-shadow: var(--shadow-lg);
-            font-size: 0.875rem;
-            font-weight: 500;
+            padding: 10px 18px;
+            border-radius: 3px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            font-size: 13px;
             display: flex;
             align-items: center;
-            gap: 10px;
-            z-index: 1000;
+            gap: 8px;
+            z-index: 1000000;
             opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            transform: translateY(10px);
+            transition: all 0.2s ease;
             pointer-events: none;
         }
 
-        .toast.show {
+        .wp-toast.show {
             opacity: 1;
             transform: translateY(0);
             pointer-events: auto;
         }
 
-        /* Pagination */
-        .pagination-wrap {
-            padding: 16px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-top: 2px solid #e2e8f0;
-            background: #f8fafc;
-        }
-
-        @media (max-width: 992px) {
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            .settings-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 640px) {
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-            .topbar {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 16px;
-            }
-            .filter-bar {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .search-box {
-                min-width: 100%;
-            }
+        /* Package Mapping Table */
+        .mapping-table th, .mapping-table td {
+            padding: 10px 14px;
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <!-- Top Bar -->
-    <div class="topbar">
-        <div class="brand-box">
-            <div class="brand-icon">
-                <i class="ph-bold ph-lightning"></i>
-            </div>
-            <div>
-                <div style="display: flex; align-items: center; gap: 10px;">
-                    <h1 class="brand-title">XUI Reseller Automation Hub</h1>
-                    <span class="secret-badge"><i class="ph-fill ph-lock-key"></i> Secret Portal</span>
-                </div>
-                <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 2px;">
-                    Official XUI.ONE REST API & automated customer fulfillment
-                </p>
-            </div>
-        </div>
-
-        <div class="topbar-actions">
-            <button type="button" class="btn btn-secondary btn-sm" onclick="switchTab('settings')">
-                <i class="ph-bold ph-gear-six"></i>
-                <span>API Settings</span>
-            </button>
-            <a href="{{ route('home') }}" target="_blank" class="btn btn-secondary btn-sm">
-                <i class="ph-bold ph-arrow-square-out"></i>
-                <span>Open Website</span>
-            </a>
-        </div>
+<!-- WordPress Top Admin Bar -->
+<div id="wpadminbar">
+    <div class="wp-bar-left">
+        <a href="{{ route('secret.reseller.index') }}" class="wp-logo">
+            <i class="ph-fill ph-television-simple"></i>
+            <span>Live IPTV Admin</span>
+        </a>
+        <a href="{{ route('home') }}" target="_blank" class="wp-bar-link">
+            <i class="ph-bold ph-house"></i>
+            <span>Visit Site</span>
+        </a>
+        <span class="wp-secret-tag"><i class="ph-fill ph-lock-key"></i> Reseller Secret Hub</span>
     </div>
 
-    <!-- Flash Messages -->
-    @if(session('success'))
-        <div class="alert alert-success">
-            <i class="ph-fill ph-check-circle" style="font-size: 24px; flex-shrink: 0;"></i>
-            <div>{{ session('success') }}</div>
-        </div>
-    @endif
-
-    @if(session('error'))
-        <div class="alert alert-error">
-            <i class="ph-fill ph-warning-circle" style="font-size: 24px; flex-shrink: 0;"></i>
-            <div>
-                <strong>Action Notice:</strong>
-                <div style="margin-top: 4px;">{{ session('error') }}</div>
-            </div>
-        </div>
-    @endif
-
-    <!-- Quick Stats Grid -->
-    <div class="stats-grid">
-        <div class="stat-card">
-            <div class="stat-icon-wrap stat-icon-purple">
-                <i class="ph-fill ph-shopping-bag"></i>
-            </div>
-            <div class="stat-content">
-                <h4>Total Orders</h4>
-                <div class="stat-value">{{ number_format($totalOrders) }}</div>
-            </div>
-        </div>
-
-        <div class="stat-card">
-            <div class="stat-icon-wrap stat-icon-amber">
-                <i class="ph-fill ph-clock-countdown"></i>
-            </div>
-            <div class="stat-content">
-                <h4>Pending Delivery</h4>
-                <div class="stat-value" style="display: flex; align-items: center; gap: 8px;">
-                    {{ number_format($pendingOrders) }}
-                    @if($pendingOrders > 0)
-                        <span class="pulse-badge" title="Orders waiting for credentials"></span>
-                    @endif
-                </div>
-            </div>
-        </div>
-
-        <div class="stat-card">
-            <div class="stat-icon-wrap stat-icon-green">
-                <i class="ph-fill ph-check-fat"></i>
-            </div>
-            <div class="stat-content">
-                <h4>Fulfilled & Active</h4>
-                <div class="stat-value">{{ number_format($completedOrders) }}</div>
-            </div>
-        </div>
-
-        <div class="stat-card">
-            <div class="stat-icon-wrap stat-icon-blue">
-                <i class="ph-fill ph-currency-dollar"></i>
-            </div>
-            <div class="stat-content">
-                <h4>Completed Revenue</h4>
-                <div class="stat-value">${{ number_format($totalRevenue, 2) }}</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Navigation Tabs -->
-    <div class="tabs-header">
-        <button class="tab-btn active" id="tab-btn-orders" onclick="switchTab('orders')">
-            <i class="ph-bold ph-receipt"></i>
-            <span>Live Orders Feed</span>
-            <span class="tab-badge">{{ $totalOrders }}</span>
+    <div class="wp-bar-right">
+        <span style="color: #a7aaad;">Howdy, <strong>{{ $settings['username'] ?: 'Reseller' }}</strong></span>
+        <button class="button button-small" onclick="switchTab('settings')" style="background: transparent; color: #c3c4c7; border-color: #50575e;">
+            <i class="ph-bold ph-gear"></i> XUI API Config
         </button>
-        <button class="tab-btn" id="tab-btn-settings" onclick="switchTab('settings')">
-            <i class="ph-bold ph-sliders-horizontal"></i>
+    </div>
+</div>
+
+<!-- Main Wrapper -->
+<div class="wp-wrap">
+    <!-- WordPress Left Sidebar Menu -->
+    <div id="adminmenu">
+        <div class="menu-item active" id="menu-orders" onclick="switchTab('orders')">
+            <i class="ph-bold ph-shopping-cart"></i>
+            <span>Orders Feed</span>
+            <span class="menu-badge">{{ $totalOrders }}</span>
+        </div>
+        <div class="menu-item" id="menu-mapping" onclick="switchTab('mapping')">
+            <i class="ph-bold ph-plugs"></i>
+            <span>Package Mapping</span>
+        </div>
+        <div class="menu-item" id="menu-settings" onclick="switchTab('settings')">
+            <i class="ph-bold ph-sliders"></i>
             <span>XUI API Settings</span>
-        </button>
-        <button class="tab-btn" id="tab-btn-generator" onclick="switchTab('generator')">
+        </div>
+        <div class="menu-item" id="menu-generator" onclick="switchTab('generator')">
             <i class="ph-bold ph-magic-wand"></i>
-            <span>Quick Line Generator</span>
-        </button>
+            <span>Instant Line</span>
+        </div>
     </div>
 
-    <!-- TAB 1: LIVE ORDERS FEED -->
-    <div class="tab-pane active" id="pane-orders">
-        <!-- Filter & Search Bar -->
-        <div class="filter-bar">
-            <div class="status-pills">
-                <a href="{{ route('secret.reseller.index', ['status' => 'all', 'search' => $searchQuery]) }}" 
-                   class="status-pill {{ $statusFilter === 'all' ? 'active' : '' }}">
-                   All Orders
-                </a>
-                <a href="{{ route('secret.reseller.index', ['status' => 'pending', 'search' => $searchQuery]) }}" 
-                   class="status-pill {{ $statusFilter === 'pending' ? 'active' : '' }}">
-                   ⏳ Pending Delivery
-                </a>
-                <a href="{{ route('secret.reseller.index', ['status' => 'completed', 'search' => $searchQuery]) }}" 
-                   class="status-pill {{ $statusFilter === 'completed' ? 'active' : '' }}">
-                   ✅ Delivered
-                </a>
-                <a href="{{ route('secret.reseller.index', ['status' => 'unpaid', 'search' => $searchQuery]) }}" 
-                   class="status-pill {{ $statusFilter === 'unpaid' ? 'active' : '' }}">
-                   💳 Unpaid
-                </a>
+    <!-- WordPress Body Content Area -->
+    <div id="wpbody">
+        <!-- Top Flash Notices -->
+        @if(session('success'))
+            <div class="notice notice-success">
+                <i class="ph-fill ph-check-circle" style="color: #00a32a; font-size: 18px;"></i>
+                <div><strong>Success:</strong> {{ session('success') }}</div>
+            </div>
+        @endif
+
+        @if(session('error'))
+            <div class="notice notice-error">
+                <i class="ph-fill ph-warning-circle" style="color: #d63638; font-size: 18px;"></i>
+                <div><strong>Notice:</strong> {{ session('error') }}</div>
+            </div>
+        @endif
+
+        <!-- TAB 1: ORDERS FEED -->
+        <div class="tab-pane active" id="pane-orders">
+            <div class="wp-page-header">
+                <div>
+                    <h1 class="wp-heading-inline">IPTV Orders & Line Fulfillment</h1>
+                    <a href="{{ route('secret.reseller.index') }}" class="page-title-action">
+                        <i class="ph-bold ph-arrows-clockwise"></i> Refresh Feed
+                    </a>
+                </div>
+
+                <div>
+                    <form method="GET" action="{{ route('secret.reseller.index') }}" style="display: flex; gap: 6px;">
+                        <input type="hidden" name="status" value="{{ $statusFilter }}">
+                        <input type="text" name="search" value="{{ $searchQuery }}" placeholder="Search customer, email, order..." class="regular-text" style="width: 260px;">
+                        <button type="submit" class="button"><i class="ph-bold ph-magnifying-glass"></i> Search</button>
+                    </form>
+                </div>
             </div>
 
-            <form method="GET" action="{{ route('secret.reseller.index') }}" class="search-box">
-                <input type="hidden" name="status" value="{{ $statusFilter }}">
-                <i class="ph ph-magnifying-glass"></i>
-                <input type="text" name="search" value="{{ $searchQuery }}" placeholder="Search customer, email, order #...">
-            </form>
-        </div>
+            <!-- Stats Bar -->
+            <div class="wp-stats-row">
+                <div class="wp-stat-box">
+                    <div class="wp-stat-title">Total Orders</div>
+                    <div class="wp-stat-number">{{ number_format($totalOrders) }}</div>
+                </div>
+                <div class="wp-stat-box">
+                    <div class="wp-stat-title">Pending Lines</div>
+                    <div class="wp-stat-number" style="color: #d63638;">{{ number_format($pendingOrders) }}</div>
+                </div>
+                <div class="wp-stat-box">
+                    <div class="wp-stat-title">Delivered & Active</div>
+                    <div class="wp-stat-number" style="color: #00a32a;">{{ number_format($completedOrders) }}</div>
+                </div>
+                <div class="wp-stat-box">
+                    <div class="wp-stat-title">Total Revenue</div>
+                    <div class="wp-stat-number">${{ number_format($totalRevenue, 2) }}</div>
+                </div>
+            </div>
 
-        <!-- Orders Table -->
-        <div class="table-card">
-            <div class="table-responsive">
-                <table>
-                    <thead>
+            <!-- Subsubsub Filter Tabs -->
+            <ul class="subsubsub">
+                <li>
+                    <a href="{{ route('secret.reseller.index', ['status' => 'all', 'search' => $searchQuery]) }}" class="{{ $statusFilter === 'all' ? 'current' : '' }}">
+                        All <span class="count">({{ $totalOrders }})</span>
+                    </a> |
+                </li>
+                <li>
+                    <a href="{{ route('secret.reseller.index', ['status' => 'pending', 'search' => $searchQuery]) }}" class="{{ $statusFilter === 'pending' ? 'current' : '' }}">
+                        Pending Fulfillment <span class="count">({{ $pendingOrders }})</span>
+                    </a> |
+                </li>
+                <li>
+                    <a href="{{ route('secret.reseller.index', ['status' => 'completed', 'search' => $searchQuery]) }}" class="{{ $statusFilter === 'completed' ? 'current' : '' }}">
+                        Delivered <span class="count">({{ $completedOrders }})</span>
+                    </a> |
+                </li>
+                <li>
+                    <a href="{{ route('secret.reseller.index', ['status' => 'unpaid', 'search' => $searchQuery]) }}" class="{{ $statusFilter === 'unpaid' ? 'current' : '' }}">
+                        Unpaid
+                    </a>
+                </li>
+            </ul>
+
+            <!-- Orders Table -->
+            <table class="wp-list-table widefat fixed striped">
+                <thead>
+                    <tr>
+                        <th style="width: 140px;">Order # & Date</th>
+                        <th style="width: 200px;">Customer Info</th>
+                        <th style="width: 170px;">Website Package</th>
+                        <th style="width: 130px;">Payment Status</th>
+                        <th style="width: 180px;">XUI Line Status</th>
+                        <th style="width: 150px;">Customer Email</th>
+                        <th style="text-align: right;">Fulfillment Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($orders as $order)
+                        @php
+                            $creds = $order->subscription_details;
+                            $hasLine = !empty($creds) && !empty($creds['username']);
+                            $isEmailed = !empty($order->email_sent_at);
+                            $pkg = $order->package;
+                            $mappedXuiPkg = $pkg && isset($packageMap[$pkg->id]) ? $packageMap[$pkg->id] : ($settings['default_package_id'] ?? 1);
+                        @endphp
                         <tr>
-                            <th>Order # / Date</th>
-                            <th>Customer Info</th>
-                            <th>Package & Duration</th>
-                            <th>Amount & Payment</th>
-                            <th>Delivery Status</th>
-                            <th style="text-align: right;">Automation Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse($orders as $order)
-                            @php
-                                $creds = $order->subscription_details;
-                                $isDelivered = !empty($creds) && !empty($creds['username']);
-                            @endphp
-                            <tr>
-                                <td>
-                                    <span class="order-tag">{{ $order->order_number }}</span>
-                                    <span class="order-time">{{ $order->created_at->format('M d, Y • h:i A') }}</span>
-                                </td>
-                                <td>
-                                    <div class="customer-cell">
-                                        <span class="customer-name">{{ $order->customer_name ?: 'Customer' }}</span>
-                                        <span class="customer-email">{{ $order->customer_email }}</span>
-                                        @if($order->customer_phone)
-                                            <span style="font-size: 0.75rem; color: var(--text-muted);">{{ $order->customer_phone }}</span>
-                                        @endif
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="pkg-badge">
-                                        <i class="ph-fill ph-television" style="color: var(--g-blue);"></i>
-                                        <span>{{ $order->package ? $order->package->name : 'Custom Plan' }}</span>
-                                    </div>
-                                    <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; font-weight: 500;">
-                                        {{ $order->package ? $order->package->duration_label : '1 Month' }} • {{ $order->package ? $order->package->devices : 1 }} Dev
-                                    </div>
-                                </td>
-                                <td>
-                                    <div style="font-weight: 800; font-size: 0.95rem; color: var(--text-title);">${{ number_format($order->amount, 2) }}</div>
-                                    <span class="status-badge {{ $order->payment_status === 'completed' ? 'badge-success' : 'badge-warning' }}">
-                                        {{ ucfirst($order->payment_status) }}
+                            <td>
+                                <strong>#{{ $order->order_number }}</strong>
+                                <div style="color: var(--wp-text-muted); font-size: 11px;">
+                                    {{ $order->created_at->format('Y/m/d \a\t g:i A') }}
+                                </div>
+                            </td>
+                            <td>
+                                <strong>{{ $order->customer_name ?: 'Customer' }}</strong>
+                                <div style="color: var(--wp-text-muted); font-size: 11px; font-family: monospace;">
+                                    {{ $order->customer_email }}
+                                </div>
+                                @if($order->customer_phone)
+                                    <div style="color: #646970; font-size: 11px;">{{ $order->customer_phone }}</div>
+                                @endif
+                            </td>
+                            <td>
+                                <strong style="color: #1d2327;">{{ $pkg ? $pkg->name : 'Custom Plan' }}</strong>
+                                <div style="color: var(--wp-text-muted); font-size: 11px;">
+                                    {{ $pkg ? $pkg->duration_label : '1 Month' }} &bull; {{ $pkg ? $pkg->devices : 1 }} Device(s)
+                                </div>
+                                <div style="font-size: 10px; color: #2271b1; margin-top: 2px;">
+                                    XUI Package ID: <strong>#{{ $mappedXuiPkg }}</strong>
+                                </div>
+                            </td>
+                            <td>
+                                <strong>${{ number_format($order->amount, 2) }}</strong>
+                                <div>
+                                    <span class="order-status {{ $order->payment_status === 'completed' ? 'status-completed' : 'status-pending' }}">
+                                        {{ $order->payment_status }}
                                     </span>
-                                </td>
-                                <td>
-                                    @if($isDelivered)
-                                        <span class="status-badge badge-success">
-                                            <i class="ph-bold ph-check"></i> Delivered
-                                        </span>
-                                        @if($order->email_sent_at)
-                                            <span style="display: block; font-size: 0.72rem; color: var(--text-muted); margin-top: 3px;">
-                                                Emailed: {{ $order->email_sent_at->diffForHumans() }}
-                                            </span>
-                                        @endif
-                                    @else
-                                        <span class="status-badge badge-warning">
-                                            <i class="ph-bold ph-hourglass"></i> Pending Line
-                                        </span>
-                                    @endif
-                                </td>
-                                <td>
-                                    <div class="action-group" style="justify-content: flex-end;">
-                                        @if(!$isDelivered)
-                                            <!-- 1-Click Generate Button -->
-                                            <form method="POST" action="{{ route('secret.reseller.generate', $order) }}" style="display: inline;" onsubmit="showButtonLoading(this)">
-                                                @csrf
-                                                <button type="submit" class="btn btn-primary btn-sm" title="Generate Line on XUI Panel & Deliver Email">
-                                                    <i class="ph-bold ph-lightning"></i>
-                                                    <span>Generate on XUI</span>
-                                                </button>
-                                            </form>
-                                        @else
-                                            <!-- Copy & View Credentials -->
-                                            <button type="button" class="btn btn-secondary btn-sm" onclick="openViewModal({{ json_encode($order) }}, {{ json_encode($creds) }})">
-                                                <i class="ph-bold ph-key"></i>
-                                                <span>Credentials</span>
-                                            </button>
-
-                                            <!-- Resend Email -->
-                                            <form method="POST" action="{{ route('secret.reseller.resend-email', $order) }}" style="display: inline;">
-                                                @csrf
-                                                <button type="submit" class="btn btn-secondary btn-sm" title="Resend delivery email">
-                                                    <i class="ph-bold ph-paper-plane-tilt"></i>
-                                                </button>
-                                            </form>
-                                        @endif
-
-                                        <!-- Manual Edit / Override -->
-                                        <button type="button" class="btn btn-secondary btn-sm" title="Manual Line Delivery" onclick="openManualModal({{ json_encode($order) }}, {{ json_encode($creds) }})">
-                                            <i class="ph-bold ph-pencil-simple"></i>
-                                        </button>
+                                </div>
+                            </td>
+                            <td>
+                                @if($hasLine)
+                                    <span class="order-status status-completed">
+                                        <i class="ph-bold ph-check"></i> Line Created
+                                    </span>
+                                    <div style="font-family: monospace; font-size: 11px; color: #2271b1; margin-top: 3px;">
+                                        User: <strong>{{ $creds['username'] }}</strong>
                                     </div>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="6" style="text-align: center; padding: 48px 20px; color: var(--text-muted);">
-                                    <i class="ph-duotone ph-magnifying-glass" style="font-size: 36px; display: block; margin-bottom: 8px; color: var(--text-subtle);"></i>
-                                    No orders found matching your search criteria.
-                                </td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
+                                @else
+                                    <span class="order-status status-pending">
+                                        <i class="ph-bold ph-hourglass"></i> Needs Generation
+                                    </span>
+                                @endif
+                            </td>
+                            <td>
+                                @if($isEmailed)
+                                    <span style="color: #00a32a; font-weight: 600; font-size: 11px; display: flex; align-items: center; gap: 4px;">
+                                        <i class="ph-fill ph-check-circle"></i> Emailed
+                                    </span>
+                                    <div style="font-size: 10px; color: #646970;">
+                                        {{ $order->email_sent_at->diffForHumans() }}
+                                    </div>
+                                @else
+                                    <span style="color: #d63638; font-weight: 600; font-size: 11px; display: flex; align-items: center; gap: 4px;">
+                                        <i class="ph-fill ph-warning-circle"></i> Not Sent
+                                    </span>
+                                @endif
+                            </td>
+                            <td style="text-align: right;">
+                                <div style="display: flex; gap: 6px; justify-content: flex-end; align-items: center; flex-wrap: wrap;">
+                                    @if(!$hasLine)
+                                        <!-- 1-Click Generate Line on XUI button -->
+                                        <form method="POST" action="{{ route('secret.reseller.generate', $order) }}" style="display: inline;" onsubmit="this.querySelector('button').innerText = 'Generating on XUI...';">
+                                            @csrf
+                                            <input type="hidden" name="package_id" value="{{ $mappedXuiPkg }}">
+                                            <button type="submit" class="button button-primary button-small" title="Generate this exact package on XUI panel">
+                                                <i class="ph-bold ph-lightning"></i>
+                                                <span>Generate on XUI</span>
+                                            </button>
+                                        </form>
+                                    @else
+                                        <!-- Send / Resend to Customer Email Button -->
+                                        <form method="POST" action="{{ route('secret.reseller.send-email', $order) }}" style="display: inline;">
+                                            @csrf
+                                            <button type="submit" class="button button-success button-small" title="Send credentials email directly to customer">
+                                                <i class="ph-bold ph-paper-plane-tilt"></i>
+                                                <span>{{ $isEmailed ? 'Resend Email' : 'Send to Customer' }}</span>
+                                            </button>
+                                        </form>
+
+                                        <!-- View Credentials Modal Button -->
+                                        <button type="button" class="button button-small" onclick="openViewModal({{ json_encode($order) }}, {{ json_encode($creds) }})">
+                                            <i class="ph-bold ph-key"></i>
+                                            <span>View Details</span>
+                                        </button>
+                                    @endif
+
+                                    <!-- Manual Line Assignment -->
+                                    <button type="button" class="button button-small" title="Manual Line Override" onclick="openManualModal({{ json_encode($order) }}, {{ json_encode($creds) }})">
+                                        <i class="ph-bold ph-pencil"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="7" style="text-align: center; padding: 30px; color: #646970;">
+                                No orders found in this view.
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
 
             @if($orders->hasPages())
-                <div class="pagination-wrap">
-                    <div style="font-size: 0.825rem; color: var(--text-muted); font-weight: 500;">
-                        Showing {{ $orders->firstItem() }} to {{ $orders->lastItem() }} of {{ $orders->total() }} orders
-                    </div>
-                    <div>
-                        {{ $orders->links() }}
-                    </div>
+                <div style="margin-top: 14px; display: flex; justify-content: space-between; align-items: center;">
+                    <span style="color: #646970; font-size: 12px;">
+                        Showing {{ $orders->firstItem() }} to {{ $orders->lastItem() }} of {{ $orders->total() }} items
+                    </span>
+                    <div>{{ $orders->links() }}</div>
                 </div>
             @endif
         </div>
-    </div>
 
-    <!-- TAB 2: XUI / XTREAM SETTINGS -->
-    <div class="tab-pane" id="pane-settings">
-        <div class="settings-grid">
-            <div class="card">
-                <h2 class="card-title">
-                    <i class="ph-bold ph-key" style="color: var(--g-blue);"></i>
-                    XUI.ONE Official API Settings
-                </h2>
-                <p class="card-desc">
-                    Enter your XUI.ONE <strong>API Key</strong> and <strong>API URL</strong> to enable direct 1-click line creation.
-                </p>
-
-                <form method="POST" action="{{ route('secret.reseller.settings.update') }}">
-                    @csrf
-                    
-                    <div class="form-group">
-                        <label class="form-label">XUI.ONE API Key</label>
-                        <input type="text" name="api_key" class="form-control" id="cfg_api_key" value="{{ $settings['api_key'] }}" placeholder="Enter your XUI API Key">
-                        <small style="color: var(--text-muted); font-size: 0.775rem; margin-top: 4px; display: block;">
-                            Your unique Reseller API Key from XUI.ONE Edit Profile.
-                        </small>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">XUI.ONE API URL</label>
-                        <input type="text" name="api_url" class="form-control" id="cfg_api_url" value="{{ $settings['api_url'] }}" placeholder="http://your-server-api-url:80/path/">
-                        <small style="color: var(--text-muted); font-size: 0.775rem; margin-top: 4px; display: block;">
-                            The dedicated API URL from your XUI Edit Profile.
-                        </small>
-                    </div>
-
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-                        <div class="form-group">
-                            <label class="form-label">Panel Login URL (Fallback)</label>
-                            <input type="text" name="panel_url" class="form-control" id="cfg_panel_url" value="{{ $settings['panel_url'] }}" placeholder="http://your-panel-url.com/path">
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">Reseller Username / Owner</label>
-                            <input type="text" name="username" class="form-control" id="cfg_username" value="{{ $settings['username'] }}" placeholder="Your reseller username">
-                        </div>
-                    </div>
-
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-                        <div class="form-group">
-                            <label class="form-label">Reseller Password (Optional)</label>
-                            <input type="password" name="password" class="form-control" id="cfg_password" placeholder="{{ !empty($settings['password']) ? '•••••••••••• (Saved)' : 'Optional if API Key is set' }}">
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">Default Package ID</label>
-                            <input type="text" name="default_package_id" class="form-control" value="{{ $settings['default_package_id'] ?? '1' }}" placeholder="1">
-                        </div>
-                    </div>
-
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-                        <div class="form-group">
-                            <label class="form-label">Default Client Portal DNS</label>
-                            <input type="text" name="portal_dns" class="form-control" value="{{ $settings['portal_dns'] }}" placeholder="http://your-iptv-dns.com:8080">
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">Username Prefix for Created Lines</label>
-                            <input type="text" name="user_prefix" class="form-control" value="{{ $settings['user_prefix'] ?? 'user' }}" placeholder="e.g. user">
-                        </div>
-                    </div>
-
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-                        <div class="form-group">
-                            <label class="form-label">Default Output Stream Format</label>
-                            <select name="output_format" class="form-control">
-                                <option value="ts" {{ $settings['output_format'] === 'ts' ? 'selected' : '' }}>MPEG-TS (.ts)</option>
-                                <option value="m3u8" {{ $settings['output_format'] === 'm3u8' ? 'selected' : '' }}>HLS (.m3u8)</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">Default Bouquet IDs (Optional)</label>
-                            <input type="text" name="default_bouquets" class="form-control" value="{{ $settings['default_bouquets'] }}" placeholder="e.g. 1,2,3,4 (comma separated)">
-                        </div>
-                    </div>
-
-                    <div class="form-switch">
-                        <div>
-                            <div class="switch-label">Instant Auto-Fulfill upon Payment</div>
-                            <div class="switch-desc">Automatically create line on XUI & email credentials immediately when customer checkout is paid.</div>
-                        </div>
-                        <label class="switch">
-                            <input type="checkbox" name="auto_fulfill" value="1" {{ $settings['auto_fulfill'] ? 'checked' : '' }}>
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-
-                    <div style="display: flex; gap: 12px; margin-top: 24px;">
-                        <button type="submit" class="btn btn-primary">
-                            <i class="ph-bold ph-floppy-disk"></i>
-                            <span>Save API Settings</span>
-                        </button>
-
-                        <button type="button" class="btn btn-secondary" onclick="testPanelConnection()">
-                            <i class="ph-bold ph-broadcast"></i>
-                            <span>Test Live API Connection</span>
-                        </button>
-                    </div>
-
-                    <!-- Test Output Box -->
-                    <div id="testConnectionBox" class="test-box"></div>
-                </form>
+        <!-- TAB 2: WEBSITE PACKAGE -> XUI PACKAGE MAPPING -->
+        <div class="tab-pane" id="pane-mapping">
+            <div class="wp-page-header">
+                <div>
+                    <h1 class="wp-heading-inline">Website Package &rarr; XUI Package ID Mapping</h1>
+                </div>
             </div>
 
-            <!-- Side Card: Information & Quick Help -->
-            <div>
-                <div class="card" style="margin-bottom: 20px;">
-                    <h3 class="card-title" style="font-size: 1rem;">
-                        <i class="ph-bold ph-shield-check" style="color: var(--g-green);"></i>
-                        XUI.ONE API Integration
-                    </h3>
-                    <ul style="padding-left: 18px; color: var(--text-muted); font-size: 0.825rem; line-height: 1.7; margin-top: 10px;">
-                        <li>Enter your official <strong>API Key</strong> and <strong>API URL</strong> in the form.</li>
-                        <li>All credentials are stored securely in your private database.</li>
-                        <li>Creates user accounts with your custom prefix and random 8-char secure passwords.</li>
-                        <li>Deducts credits automatically from your reseller account.</li>
-                    </ul>
+            <div class="postbox">
+                <div class="postbox-header">
+                    <h2 class="postbox-title"><i class="ph-bold ph-plugs"></i> Auto-Generate Package Matcher</h2>
                 </div>
-
-                <div class="card">
-                    <h3 class="card-title" style="font-size: 1rem;">
-                        <i class="ph-bold ph-link-simple" style="color: var(--g-blue);"></i>
-                        Generated M3U Structure
-                    </h3>
-                    <p style="font-size: 0.775rem; color: var(--text-muted); margin-top: 6px;">
-                        The system generates standard Xtream Codes and M3U Plus format compatible with TiviMate, IPTV Smarters, IPTV Smart Player, XCIPTV, and VLC.
+                <div class="inside">
+                    <p style="color: #646970; margin-bottom: 16px;">
+                        When a customer purchases a package on your website, the system automatically uses the mapped <strong>XUI Package ID</strong> below to create the exact plan on your XUI server.
                     </p>
-                    <div style="background: #f1f5f9; border: 1px solid #e2e8f0; padding: 12px; border-radius: 10px; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--g-blue); margin-top: 10px; word-break: break-all; font-weight: 600;">
-                        {portal_dns}/get.php?username={user}&password={pass}&type=m3u_plus&output=ts
-                    </div>
+
+                    <form method="POST" action="{{ route('secret.reseller.package-mapping') }}">
+                        @csrf
+                        <table class="wp-list-table widefat striped mapping-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 250px;">Website Package Name</th>
+                                    <th style="width: 140px;">Duration</th>
+                                    <th style="width: 120px;">Devices</th>
+                                    <th style="width: 100px;">Price</th>
+                                    <th>Corresponding XUI.ONE Package ID</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($packages as $pkg)
+                                    @php
+                                        $currentXuiId = $packageMap[$pkg->id] ?? ($settings['default_package_id'] ?? 1);
+                                    @endphp
+                                    <tr>
+                                        <td>
+                                            <strong>{{ $pkg->name }}</strong>
+                                            <div style="font-size: 11px; color: #646970;">Slug: {{ $pkg->slug }}</div>
+                                        </td>
+                                        <td>{{ $pkg->duration_label }}</td>
+                                        <td>{{ $pkg->devices }} Connection(s)</td>
+                                        <td><strong>${{ number_format($pkg->price, 2) }}</strong></td>
+                                        <td>
+                                            <input type="number" 
+                                                   name="package_map[{{ $pkg->id }}]" 
+                                                   value="{{ $currentXuiId }}" 
+                                                   class="regular-text" 
+                                                   style="width: 120px;" 
+                                                   min="1" 
+                                                   placeholder="e.g. 1">
+                                            <span style="font-size: 11px; color: #646970; margin-left: 6px;">
+                                                (XUI Package ID in your panel)
+                                            </span>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+
+                        <div style="margin-top: 18px;">
+                            <button type="submit" class="button button-primary">
+                                <i class="ph-bold ph-floppy-disk"></i>
+                                <span>Save Package Mappings</span>
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- TAB 3: QUICK SCRATCHPAD GENERATOR -->
-    <div class="tab-pane" id="pane-generator">
-        <div class="card" style="max-width: 700px; margin: 0 auto;">
-            <h2 class="card-title">
-                <i class="ph-bold ph-magic-wand" style="color: var(--g-purple);"></i>
-                Instant Line Scratchpad
-            </h2>
-            <p class="card-desc">
-                Need to quickly generate a test line or deliver an off-site customer subscription? Use this instant builder.
-            </p>
-
-            <div class="form-group">
-                <label class="form-label">Customer Name</label>
-                <input type="text" id="quick_name" class="form-control" placeholder="e.g. John Doe">
-            </div>
-
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-                <div class="form-group">
-                    <label class="form-label">Username</label>
-                    <input type="text" id="quick_user" class="form-control" placeholder="e.g. user9821">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Password</label>
-                    <input type="text" id="quick_pass" class="form-control" placeholder="Auto-generated if blank">
+        <!-- TAB 3: XUI API SETTINGS -->
+        <div class="tab-pane" id="pane-settings">
+            <div class="wp-page-header">
+                <div>
+                    <h1 class="wp-heading-inline">XUI.ONE Server & API Configuration</h1>
                 </div>
             </div>
 
-            <div class="form-group">
-                <label class="form-label">Portal DNS</label>
-                <input type="text" id="quick_dns" class="form-control" value="{{ $settings['portal_dns'] }}">
+            <div class="postbox">
+                <div class="postbox-header">
+                    <h2 class="postbox-title"><i class="ph-bold ph-sliders"></i> XUI API Credentials & Connection</h2>
+                </div>
+                <div class="inside">
+                    <form method="POST" action="{{ route('secret.reseller.settings.update') }}">
+                        @csrf
+                        
+                        <table class="form-table">
+                            <tbody>
+                                <tr>
+                                    <th><label for="cfg_api_key">XUI.ONE API Key</label></th>
+                                    <td>
+                                        <input type="text" name="api_key" id="cfg_api_key" value="{{ $settings['api_key'] }}" class="regular-text" placeholder="Paste your API key from XUI Edit Profile">
+                                        <p class="description">Your reseller API key from your XUI.ONE profile (keeps everything automated without manual logins).</p>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <th><label for="cfg_api_url">XUI.ONE API URL</label></th>
+                                    <td>
+                                        <input type="text" name="api_url" id="cfg_api_url" value="{{ $settings['api_url'] }}" class="regular-text" placeholder="http://your-server:80/path/">
+                                        <p class="description">The dedicated API URL displayed in your XUI.ONE Edit Profile tooltip.</p>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <th><label for="cfg_panel_url">Panel URL (Web Fallback)</label></th>
+                                    <td>
+                                        <input type="text" name="panel_url" id="cfg_panel_url" value="{{ $settings['panel_url'] }}" class="regular-text" placeholder="http://your-server/secret-path">
+                                        <p class="description">Your primary reseller panel web address.</p>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <th><label for="cfg_username">Reseller Username</label></th>
+                                    <td>
+                                        <input type="text" name="username" id="cfg_username" value="{{ $settings['username'] }}" class="regular-text" placeholder="Your reseller account username">
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <th><label for="cfg_password">Reseller Password</label></th>
+                                    <td>
+                                        <input type="password" name="password" id="cfg_password" class="regular-text" placeholder="{{ !empty($settings['password']) ? '•••••••••••• (Saved)' : 'Optional if API Key is set' }}">
+                                        <p class="description">Only required if using session web login instead of API Key.</p>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <th><label for="cfg_dns">Default Client Portal DNS</label></th>
+                                    <td>
+                                        <input type="text" name="portal_dns" id="cfg_dns" value="{{ $settings['portal_dns'] }}" class="regular-text" placeholder="http://your-iptv-portal.com:8080">
+                                        <p class="description">The streaming server address sent to the customer for Xtream Codes and M3U playlists.</p>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <th><label for="cfg_prefix">Username Prefix</label></th>
+                                    <td>
+                                        <input type="text" name="user_prefix" id="cfg_prefix" value="{{ $settings['user_prefix'] ?? 'user' }}" class="regular-text" style="width: 160px;">
+                                        <p class="description">Prefix for generated IPTV accounts (e.g. <code>bestuser</code> &rarr; <code>bestuser3254</code>).</p>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <th><label for="cfg_default_pkg">Fallback Package ID</label></th>
+                                    <td>
+                                        <input type="text" name="default_package_id" id="cfg_default_pkg" value="{{ $settings['default_package_id'] ?? '1' }}" class="regular-text" style="width: 100px;">
+                                        <p class="description">Default XUI package ID if no package mapping matches.</p>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <th>Automatic Delivery</th>
+                                    <td>
+                                        <label>
+                                            <input type="checkbox" name="auto_fulfill" value="1" {{ $settings['auto_fulfill'] ? 'checked' : '' }}>
+                                            <span>Instantly create line on XUI & email customer as soon as payment is confirmed on website.</span>
+                                        </label>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div style="margin-top: 20px; display: flex; gap: 10px; align-items: center;">
+                            <button type="submit" class="button button-primary">
+                                <i class="ph-bold ph-floppy-disk"></i>
+                                <span>Save XUI Settings</span>
+                            </button>
+
+                            <button type="button" class="button" onclick="testPanelConnection()">
+                                <i class="ph-bold ph-broadcast"></i>
+                                <span>Test Live API Connection</span>
+                            </button>
+                        </div>
+
+                        <div id="testConnectionBox" style="display: none; margin-top: 16px; padding: 12px; background: #fafafa; border: 1px solid var(--wp-border); font-family: monospace; font-size: 12px;"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 4: INSTANT SCRATCHPAD GENERATOR -->
+        <div class="tab-pane" id="pane-generator">
+            <div class="wp-page-header">
+                <div>
+                    <h1 class="wp-heading-inline">Instant IPTV Line Builder</h1>
+                </div>
             </div>
 
-            <div style="margin-top: 20px;">
-                <button type="button" class="btn btn-primary" onclick="generateQuickLine()">
-                    <i class="ph-bold ph-lightning"></i>
-                    <span>Generate Instant Credentials</span>
-                </button>
-            </div>
+            <div class="postbox" style="max-width: 700px;">
+                <div class="postbox-header">
+                    <h2 class="postbox-title"><i class="ph-bold ph-magic-wand"></i> Quick Line Scratchpad</h2>
+                </div>
+                <div class="inside">
+                    <table class="form-table">
+                        <tbody>
+                            <tr>
+                                <th>Username</th>
+                                <td><input type="text" id="quick_user" class="regular-text" placeholder="Auto-generated if blank"></td>
+                            </tr>
+                            <tr>
+                                <th>Password</th>
+                                <td><input type="text" id="quick_pass" class="regular-text" placeholder="Auto-generated if blank"></td>
+                            </tr>
+                            <tr>
+                                <th>Portal DNS</th>
+                                <td><input type="text" id="quick_dns" class="regular-text" value="{{ $settings['portal_dns'] }}"></td>
+                            </tr>
+                        </tbody>
+                    </table>
 
-            <div id="quickResultBox" style="display: none; margin-top: 24px; border-top: 2px solid #e2e8f0; padding-top: 20px;">
-                <h4 style="color: var(--text-title); margin-bottom: 12px; font-size: 1rem;">Generated Credentials:</h4>
-                <div class="cred-copy-box">
-                    <div class="cred-info">
-                        <span class="cred-lbl">Portal URL</span>
-                        <span class="cred-val" id="res_portal"></span>
+                    <div style="margin-top: 14px;">
+                        <button type="button" class="button button-primary" onclick="generateQuickLine()">
+                            <i class="ph-bold ph-lightning"></i>
+                            <span>Generate Instant Credentials</span>
+                        </button>
                     </div>
-                    <button class="btn btn-secondary btn-sm" onclick="copyText(document.getElementById('res_portal').innerText)">Copy</button>
-                </div>
-                <div class="cred-copy-box">
-                    <div class="cred-info">
-                        <span class="cred-lbl">Username</span>
-                        <span class="cred-val" id="res_user"></span>
+
+                    <div id="quickResultBox" style="display: none; margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--wp-border);">
+                        <h4 style="margin-bottom: 10px;">Generated Details:</h4>
+                        <div class="cred-item">
+                            <div class="cred-item-info">
+                                <span class="cred-label">Portal URL</span>
+                                <span class="cred-value" id="res_portal"></span>
+                            </div>
+                            <button class="button button-small" onclick="copyText(document.getElementById('res_portal').innerText)">Copy</button>
+                        </div>
+                        <div class="cred-item">
+                            <div class="cred-item-info">
+                                <span class="cred-label">Username</span>
+                                <span class="cred-value" id="res_user"></span>
+                            </div>
+                            <button class="button button-small" onclick="copyText(document.getElementById('res_user').innerText)">Copy</button>
+                        </div>
+                        <div class="cred-item">
+                            <div class="cred-item-info">
+                                <span class="cred-label">Password</span>
+                                <span class="cred-value" id="res_pass"></span>
+                            </div>
+                            <button class="button button-small" onclick="copyText(document.getElementById('res_pass').innerText)">Copy</button>
+                        </div>
+                        <div class="cred-item">
+                            <div class="cred-item-info">
+                                <span class="cred-label">M3U Playlist Link</span>
+                                <span class="cred-value" id="res_m3u"></span>
+                            </div>
+                            <button class="button button-small" onclick="copyText(document.getElementById('res_m3u').innerText)">Copy</button>
+                        </div>
+                        <button type="button" class="button button-success" style="width: 100%; margin-top: 8px;" onclick="copyAllQuick()">
+                            <i class="ph-bold ph-copy"></i>
+                            <span>Copy Complete Customer Message</span>
+                        </button>
                     </div>
-                    <button class="btn btn-secondary btn-sm" onclick="copyText(document.getElementById('res_user').innerText)">Copy</button>
                 </div>
-                <div class="cred-copy-box">
-                    <div class="cred-info">
-                        <span class="cred-lbl">Password</span>
-                        <span class="cred-val" id="res_pass"></span>
-                    </div>
-                    <button class="btn btn-secondary btn-sm" onclick="copyText(document.getElementById('res_pass').innerText)">Copy</button>
-                </div>
-                <div class="cred-copy-box">
-                    <div class="cred-info">
-                        <span class="cred-lbl">M3U Playlist URL</span>
-                        <span class="cred-val" id="res_m3u"></span>
-                    </div>
-                    <button class="btn btn-secondary btn-sm" onclick="copyText(document.getElementById('res_m3u').innerText)">Copy</button>
-                </div>
-                <button type="button" class="btn btn-success" style="width: 100%; margin-top: 10px;" onclick="copyAllQuick()">
-                    <i class="ph-bold ph-copy"></i>
-                    <span>Copy Full Customer Access Message</span>
-                </button>
             </div>
         </div>
     </div>
 </div>
 
-<!-- MODAL 1: VIEW & COPY CREDENTIALS -->
-<div class="modal-overlay" id="viewModal">
-    <div class="modal-card">
-        <div class="modal-header">
-            <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text-title); display: flex; align-items: center; gap: 8px;">
-                <i class="ph-bold ph-key" style="color: var(--g-blue);"></i>
-                <span>Customer IPTV Credentials</span>
-            </h3>
-            <button class="modal-close" onclick="closeModal('viewModal')"><i class="ph ph-x"></i></button>
+<!-- MODAL: VIEW & COPY CREDENTIALS -->
+<div class="wp-modal-overlay" id="viewModal">
+    <div class="wp-modal-box">
+        <div class="wp-modal-header">
+            <h3 class="wp-modal-title"><i class="ph-bold ph-key"></i> Customer IPTV Credentials</h3>
+            <button type="button" class="button button-small" onclick="closeModal('viewModal')">&times;</button>
         </div>
+        <div class="wp-modal-body">
+            <div style="color: #646970; font-size: 12px; margin-bottom: 14px;" id="vm_order_info"></div>
 
-        <div style="margin-bottom: 18px;">
-            <div style="font-size: 0.85rem; color: var(--text-muted);" id="vm_order_info"></div>
-        </div>
-
-        <div class="cred-copy-box">
-            <div class="cred-info">
-                <span class="cred-lbl">Portal URL / Server DNS</span>
-                <span class="cred-val" id="vm_portal"></span>
+            <div class="cred-item">
+                <div class="cred-item-info">
+                    <span class="cred-label">Portal URL / Server DNS</span>
+                    <span class="cred-value" id="vm_portal"></span>
+                </div>
+                <button class="button button-small" onclick="copyText(document.getElementById('vm_portal').innerText)">Copy</button>
             </div>
-            <button class="btn btn-secondary btn-sm" onclick="copyText(document.getElementById('vm_portal').innerText)">Copy</button>
-        </div>
 
-        <div class="cred-copy-box">
-            <div class="cred-info">
-                <span class="cred-lbl">Username</span>
-                <span class="cred-val" id="vm_user"></span>
+            <div class="cred-item">
+                <div class="cred-item-info">
+                    <span class="cred-label">Username</span>
+                    <span class="cred-value" id="vm_user"></span>
+                </div>
+                <button class="button button-small" onclick="copyText(document.getElementById('vm_user').innerText)">Copy</button>
             </div>
-            <button class="btn btn-secondary btn-sm" onclick="copyText(document.getElementById('vm_user').innerText)">Copy</button>
-        </div>
 
-        <div class="cred-copy-box">
-            <div class="cred-info">
-                <span class="cred-lbl">Password</span>
-                <span class="cred-val" id="vm_pass"></span>
+            <div class="cred-item">
+                <div class="cred-item-info">
+                    <span class="cred-label">Password</span>
+                    <span class="cred-value" id="vm_pass"></span>
+                </div>
+                <button class="button button-small" onclick="copyText(document.getElementById('vm_pass').innerText)">Copy</button>
             </div>
-            <button class="btn btn-secondary btn-sm" onclick="copyText(document.getElementById('vm_pass').innerText)">Copy</button>
-        </div>
 
-        <div class="cred-copy-box">
-            <div class="cred-info">
-                <span class="cred-lbl">M3U Playlist URL</span>
-                <span class="cred-val" id="vm_m3u"></span>
+            <div class="cred-item">
+                <div class="cred-item-info">
+                    <span class="cred-label">M3U Playlist Link</span>
+                    <span class="cred-value" id="vm_m3u"></span>
+                </div>
+                <button class="button button-small" onclick="copyText(document.getElementById('vm_m3u').innerText)">Copy</button>
             </div>
-            <button class="btn btn-secondary btn-sm" onclick="copyText(document.getElementById('vm_m3u').innerText)">Copy</button>
         </div>
-
-        <div style="display: flex; gap: 12px; margin-top: 20px;">
-            <button type="button" class="btn btn-primary" style="flex: 1;" onclick="copyAllModal()">
-                <i class="ph-bold ph-copy"></i>
-                <span>Copy Full Details</span>
+        <div class="wp-modal-footer">
+            <button type="button" class="button button-primary" onclick="copyAllModal()">
+                <i class="ph-bold ph-copy"></i> Copy Full Access Text
             </button>
-            <button type="button" class="btn btn-secondary" onclick="closeModal('viewModal')">Close</button>
+            <button type="button" class="button" onclick="closeModal('viewModal')">Close</button>
         </div>
     </div>
 </div>
 
-<!-- MODAL 2: MANUAL OVERRIDE / ASSIGN CREDENTIALS -->
-<div class="modal-overlay" id="manualModal">
-    <div class="modal-card">
-        <div class="modal-header">
-            <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text-title); display: flex; align-items: center; gap: 8px;">
-                <i class="ph-bold ph-pencil-simple" style="color: var(--g-yellow);"></i>
-                <span>Manual Line Assignment</span>
-            </h3>
-            <button class="modal-close" onclick="closeModal('manualModal')"><i class="ph ph-x"></i></button>
+<!-- MODAL: MANUAL EDIT -->
+<div class="wp-modal-overlay" id="manualModal">
+    <div class="wp-modal-box">
+        <div class="wp-modal-header">
+            <h3 class="wp-modal-title"><i class="ph-bold ph-pencil"></i> Manual Line Override</h3>
+            <button type="button" class="button button-small" onclick="closeModal('manualModal')">&times;</button>
         </div>
-
         <form id="manualForm" method="POST" action="">
             @csrf
-            <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;" id="mm_order_info"></div>
+            <div class="wp-modal-body">
+                <div style="font-size: 12px; color: #646970; margin-bottom: 12px;" id="mm_order_info"></div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
-                <div class="form-group">
-                    <label class="form-label">Username *</label>
-                    <input type="text" name="username" id="mm_user" class="form-control" required>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+                    <div>
+                        <label style="display: block; font-weight: 600; font-size: 12px; margin-bottom: 4px;">Username *</label>
+                        <input type="text" name="username" id="mm_user" class="regular-text" required>
+                    </div>
+                    <div>
+                        <label style="display: block; font-weight: 600; font-size: 12px; margin-bottom: 4px;">Password *</label>
+                        <input type="text" name="password" id="mm_pass" class="regular-text" required>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label class="form-label">Password *</label>
-                    <input type="text" name="password" id="mm_pass" class="form-control" required>
+
+                <div style="margin-bottom: 10px;">
+                    <label style="display: block; font-weight: 600; font-size: 12px; margin-bottom: 4px;">Portal DNS</label>
+                    <input type="text" name="portal_url" id="mm_portal" class="regular-text" value="{{ $settings['portal_dns'] }}">
+                </div>
+
+                <div style="margin-bottom: 10px;">
+                    <label style="display: block; font-weight: 600; font-size: 12px; margin-bottom: 4px;">Duration (Days)</label>
+                    <input type="number" name="duration_days" id="mm_days" class="regular-text" value="30">
+                </div>
+
+                <div style="margin-top: 10px;">
+                    <label>
+                        <input type="checkbox" name="send_email" value="1">
+                        <span>Send delivery email to customer immediately</span>
+                    </label>
                 </div>
             </div>
-
-            <div class="form-group">
-                <label class="form-label">Portal DNS</label>
-                <input type="text" name="portal_url" id="mm_portal" class="form-control" value="{{ $settings['portal_dns'] }}">
-            </div>
-
-            <div class="form-group">
-                <label class="form-label">M3U Playlist URL (Optional)</label>
-                <input type="text" name="m3u_url" id="mm_m3u" class="form-control" placeholder="Leave empty to auto-build from DNS + user + pass">
-            </div>
-
-            <div class="form-group">
-                <label class="form-label">Duration (Days)</label>
-                <input type="number" name="duration_days" id="mm_days" class="form-control" value="30">
-            </div>
-
-            <div class="form-switch" style="margin-top: 10px;">
-                <div>
-                    <div class="switch-label">Send Delivery Email to Customer</div>
-                    <div class="switch-desc">Sends the credentials to the customer's email address upon saving.</div>
-                </div>
-                <label class="switch">
-                    <input type="checkbox" name="send_email" value="1" checked>
-                    <span class="slider"></span>
-                </label>
-            </div>
-
-            <div style="display: flex; gap: 12px; margin-top: 20px;">
-                <button type="submit" class="btn btn-primary" style="flex: 1;">
-                    <i class="ph-bold ph-check"></i>
-                    <span>Save & Deliver Line</span>
-                </button>
-                <button type="button" class="btn btn-secondary" onclick="closeModal('manualModal')">Cancel</button>
+            <div class="wp-modal-footer">
+                <button type="submit" class="button button-primary">Save Line</button>
+                <button type="button" class="button" onclick="closeModal('manualModal')">Cancel</button>
             </div>
         </form>
     </div>
 </div>
 
-<!-- Toast Box -->
-<div class="toast" id="toastBox">
-    <i class="ph-bold ph-check-circle" style="font-size: 18px; color: #4ade80;"></i>
+<!-- Toast Notification Box -->
+<div class="wp-toast" id="toastBox">
+    <i class="ph-bold ph-check-circle" style="color: #00a32a;"></i>
     <span id="toastText">Copied to clipboard!</span>
 </div>
 
 <script>
     // Tab switching
     function switchTab(tabId) {
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.menu-item').forEach(b => b.classList.remove('active'));
         document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
 
-        const btn = document.getElementById('tab-btn-' + tabId);
+        const menu = document.getElementById('menu-' + tabId);
         const pane = document.getElementById('pane-' + tabId);
-        if (btn && pane) {
-            btn.classList.add('active');
+        if (menu && pane) {
+            menu.classList.add('active');
             pane.classList.add('active');
         }
     }
 
-    // Modal helpers
+    // Modals
     function openModal(id) {
         document.getElementById(id).classList.add('active');
     }
@@ -1481,7 +1278,6 @@
         document.getElementById(id).classList.remove('active');
     }
 
-    // View Credentials modal
     let currentModalCreds = null;
     let currentModalOrder = null;
 
@@ -1489,7 +1285,7 @@
         currentModalOrder = order;
         currentModalCreds = creds || {};
 
-        document.getElementById('vm_order_info').innerHTML = `Order <strong>#${order.order_number}</strong> — ${order.customer_name} (${order.customer_email})`;
+        document.getElementById('vm_order_info').innerHTML = `Order <strong>#${order.order_number}</strong> &#8212; ${order.customer_name} (${order.customer_email})`;
         document.getElementById('vm_portal').innerText = creds.portal_url || 'N/A';
         document.getElementById('vm_user').innerText = creds.username || 'N/A';
         document.getElementById('vm_pass').innerText = creds.password || 'N/A';
@@ -1504,7 +1300,6 @@
         copyText(text, 'Full IPTV details copied to clipboard!');
     }
 
-    // Manual Edit modal
     function openManualModal(order, creds) {
         const form = document.getElementById('manualForm');
         form.action = `/secret-reseller-hub-8829/manual-deliver/${order.id}`;
@@ -1514,13 +1309,11 @@
         document.getElementById('mm_user').value = creds && creds.username ? creds.username : (userPrefix + Math.floor(1000 + Math.random() * 9000));
         document.getElementById('mm_pass').value = creds && creds.password ? creds.password : Math.random().toString(36).slice(-8);
         document.getElementById('mm_portal').value = creds && creds.portal_url ? creds.portal_url : '{{ $settings['portal_dns'] }}';
-        document.getElementById('mm_m3u').value = creds && creds.m3u_url ? creds.m3u_url : '';
         document.getElementById('mm_days').value = creds && creds.duration_days ? creds.duration_days : (order.package && order.package.duration_days ? order.package.duration_days : 30);
 
         openModal('manualModal');
     }
 
-    // Copy to clipboard with toast
     function copyText(text, msg = 'Copied to clipboard!') {
         navigator.clipboard.writeText(text).then(() => {
             showToast(msg);
@@ -1534,7 +1327,6 @@
         setTimeout(() => toast.classList.remove('show'), 2500);
     }
 
-    // Test XUI Panel connection
     function testPanelConnection() {
         const apiKey = document.getElementById('cfg_api_key') ? document.getElementById('cfg_api_key').value : '';
         const apiUrl = document.getElementById('cfg_api_url') ? document.getElementById('cfg_api_url').value : '';
@@ -1544,7 +1336,7 @@
         const box = document.getElementById('testConnectionBox');
 
         box.style.display = 'block';
-        box.innerHTML = `<span style="color: var(--g-blue);"><i class="ph-bold ph-spinner ph-spin"></i> Connecting & authenticating to XUI API...</span>`;
+        box.innerHTML = `<span style="color: #2271b1;"><i class="ph-bold ph-spinner ph-spin"></i> Connecting to XUI API server...</span>`;
 
         fetch('{{ route('secret.reseller.test-connection') }}', {
             method: 'POST',
@@ -1563,29 +1355,19 @@
         .then(res => res.json())
         .then(data => {
             if (data.success) {
-                box.innerHTML = `<span style="color: var(--g-green); font-weight: 700;"><i class="ph-bold ph-check-circle"></i> ${data.message}</span>`;
+                box.innerHTML = `<span style="color: #00a32a; font-weight: 700;"><i class="ph-bold ph-check-circle"></i> ${data.message}</span>`;
                 if (data.data) {
-                    box.innerHTML += `<div style="margin-top: 8px; color: var(--text-muted); font-size: 0.75rem;">Diagnostics: ${JSON.stringify(data.data)}</div>`;
+                    box.innerHTML += `<div style="margin-top: 6px; color: #646970; font-size: 11px;">Details: ${JSON.stringify(data.data)}</div>`;
                 }
             } else {
-                box.innerHTML = `<span style="color: var(--g-red); font-weight: 700;"><i class="ph-bold ph-x-circle"></i> ${data.message}</span>`;
+                box.innerHTML = `<span style="color: #d63638; font-weight: 700;"><i class="ph-bold ph-x-circle"></i> ${data.message}</span>`;
             }
         })
         .catch(err => {
-            box.innerHTML = `<span style="color: var(--g-red); font-weight: 700;"><i class="ph-bold ph-x-circle"></i> Request error: ${err.message}</span>`;
+            box.innerHTML = `<span style="color: #d63638; font-weight: 700;"><i class="ph-bold ph-x-circle"></i> Request error: ${err.message}</span>`;
         });
     }
 
-    // Button loading state
-    function showButtonLoading(form) {
-        const btn = form.querySelector('button[type="submit"]');
-        if (btn) {
-            btn.disabled = true;
-            btn.innerHTML = `<i class="ph-bold ph-spinner ph-spin"></i> Creating on XUI...`;
-        }
-    }
-
-    // Instant Scratchpad Generator
     function generateQuickLine() {
         const userPrefix = '{{ $settings['user_prefix'] ?? 'user' }}';
         const user = document.getElementById('quick_user').value || (userPrefix + Math.floor(1000 + Math.random() * 9000));
