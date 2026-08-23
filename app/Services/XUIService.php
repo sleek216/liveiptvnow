@@ -41,7 +41,7 @@ class XUIService
     }
 
     /**
-     * Clean base URL (strip trailing slashes, /lines, /dashboard, /login)
+     * Clean base URL (strip trailing slashes, /lines, /dashboard, /login, /line)
      */
     public function cleanUrl(?string $url): string
     {
@@ -49,7 +49,7 @@ class XUIService
             return '';
         }
         $url = trim($url);
-        $url = preg_replace('/(\/lines|\/dashboard|\/index\.php|\/lines\?.*|\/login|\/edit_profile|\/line)$/i', '', $url);
+        $url = preg_replace('/(\/lines|\/dashboard|\/index\.php|\/lines\?.*|\/login|\/edit_profile|\/line|\/line\?.*|\/api\.php|\/api)$/i', '', $url);
         return rtrim($url, '/');
     }
 
@@ -84,7 +84,7 @@ class XUIService
         $username = trim($username ?: $settings['username']);
         $password = trim($password !== null ? $password : $settings['password']);
 
-        $targets = array_unique(array_filter([$apiUrl, $panelUrl]));
+        $targets = array_unique(array_filter([$panelUrl, $apiUrl]));
         
         if (empty($targets) && empty($apiKey) && empty($username)) {
             return [
@@ -97,32 +97,22 @@ class XUIService
         $connected = false;
         $serverData = [];
 
-        // Method 1: Official XUI.ONE API Key
+        // Method 1: Official XUI.ONE API Key on api.php
         if (!empty($apiKey)) {
             foreach ($targets as $base) {
-                // XUI.ONE REST API test endpoints
                 $testEndpoints = [
+                    $base . '/api.php?action=user_info&api_key=' . urlencode($apiKey),
                     $base . '/api?action=user_info&api_key=' . urlencode($apiKey),
                     $base . '/api/user/info',
-                    $base . '/api.php?action=user_info&api_key=' . urlencode($apiKey),
-                    $base . '/api?action=package_list&api_key=' . urlencode($apiKey),
-                    $base . '/api',
                 ];
 
                 foreach ($testEndpoints as $ep) {
                     try {
-                        $res = $this->getHttpClient($apiKey)->get($ep, [
-                            'api_key' => $apiKey,
-                            'token' => $apiKey,
-                            'action' => 'user_info',
-                        ]);
-
+                        $res = $this->getHttpClient($apiKey)->get($ep);
                         $json = $res->json();
-                        $body = $res->body();
 
-                        // Check for valid JSON response from XUI.ONE
                         if (is_array($json)) {
-                            if ((isset($json['result']) && $json['result'] === true) || 
+                            if ((isset($json['result']) && ($json['result'] === true || $json['result'] === 'success')) || 
                                 (isset($json['status']) && ($json['status'] === 'success' || $json['status'] == 1)) || 
                                 isset($json['credits']) || 
                                 isset($json['member_id']) || 
@@ -134,13 +124,13 @@ class XUIService
                                     'endpoint' => $ep,
                                     'response' => $json,
                                 ];
-                                $diagnostics[] = "API Key validated successfully on {$ep}";
+                                $diagnostics[] = "API Key validated on {$ep}";
                                 break 2;
                             } else {
                                 $diagnostics[] = "{$ep}: " . ($json['message'] ?? $json['error'] ?? json_encode($json));
                             }
                         } else {
-                            $diagnostics[] = "{$ep} returned non-JSON (HTTP {$res->status()})";
+                            $diagnostics[] = "{$ep} returned HTTP {$res->status()} (non-JSON)";
                         }
                     } catch (\Exception $e) {
                         $diagnostics[] = "{$ep} connection error: " . $e->getMessage();
@@ -162,14 +152,12 @@ class XUIService
                     $cookies = $loginRes->cookies();
                     $cookieArray = $cookies ? $cookies->toArray() : [];
 
-                    // Check if session cookies received and not redirected to error
                     if (!empty($cookieArray)) {
-                        // Verify by visiting /lines
                         $checkLines = Http::timeout(10)
                             ->withCookies($cookieArray, parse_url($base, PHP_URL_HOST))
                             ->get($base . '/lines');
 
-                        if ($checkLines->successful() && !str_contains($checkLines->body(), 'login-box') && !str_contains($checkLines->body(), 'Please login')) {
+                        if ($checkLines->successful() && !str_contains($checkLines->body(), 'login-box')) {
                             Cache::put('xui_session_cookies', $cookieArray, now()->addHours(6));
                             $connected = true;
                             $serverData = [
@@ -177,13 +165,8 @@ class XUIService
                                 'panel_url' => $base,
                                 'user' => $username,
                             ];
-                            $diagnostics[] = "Web login succeeded on {$base}";
                             break;
-                        } else {
-                            $diagnostics[] = "Login cookie received on {$base} but /lines access was rejected.";
                         }
-                    } else {
-                        $diagnostics[] = "Login on {$base} returned HTTP {$loginRes->status()} with no session cookie.";
                     }
                 } catch (\Exception $e) {
                     $diagnostics[] = "Login error on {$base}: " . $e->getMessage();
@@ -213,7 +196,7 @@ class XUIService
         $settings = $this->getSettings();
         $package = $order->package;
 
-        // Calculate accurate duration based on website package
+        // Calculate accurate duration
         $durationDays = 30;
         if (!empty($customParams['duration_days'])) {
             $durationDays = (int)$customParams['duration_days'];
@@ -226,6 +209,12 @@ class XUIService
             }
         }
 
+        // Check if trial line
+        $isTrial = false;
+        if ($durationDays <= 2 || ($package && (str_contains(strtolower($package->name), 'trial') || str_contains(strtolower($package->slug ?? ''), 'trial')))) {
+            $isTrial = true;
+        }
+
         $devices = $customParams['devices'] ?? ($package && $package->devices ? (int)$package->devices : 1);
 
         // Determine XUI Package ID from mapping or parameter
@@ -236,7 +225,7 @@ class XUIService
                 : ($settings['default_package_id'] ?: 1));
 
         // Generate username & password
-        $prefix = !empty($settings['user_prefix']) ? $settings['user_prefix'] : 'user';
+        $prefix = !empty($settings['user_prefix']) ? $settings['user_prefix'] : 'bestuser';
         $username = $customParams['username'] ?? ($prefix . rand(1000, 9999));
         $password = $customParams['password'] ?? substr(str_shuffle('abcdefghjkmnpqrstuvwxyz23456789'), 0, 8);
         $portalDns = rtrim($customParams['portal_dns'] ?? ($settings['portal_dns'] ?: 'http://iptv.server:8080'), '/');
@@ -246,13 +235,13 @@ class XUIService
         $expireDateStr = date('Y-m-d H:i:s', $expireTimestamp);
         $expireDateShort = date('Y-m-d', $expireTimestamp);
 
-        $apiUrl = $this->cleanUrl($settings['api_url']);
         $panelUrl = $this->cleanUrl($settings['panel_url']);
+        $apiUrl = $this->cleanUrl($settings['api_url']);
         $apiKey = trim($settings['api_key']);
         $panelUser = trim($settings['username']);
         $panelPass = trim($settings['password']);
 
-        $targets = array_unique(array_filter([$apiUrl, $panelUrl]));
+        $targets = array_unique(array_filter([$panelUrl, $apiUrl]));
 
         if (empty($targets)) {
             return [
@@ -266,78 +255,93 @@ class XUIService
         $createdVia = '';
 
         // =========================================================================
-        // STRATEGY 1: Official XUI.ONE REST API using API Key
+        // STRATEGY 1: Official XUI.ONE api.php with GET / POST (Recommended for XUI.ONE)
         // =========================================================================
         if (!empty($apiKey)) {
             foreach ($targets as $base) {
-                $apiEndpoints = [
-                    $base . '/api?action=user_create&api_key=' . urlencode($apiKey),
-                    $base . '/api/line/create',
-                    $base . '/api/line/add',
-                    $base . '/api.php?action=user_create&api_key=' . urlencode($apiKey),
-                    $base . '/api',
-                ];
-
-                $apiPayload = [
+                // XUI.ONE standard API parameters
+                $apiParams = [
                     'action' => 'user_create',
                     'api_key' => $apiKey,
-                    'username' => $username,
-                    'password' => $password,
                     'user_name' => $username,
                     'user_password' => $password,
-                    'package' => (int)$packageId,
+                    'username' => $username,
+                    'password' => $password,
                     'package_id' => (int)$packageId,
+                    'package' => (int)$packageId,
                     'max_connections' => (int)$devices,
-                    'expire_date' => $expireDateStr,
                     'exp_date' => $expireDateShort,
+                    'expire_date' => $expireDateStr,
                     'member_id' => 1,
-                    'notes' => 'Order #' . $order->order_number . ' (' . ($package ? $package->name : 'Custom') . ')',
+                    'trial' => $isTrial ? 1 : 0,
+                    'notes' => 'Order #' . $order->order_number . ' (' . ($package ? $package->name : 'Plan') . ')',
+                ];
+
+                $apiEndpoints = [
+                    $base . '/api.php',
+                    $base . '/api',
+                    $base . '/api/line/create',
                 ];
 
                 foreach ($apiEndpoints as $endpoint) {
+                    // Try 1A: GET request with query string (Xtream/XUI standard)
                     try {
-                        // Try POST as JSON first, then Form
-                        $res = $this->getHttpClient($apiKey)->asForm()->post($endpoint, $apiPayload);
-                        $json = $res->json();
-                        $body = $res->body();
+                        $getRes = $this->getHttpClient($apiKey)->get($endpoint, $apiParams);
+                        $json = $getRes->json();
 
-                        // Strict verification: response MUST be valid JSON indicating success
                         if (is_array($json)) {
-                            if ((isset($json['result']) && $json['result'] === true) || 
+                            if ((isset($json['result']) && ($json['result'] === true || $json['result'] === 'success')) || 
                                 (isset($json['status']) && ($json['status'] === 'success' || $json['status'] == 1)) || 
                                 (isset($json['success']) && $json['success'] === true) ||
                                 isset($json['user_id']) ||
                                 isset($json['data']['id'])) {
                                 
                                 $lineCreated = true;
-                                $createdVia = "XUI.ONE API ({$endpoint})";
+                                $createdVia = "XUI.ONE api.php GET ({$endpoint})";
                                 break 2;
                             } else {
                                 $err = $json['message'] ?? $json['error'] ?? $json['result'] ?? json_encode($json);
-                                $debugDetails[] = "API {$endpoint}: {$err}";
-                            }
-                        } else {
-                            // If response is not JSON, check if it's an error HTML
-                            if ($res->status() === 401 || $res->status() === 403) {
-                                $debugDetails[] = "API {$endpoint}: 401/403 Unauthorized (Invalid API Key)";
-                            } else {
-                                $debugDetails[] = "API {$endpoint} returned HTTP {$res->status()} (non-JSON)";
+                                $debugDetails[] = "GET {$endpoint}: {$err}";
                             }
                         }
                     } catch (\Exception $e) {
-                        $debugDetails[] = "API {$endpoint} exception: " . $e->getMessage();
+                        $debugDetails[] = "GET {$endpoint} err: " . $e->getMessage();
+                    }
+
+                    // Try 1B: POST request with form payload
+                    try {
+                        $postRes = $this->getHttpClient($apiKey)->asForm()->post($endpoint, $apiParams);
+                        $json = $postRes->json();
+
+                        if (is_array($json)) {
+                            if ((isset($json['result']) && ($json['result'] === true || $json['result'] === 'success')) || 
+                                (isset($json['status']) && ($json['status'] === 'success' || $json['status'] == 1)) || 
+                                (isset($json['success']) && $json['success'] === true) ||
+                                isset($json['user_id']) ||
+                                isset($json['data']['id'])) {
+                                
+                                $lineCreated = true;
+                                $createdVia = "XUI.ONE api.php POST ({$endpoint})";
+                                break 2;
+                            } else {
+                                $err = $json['message'] ?? $json['error'] ?? $json['result'] ?? json_encode($json);
+                                $debugDetails[] = "POST {$endpoint}: {$err}";
+                            }
+                        }
+                    } catch (\Exception $e) {
+                        $debugDetails[] = "POST {$endpoint} err: " . $e->getMessage();
                     }
                 }
             }
         }
 
         // =========================================================================
-        // STRATEGY 2: Web Session Form Line Creation (POST to /line)
+        // STRATEGY 2: Web Session Form Line Creation (POST to /line or /line?trial=1)
         // =========================================================================
         if (!$lineCreated && !empty($panelUser) && !empty($panelPass)) {
             foreach ($targets as $base) {
                 try {
-                    // Step A: Login to get fresh session cookie
+                    // Step A: Authenticate session
                     $loginRes = Http::timeout(10)->asForm()->post($base . '/login', [
                         'username' => $panelUser,
                         'password' => $panelPass,
@@ -348,7 +352,8 @@ class XUIService
                     $cookieArray = $cookies ? $cookies->toArray() : [];
 
                     if (!empty($cookieArray)) {
-                        // Step B: Submit Line Creation Form to /line
+                        $lineFormUrl = $isTrial ? "{$base}/line?trial=1" : "{$base}/line";
+                        
                         $linePayload = [
                             'username' => $username,
                             'password' => $password,
@@ -363,25 +368,24 @@ class XUIService
                         $lineRes = Http::timeout(12)
                             ->withCookies($cookieArray, parse_url($base, PHP_URL_HOST))
                             ->withHeaders([
-                                'Referer' => $base . '/line',
+                                'Referer' => $lineFormUrl,
                                 'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
                             ])
                             ->asForm()
-                            ->post($base . '/line', $linePayload);
+                            ->post($lineFormUrl, $linePayload);
 
-                        // Strict Check: XUI.ONE redirects (302) to /lines on successful creation
                         $location = $lineRes->header('Location');
                         if (($lineRes->status() === 302 && $location && (str_contains($location, 'lines') || str_contains($location, 'manage_lines'))) ||
                             ($lineRes->json('result') === true)) {
                             
                             $lineCreated = true;
-                            $createdVia = "XUI Web Form ({$base}/line)";
+                            $createdVia = "XUI Web Form ({$lineFormUrl})";
                             break;
                         } else {
-                            $debugDetails[] = "Web Form {$base}/line returned HTTP " . $lineRes->status() . " (Location: {$location})";
+                            $debugDetails[] = "Web Form {$lineFormUrl} returned HTTP {$lineRes->status()} (Location: {$location})";
                         }
                     } else {
-                        $debugDetails[] = "Web login on {$base} failed: invalid username/password.";
+                        $debugDetails[] = "Web login failed on {$base}";
                     }
                 } catch (\Exception $e) {
                     $debugDetails[] = "Web Form line error on {$base}: " . $e->getMessage();
@@ -389,38 +393,7 @@ class XUIService
             }
         }
 
-        // =========================================================================
-        // STRATEGY 3: Standard Xtream Reseller api.php GET query
-        // =========================================================================
-        if (!$lineCreated && !empty($panelUser) && !empty($panelPass)) {
-            foreach ($targets as $base) {
-                try {
-                    $apiRes = Http::timeout(10)->get($base . '/api.php', [
-                        'action' => 'user_create',
-                        'sub_user' => $panelUser,
-                        'sub_password' => $panelPass,
-                        'user_name' => $username,
-                        'user_password' => $password,
-                        'package_id' => $packageId,
-                        'exp_date' => $expireDateShort,
-                        'max_connections' => $devices,
-                    ]);
-
-                    $json = $apiRes->json();
-                    if (is_array($json) && (($json['result'] ?? '') === 'success' || ($json['status'] ?? 0) == 1)) {
-                        $lineCreated = true;
-                        $createdVia = "Xtream api.php ({$base})";
-                        break;
-                    } else {
-                        $debugDetails[] = "api.php: " . (is_array($json) ? json_encode($json) : "HTTP " . $apiRes->status());
-                    }
-                } catch (\Exception $e) {
-                    $debugDetails[] = "api.php exception: " . $e->getMessage();
-                }
-            }
-        }
-
-        // Strict Fail: If XUI did not confirm account creation, abort and show real error!
+        // Strict Fail: If XUI did not confirm creation, abort and show real error!
         if (!$lineCreated) {
             $reason = !empty($debugDetails) ? implode(' | ', array_slice($debugDetails, 0, 2)) : 'Panel did not respond.';
             return [
@@ -438,6 +411,7 @@ class XUIService
             'portal_url' => $portalDns,
             'm3u_url' => $m3uUrl,
             'duration_days' => $durationDays,
+            'is_trial' => $isTrial,
             'package_name' => $package ? $package->name : 'Custom Plan',
             'package_id' => $packageId,
             'devices' => $devices,
