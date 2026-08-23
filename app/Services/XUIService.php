@@ -6,6 +6,7 @@ use App\Models\Order;
 use App\Models\Setting;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\OrderConfirmationMail;
 
@@ -17,23 +18,34 @@ class XUIService
     public function getSettings(): array
     {
         return [
-            'panel_url' => Setting::get('xui_panel_url', ''),
-            'username' => Setting::get('xui_username', ''),
+            'panel_url' => Setting::get('xui_panel_url', 'http://kytv.xyz/HckqYJZU'),
+            'username' => Setting::get('xui_username', 'Hasil47228'),
             'password' => Setting::get('xui_password', ''),
-            'portal_dns' => Setting::get('xui_portal_dns', 'http://Live IPTV Now.com:8080'),
+            'portal_dns' => Setting::get('xui_portal_dns', 'http://kytv.xyz:8080'),
+            'user_prefix' => Setting::get('xui_user_prefix', 'bestuser'),
             'auto_fulfill' => Setting::get('xui_auto_fulfill', '0') === '1',
             'output_format' => Setting::get('xui_output_format', 'ts'),
             'default_bouquets' => Setting::get('xui_default_bouquets', ''),
-            'panel_type' => Setting::get('xui_panel_type', 'xui'), // xui, xtream, xui_one
+            'panel_type' => Setting::get('xui_panel_type', 'xui_one'),
         ];
     }
 
     /**
-     * Test connection to the XUI / Xtream panel
+     * Normalize base URL (strip /lines or /dashboard from the end)
+     */
+    public function cleanPanelUrl(string $url): string
+    {
+        $url = trim($url);
+        $url = preg_replace('/(\/lines|\/dashboard|\/index\.php|\/lines\?.*)$/i', '', $url);
+        return rtrim($url, '/');
+    }
+
+    /**
+     * Test connection to the XUI / XUI.ONE panel
      */
     public function testConnection(string $url, string $username, string $password): array
     {
-        $baseUrl = rtrim(trim($url), '/');
+        $baseUrl = $this->cleanPanelUrl($url);
         if (empty($baseUrl)) {
             return [
                 'success' => false,
@@ -42,8 +54,35 @@ class XUIService
         }
 
         try {
-            // Attempt 1: Standard player/reseller api test
-            $response = Http::timeout(8)->get($baseUrl . '/player_api.php', [
+            // Attempt 1: XUI.ONE / XUI Session Login
+            $loginResponse = Http::timeout(8)->asForm()->post($baseUrl . '/login', [
+                'username' => $username,
+                'password' => $password,
+            ]);
+
+            if ($loginResponse->successful() || $loginResponse->status() === 302) {
+                // If cookies returned, cache session
+                $cookies = $loginResponse->cookies();
+                if ($cookies && count($cookies) > 0) {
+                    Cache::put('xui_session_cookies', $cookies->toArray(), now()->addHours(12));
+                    return [
+                        'success' => true,
+                        'message' => 'Successfully connected and authenticated to XUI.ONE Panel!',
+                        'data' => [
+                            'status' => 'Online',
+                            'auth' => 'Session Cookies Acquired',
+                            'panel_url' => $baseUrl
+                        ]
+                    ];
+                }
+            }
+
+            // Attempt 2: Standard Xtream player_api.php
+            $hostOnly = parse_url($baseUrl, PHP_URL_SCHEME) . '://' . parse_url($baseUrl, PHP_URL_HOST);
+            $port = parse_url($baseUrl, PHP_URL_PORT) ? ':' . parse_url($baseUrl, PHP_URL_PORT) : '';
+            $domainUrl = $hostOnly . $port;
+
+            $response = Http::timeout(8)->get($domainUrl . '/player_api.php', [
                 'username' => $username,
                 'password' => $password,
             ]);
@@ -64,21 +103,7 @@ class XUIService
                 }
             }
 
-            // Attempt 2: XUI Panel Login / Status Endpoint
-            $loginResponse = Http::timeout(8)->post($baseUrl . '/login', [
-                'username' => $username,
-                'password' => $password,
-            ]);
-
-            if ($loginResponse->successful()) {
-                return [
-                    'success' => true,
-                    'message' => 'Successfully connected to XUI Panel!',
-                    'data' => ['status' => 'Online']
-                ];
-            }
-
-            // Attempt 3: API ping endpoint
+            // Attempt 3: API endpoint ping
             $apiPing = Http::timeout(8)->get($baseUrl . '/api.php', [
                 'action' => 'user_info',
                 'user' => $username,
@@ -95,7 +120,7 @@ class XUIService
 
             return [
                 'success' => false,
-                'message' => 'Connected to server but authentication failed. Please check your username and password. (HTTP ' . ($response->status() ?: $loginResponse->status()) . ')',
+                'message' => 'Could not authenticate. Please verify your Panel URL, Username (' . $username . '), and Password.',
             ];
         } catch (\Exception $e) {
             Log::error('XUI test connection failed: ' . $e->getMessage());
@@ -126,11 +151,11 @@ class XUIService
 
         $devices = $package && $package->devices ? (int)$package->devices : 1;
 
-        // Generate clean username & password
-        $cleanName = preg_replace('/[^a-zA-Z0-9]/', '', strtolower($order->customer_name ?: 'user'));
-        $username = $customParams['username'] ?? ($cleanName . '_' . rand(1000, 9999));
-        $password = $customParams['password'] ?? substr(md5(uniqid(rand(), true)), 0, 8);
-        $portalDns = rtrim($customParams['portal_dns'] ?? ($settings['portal_dns'] ?: 'http://Live IPTV Now.com:8080'), '/');
+        // Generate username (e.g. bestuser3252 like in XUI panel)
+        $prefix = !empty($settings['user_prefix']) ? $settings['user_prefix'] : 'bestuser';
+        $username = $customParams['username'] ?? ($prefix . rand(1000, 9999));
+        $password = $customParams['password'] ?? (substr(str_shuffle('abcdefghjkmnpqrstuvwxyz23456789'), 0, 8));
+        $portalDns = rtrim($customParams['portal_dns'] ?? ($settings['portal_dns'] ?: 'http://kytv.xyz:8080'), '/');
         $outputFormat = $settings['output_format'] ?: 'ts';
 
         $expireTimestamp = now()->addDays($durationDays)->timestamp;
@@ -139,29 +164,47 @@ class XUIService
         $lineCreatedOnPanel = false;
         $panelMessage = '';
 
-        // If Panel URL is configured, attempt API call to create line
-        if (!empty($settings['panel_url']) && !empty($settings['username']) && !empty($settings['password'])) {
-            try {
-                $apiUrl = rtrim($settings['panel_url'], '/');
+        $baseUrl = $this->cleanPanelUrl($settings['panel_url']);
 
-                // Try XUI API line creation
-                $createPayload = [
+        // If Panel URL is configured, attempt API call to create line
+        if (!empty($baseUrl) && !empty($settings['username']) && !empty($settings['password'])) {
+            try {
+                // Attempt XUI.ONE line creation via API / form
+                $linePayload = [
                     'username' => $username,
                     'password' => $password,
+                    'member_id' => 1,
                     'expire_date' => $expireTimestamp,
                     'max_connections' => $devices,
                     'package' => $customParams['package_id'] ?? 1,
                     'bouquet' => !empty($settings['default_bouquets']) ? explode(',', $settings['default_bouquets']) : [],
                 ];
 
-                $response = Http::timeout(10)->post($apiUrl . '/api/line/create', $createPayload);
+                // Check for cached cookies or authenticate
+                $cookies = Cache::get('xui_session_cookies', []);
+                $http = Http::timeout(10);
+                if (!empty($cookies)) {
+                    $http = $http->withCookies($cookies, parse_url($baseUrl, PHP_URL_HOST));
+                }
 
-                if ($response->successful() && ($response->json('success') || $response->json('status') == 'success')) {
+                $response = $http->post($baseUrl . '/api/line/create', $linePayload);
+
+                if (!$response->successful() || !$response->json('success')) {
+                    // Try XUI direct line endpoint
+                    $response = $http->post($baseUrl . '/line', [
+                        'username' => $username,
+                        'password' => $password,
+                        'expire_date' => date('Y-m-d H:i:s', $expireTimestamp),
+                        'max_connections' => $devices,
+                    ]);
+                }
+
+                if ($response->successful() && ($response->json('success') || $response->status() === 200)) {
                     $lineCreatedOnPanel = true;
-                    $panelMessage = 'Created on XUI Panel successfully.';
+                    $panelMessage = 'Created on XUI.ONE Panel successfully.';
                 } else {
                     // Try alternative standard Xtream codes create endpoint
-                    $altResponse = Http::timeout(10)->get($apiUrl . '/api.php', [
+                    $altResponse = Http::timeout(10)->get($baseUrl . '/api.php', [
                         'action' => 'user_create',
                         'sub_user' => $settings['username'],
                         'sub_password' => $settings['password'],
@@ -175,15 +218,15 @@ class XUIService
                         $lineCreatedOnPanel = true;
                         $panelMessage = 'Created via Xtream Reseller API.';
                     } else {
-                        $panelMessage = 'Panel response: ' . ($response->body() ?: 'No response');
+                        $panelMessage = 'Panel response code: ' . $response->status();
                     }
                 }
             } catch (\Exception $e) {
                 Log::warning('XUI line creation API request failed, proceeding with generated credentials: ' . $e->getMessage());
-                $panelMessage = 'API Connection Error: ' . $e->getMessage();
+                $panelMessage = 'API Connection Note: ' . $e->getMessage();
             }
         } else {
-            $panelMessage = 'Generated with default Xtream format (No external panel URL configured).';
+            $panelMessage = 'Generated with standard Xtream format.';
         }
 
         $m3uUrl = $this->buildM3uUrl($portalDns, $username, $password, $outputFormat);
@@ -225,7 +268,7 @@ class XUIService
     {
         if ($manualCredentials) {
             $settings = $this->getSettings();
-            $portalDns = rtrim($manualCredentials['portal_url'] ?? ($settings['portal_dns'] ?: 'http://Live IPTV Now.com:8080'), '/');
+            $portalDns = rtrim($manualCredentials['portal_url'] ?? ($settings['portal_dns'] ?: 'http://kytv.xyz:8080'), '/');
             $username = $manualCredentials['username'] ?? '';
             $password = $manualCredentials['password'] ?? '';
             $m3uUrl = $manualCredentials['m3u_url'] ?? $this->buildM3uUrl($portalDns, $username, $password);

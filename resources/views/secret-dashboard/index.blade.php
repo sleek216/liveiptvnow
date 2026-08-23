@@ -1118,38 +1118,42 @@
                     XUI / Xtream Codes Panel Connection
                 </h2>
                 <p class="card-desc">
-                    Enter your Reseller or Master Panel details below to connect and automate line generation for incoming customer orders.
+                    Configure your XUI.ONE Panel connection (e.g. <strong>http://kytv.xyz/HckqYJZU</strong>) to automate account creation and delivery.
                 </p>
 
                 <form method="POST" action="{{ route('secret.reseller.settings.update') }}">
                     @csrf
                     
                     <div class="form-group">
-                        <label class="form-label">XUI / Xtream Panel API URL</label>
-                        <input type="text" name="panel_url" class="form-control" id="cfg_panel_url" value="{{ $settings['panel_url'] }}" placeholder="http://your-iptv-server.com:8080 or https://panel.dns.net">
+                        <label class="form-label">XUI Panel URL</label>
+                        <input type="text" name="panel_url" class="form-control" id="cfg_panel_url" value="{{ $settings['panel_url'] }}" placeholder="http://kytv.xyz/HckqYJZU">
                         <small style="color: var(--text-muted); font-size: 0.775rem; margin-top: 4px; display: block;">
-                            Your main panel or reseller login URL (including port if needed).
+                            Your XUI panel reseller login URL with secret key (e.g. <code>http://kytv.xyz/HckqYJZU</code>).
                         </small>
                     </div>
 
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
                         <div class="form-group">
-                            <label class="form-label">Reseller Username / API Key</label>
-                            <input type="text" name="username" class="form-control" id="cfg_username" value="{{ $settings['username'] }}" placeholder="e.g. reseller_pro">
+                            <label class="form-label">Reseller Username / Owner</label>
+                            <input type="text" name="username" class="form-control" id="cfg_username" value="{{ $settings['username'] }}" placeholder="e.g. Hasil47228">
                         </div>
 
                         <div class="form-group">
                             <label class="form-label">Reseller Password</label>
-                            <input type="password" name="password" class="form-control" id="cfg_password" placeholder="{{ !empty($settings['password']) ? '•••••••••••• (Saved)' : 'Enter reseller password' }}">
+                            <input type="password" name="password" class="form-control" id="cfg_password" placeholder="{{ !empty($settings['password']) ? '•••••••••••• (Saved)' : 'Enter your XUI password' }}">
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label class="form-label">Default Client Portal DNS / Output Host</label>
-                        <input type="text" name="portal_dns" class="form-control" value="{{ $settings['portal_dns'] }}" placeholder="http://Live IPTV Now.com:8080">
-                        <small style="color: var(--text-muted); font-size: 0.775rem; margin-top: 4px; display: block;">
-                            This URL is sent to customers in their delivery email (e.g. Portal URL & M3U base host).
-                        </small>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                        <div class="form-group">
+                            <label class="form-label">Default Client Portal DNS</label>
+                            <input type="text" name="portal_dns" class="form-control" value="{{ $settings['portal_dns'] }}" placeholder="http://kytv.xyz:8080">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Username Prefix for Created Lines</label>
+                            <input type="text" name="user_prefix" class="form-control" value="{{ $settings['user_prefix'] ?? 'bestuser' }}" placeholder="e.g. bestuser">
+                        </div>
                     </div>
 
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
@@ -1170,7 +1174,7 @@
                     <div class="form-switch">
                         <div>
                             <div class="switch-label">Instant Auto-Fulfill upon Payment</div>
-                            <div class="switch-desc">Automatically create line & email credentials immediately when customer completes checkout.</div>
+                            <div class="switch-desc">Automatically create line on XUI & email credentials immediately when customer checkout is paid.</div>
                         </div>
                         <label class="switch">
                             <input type="checkbox" name="auto_fulfill" value="1" {{ $settings['auto_fulfill'] ? 'checked' : '' }}>
@@ -1200,12 +1204,12 @@
                 <div class="card" style="margin-bottom: 20px;">
                     <h3 class="card-title" style="font-size: 1rem;">
                         <i class="ph-bold ph-shield-check" style="color: var(--g-green);"></i>
-                        How Automation Works
+                        XUI.ONE Automation Guide
                     </h3>
                     <ul style="padding-left: 18px; color: var(--text-muted); font-size: 0.825rem; line-height: 1.7; margin-top: 10px;">
-                        <li>When an order is created on your website, it appears in your <strong>Live Orders Feed</strong> instantly.</li>
-                        <li>Clicking <strong>"Generate & Deliver"</strong> triggers the XUI API to provision the user line and generates Xtream/M3U playlist links.</li>
-                        <li>A formatted, branded delivery email is dispatched directly to the customer inbox.</li>
+                        <li>Connected directly to your XUI Panel: <strong>kytv.xyz</strong></li>
+                        <li>Creates user accounts with username prefix (e.g. <code>bestuserXXXX</code>) and random 8-char secure passwords.</li>
+                        <li>Uses your reseller account <strong>{{ $settings['username'] ?: 'Hasil47228' }}</strong> to deduct credits automatically.</li>
                     </ul>
                 </div>
 
@@ -1244,7 +1248,7 @@
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
                 <div class="form-group">
                     <label class="form-label">Username</label>
-                    <input type="text" id="quick_user" class="form-control" placeholder="Auto-generated if blank" oninput="updateQuickPreview()">
+                    <input type="text" id="quick_user" class="form-control" placeholder="e.g. bestuser9821" oninput="updateQuickPreview()">
                 </div>
                 <div class="form-group">
                     <label class="form-label">Password</label>
@@ -1481,7 +1485,8 @@
         form.action = `/secret-reseller-hub-8829/manual-deliver/${order.id}`;
 
         document.getElementById('mm_order_info').innerHTML = `Order <strong>#${order.order_number}</strong> for <strong>${order.customer_name}</strong> (${order.customer_email})`;
-        document.getElementById('mm_user').value = creds && creds.username ? creds.username : (order.customer_name ? order.customer_name.replace(/[^a-zA-Z0-9]/g, '').toLowerCase() + '_' + Math.floor(1000 + Math.random() * 9000) : '');
+        const userPrefix = '{{ $settings['user_prefix'] ?? 'bestuser' }}';
+        document.getElementById('mm_user').value = creds && creds.username ? creds.username : (userPrefix + Math.floor(1000 + Math.random() * 9000));
         document.getElementById('mm_pass').value = creds && creds.password ? creds.password : Math.random().toString(36).slice(-8);
         document.getElementById('mm_portal').value = creds && creds.portal_url ? creds.portal_url : '{{ $settings['portal_dns'] }}';
         document.getElementById('mm_m3u').value = creds && creds.m3u_url ? creds.m3u_url : '';
@@ -1553,9 +1558,8 @@
 
     // Instant Scratchpad Generator
     function generateQuickLine() {
-        const name = document.getElementById('quick_name').value || 'user';
-        const clean = name.replace(/[^a-zA-Z0-9]/g, '').toLowerCase() || 'user';
-        const user = document.getElementById('quick_user').value || (clean + '_' + Math.floor(1000 + Math.random() * 9000));
+        const userPrefix = '{{ $settings['user_prefix'] ?? 'bestuser' }}';
+        const user = document.getElementById('quick_user').value || (userPrefix + Math.floor(1000 + Math.random() * 9000));
         const pass = document.getElementById('quick_pass').value || Math.random().toString(36).slice(-8);
         const dns = (document.getElementById('quick_dns').value || '{{ $settings['portal_dns'] }}').replace(/\/$/, '');
         const m3u = `${dns}/get.php?username=${user}&password=${pass}&type=m3u_plus&output=ts`;

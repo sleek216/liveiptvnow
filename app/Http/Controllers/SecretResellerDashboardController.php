@@ -186,7 +186,8 @@ class SecretResellerDashboardController extends Controller
             Setting::set('xui_password', trim($request->input('password')), 'password', 'iptv_xui');
         }
 
-        Setting::set('xui_portal_dns', trim($request->input('portal_dns', 'http://Live IPTV Now.com:8080')), 'text', 'iptv_xui');
+        Setting::set('xui_portal_dns', trim($request->input('portal_dns', 'http://kytv.xyz:8080')), 'text', 'iptv_xui');
+        Setting::set('xui_user_prefix', trim($request->input('user_prefix', 'bestuser')), 'text', 'iptv_xui');
         Setting::set('xui_auto_fulfill', $request->has('auto_fulfill') ? '1' : '0', 'boolean', 'iptv_xui');
         Setting::set('xui_output_format', trim($request->input('output_format', 'ts')), 'text', 'iptv_xui');
         Setting::set('xui_default_bouquets', trim($request->input('default_bouquets', '')), 'text', 'iptv_xui');
