@@ -68,7 +68,7 @@ class XUIService
             $headers['Authorization'] = 'Bearer ' . $apiKey;
         }
 
-        return Http::timeout(15)->withHeaders($headers);
+        return Http::timeout(6)->connectTimeout(4)->withHeaders($headers);
     }
 
     /**
@@ -84,7 +84,11 @@ class XUIService
         $username = trim($username ?: $settings['username']);
         $password = trim($password !== null ? $password : $settings['password']);
 
-        $targets = array_unique(array_filter([$panelUrl, $apiUrl]));
+        $rawTargets = array_filter([$panelUrl, $apiUrl]);
+        if (!empty($panelUrl)) {
+            $rawTargets = array_filter($rawTargets, fn($t) => !str_contains($t, 'limited-name.com'));
+        }
+        $targets = array_unique($rawTargets);
         
         if (empty($targets) && empty($apiKey) && empty($username)) {
             return [
@@ -241,12 +245,16 @@ class XUIService
         $panelUser = trim($settings['username']);
         $panelPass = trim($settings['password']);
 
-        $targets = array_unique(array_filter([$panelUrl, $apiUrl]));
+        $rawTargets = array_filter([$panelUrl, $apiUrl]);
+        if (!empty($panelUrl)) {
+            $rawTargets = array_filter($rawTargets, fn($t) => !str_contains($t, 'limited-name.com'));
+        }
+        $targets = array_unique($rawTargets);
 
         if (empty($targets)) {
             return [
                 'success' => false,
-                'message' => 'XUI Panel URL or API URL is not configured. Please enter them in Settings tab.',
+                'message' => 'XUI Panel URL is not configured. Please enter it in Settings tab.',
             ];
         }
 
