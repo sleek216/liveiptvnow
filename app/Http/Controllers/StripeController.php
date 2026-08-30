@@ -20,13 +20,19 @@ class StripeController extends Controller
         $this->initializeStripe();
     }
 
+    protected function getStripeSecretKey(): ?string
+    {
+        $key = Setting::get('stripe_secret_key') ?: config('services.stripe.secret') ?: env('STRIPE_SECRET');
+        return $key ? trim($key) : null;
+    }
+
     protected function initializeStripe(): void
     {
-        $secretKey = Setting::get('stripe_secret_key');
+        $secretKey = $this->getStripeSecretKey();
         if ($secretKey) {
             Stripe::setApiKey($secretKey);
         } else {
-            \Log::warning('StripeController: Secret key is missing in settings.');
+            \Log::warning('StripeController: Secret key is missing in settings, config, and env.');
         }
     }
 
@@ -49,13 +55,15 @@ class StripeController extends Controller
                 ->with('error', 'Package not found. Please contact support.');
         }
 
-        $secretKey = Setting::get('stripe_secret_key');
+        $secretKey = $this->getStripeSecretKey();
         if (!$secretKey) {
             \Log::error('StripeController: Attempted checkout but Stripe Secret Key is not set.');
             return redirect()
                 ->route('checkout.pending', $order->order_number)
-                ->with('error', 'Payment gateway is not configured. Please contact support.');
+                ->with('error', 'Stripe Payment Gateway is not configured. Please set Secret Key in Admin Panel.');
         }
+
+        Stripe::setApiKey($secretKey);
 
         if ($order->payment_status === 'completed') {
             return redirect()->route('stripe.success', ['order' => $order->order_number]);
