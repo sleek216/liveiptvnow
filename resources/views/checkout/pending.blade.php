@@ -8,13 +8,37 @@
             <div class="cx-icon pending"><i class="ri-time-fill"></i></div>
             <h1>Payment <i>Pending</i></h1>
             <p>Your order has been created. Complete the payment to activate.</p>
+
+            @if(session('error'))
+            <div class="co-alert co-alert-err" style="margin-bottom: 20px; padding: 14px; background: #fee2e2; border: 1px solid #fca5a5; border-radius: 8px; color: #b91c1c; display: flex; align-items: center; gap: 8px; justify-content: center; font-size: 0.9rem;">
+                <i class="ri-close-circle-fill" style="font-size: 1.1rem; color: #ef4444;"></i>
+                <span style="font-weight: 500;">{{ session('error') }}</span>
+            </div>
+            @endif
+
+            @if(session('info'))
+            <div class="co-alert co-alert-info" style="margin-bottom: 20px; padding: 14px; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; color: #1e40af; display: flex; align-items: center; gap: 8px; justify-content: center; font-size: 0.9rem;">
+                <i class="ri-information-fill" style="font-size: 1.1rem; color: #3b82f6;"></i>
+                <span style="font-weight: 500;">{{ session('info') }}</span>
+            </div>
+            @endif
+
             <div class="cx-details">
                 <div class="cx-row"><span>Order Number</span><strong>{{ $order->order_number }}</strong></div>
                 <div class="cx-row"><span>Package</span><strong>{{ $order->package->name }}</strong></div>
                 <div class="cx-row"><span>Amount</span><strong>${{ number_format($order->amount, 2) }}</strong></div>
-                <div class="cx-row"><span>Payment</span><strong>{{ ucfirst($order->payment_method) }}</strong></div>
+                <div class="cx-row"><span>Payment</span><strong>{{ $order->payment_method === 'stripe' ? 'Stripe (Credit/Debit Card)' : ucfirst($order->payment_method) }}</strong></div>
             </div>
-            @if($order->payment_method === 'paypal')
+
+            @if($order->payment_method === 'stripe' && $order->payment_status !== 'completed')
+            <div class="cx-inst" style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 20px; border-radius: 12px; margin-bottom: 18px;">
+                <h3 style="color: #475569; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 8px; font-weight: 700;"><i class="ri-bank-card-fill" style="color: #635bff;"></i> Credit / Debit Card</h3>
+                <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 15px;">Please click the button below to complete your payment of <strong>${{ number_format($order->amount, 2) }}</strong> securely via Stripe.</p>
+                <a href="{{ route('stripe.checkout', $order->order_number) }}" class="hb hb-b" style="display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; background: #635bff; color: #fff; border-radius: 99px; text-decoration: none; font-weight: 700; transition: background 0.2s;">
+                    <i class="ri-lock-2-line"></i> Pay Now with Card
+                </a>
+            </div>
+            @elseif($order->payment_method === 'paypal')
             <div class="cx-inst"><h3><i class="ri-paypal-fill"></i> PayPal</h3><p>Send <strong>${{ number_format($order->amount, 2) }}</strong> to our PayPal and include order <strong>{{ $order->order_number }}</strong>.</p><a href="https://paypal.me/LiveIPTVNow" target="_blank" class="hb hb-b"><i class="ri-external-link-line"></i> Pay with PayPal</a></div>
             @elseif($order->payment_method === 'crypto')
             <div class="cx-inst"><h3><i class="ri-bitcoin-fill"></i> Crypto</h3><p>Contact our support team for the wallet address.</p><a href="{{ route('contact') }}" class="hb hb-b"><i class="ri-chat-1-line"></i> Contact Support</a></div>
