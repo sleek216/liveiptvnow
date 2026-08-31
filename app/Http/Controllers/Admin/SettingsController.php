@@ -59,11 +59,23 @@ class SettingsController extends Controller
             'stripe_webhook_secret' => 'nullable|string|max:255',
         ]);
 
+        $publishableKey = trim($validated['stripe_publishable_key'] ?? '');
+        if (preg_match('/(pk_live_[a-zA-Z0-9]+|pk_test_[a-zA-Z0-9]+)/', $publishableKey, $pkMatches)) {
+            $publishableKey = $pkMatches[1];
+        }
+
+        $secretKey = trim($validated['stripe_secret_key'] ?? '');
+        if (preg_match('/(sk_live_[a-zA-Z0-9]+|sk_test_[a-zA-Z0-9]+|rk_live_[a-zA-Z0-9]+|rk_test_[a-zA-Z0-9]+)/', $secretKey, $skMatches)) {
+            $secretKey = $skMatches[1];
+        }
+
+        $webhookSecret = trim($validated['stripe_webhook_secret'] ?? '');
+
         Setting::set('stripe_enabled', $request->boolean('stripe_enabled') ? '1' : '0');
         Setting::set('stripe_mode', $validated['stripe_mode']);
-        Setting::set('stripe_publishable_key', $validated['stripe_publishable_key'] ?? '');
-        Setting::set('stripe_secret_key', $validated['stripe_secret_key'] ?? '');
-        Setting::set('stripe_webhook_secret', $validated['stripe_webhook_secret'] ?? '');
+        Setting::set('stripe_publishable_key', $publishableKey);
+        Setting::set('stripe_secret_key', $secretKey);
+        Setting::set('stripe_webhook_secret', $webhookSecret);
 
         return redirect()
             ->route('admin.settings.stripe')

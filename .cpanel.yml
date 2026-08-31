@@ -12,7 +12,10 @@ deployment:
     - /bin/cp -R resources $DEPLOYPATH
     - /bin/cp -R routes $DEPLOYPATH
     - /bin/cp -R scripts $DEPLOYPATH
-    - /bin/cp -R storage $DEPLOYPATH
     - /bin/cp artisan $DEPLOYPATH
     - /bin/cp composer.json $DEPLOYPATH
     - /bin/cp composer.lock $DEPLOYPATH
+    - /bin/chmod -R 775 $DEPLOYPATH/storage $DEPLOYPATH/bootstrap/cache 2>/dev/null || true
+    - /usr/local/bin/php $DEPLOYPATH/artisan config:clear 2>/dev/null || true
+    - /usr/local/bin/php $DEPLOYPATH/artisan view:clear 2>/dev/null || true
+    - /usr/local/bin/php $DEPLOYPATH/artisan route:clear 2>/dev/null || true

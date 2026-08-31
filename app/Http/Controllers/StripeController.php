@@ -23,7 +23,17 @@ class StripeController extends Controller
     protected function getStripeSecretKey(): ?string
     {
         $key = Setting::get('stripe_secret_key') ?: config('services.stripe.secret') ?: env('STRIPE_SECRET');
-        return $key ? trim($key) : null;
+        if (!$key) {
+            return null;
+        }
+
+        $key = trim($key);
+        // If key accidentally has prefix like 'adm', extract standard sk_live, sk_test, rk_live, rk_test
+        if (preg_match('/(sk_live_[a-zA-Z0-9]+|sk_test_[a-zA-Z0-9]+|rk_live_[a-zA-Z0-9]+|rk_test_[a-zA-Z0-9]+)/', $key, $matches)) {
+            $key = $matches[1];
+        }
+
+        return $key;
     }
 
     protected function initializeStripe(): void
@@ -117,13 +127,13 @@ class StripeController extends Controller
 
             return redirect()
                 ->route('checkout.pending', $order->order_number)
-                ->with('error', 'Payment initialization failed: ' . $e->getMessage());
+                ->with('error', 'Card payment processing is temporarily unavailable. Please try again in a few moments or contact support.');
         } catch (\Exception $e) {
             \Log::error('StripeController: Unexpected error: ' . $e->getMessage());
 
             return redirect()
                 ->route('checkout.pending', $order->order_number)
-                ->with('error', 'An unexpected error occurred. Please try again.');
+                ->with('error', 'We could not initiate card payment at this time. Please try again or contact support.');
         }
     }
 
