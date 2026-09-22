@@ -181,6 +181,9 @@ Route::prefix('my-secret-portal-9821')->name('admin.')->group(function () {
         Route::post('users/{user}/commission-rate', [AdminUserController::class, 'updateCommissionRate'])->name('users.update-commission-rate');
         Route::delete('users/{user}', [AdminUserController::class, 'destroy'])->name('users.destroy');
 
+        // Staff Management
+        Route::resource('staff', \App\Http\Controllers\Admin\StaffController::class);
+
         // Global Mark All Read
         Route::post('notifications/mark-all-read', [AdminDashboardController::class, 'markAllNotificationsAsRead'])->name('notifications.mark-all-read');
 

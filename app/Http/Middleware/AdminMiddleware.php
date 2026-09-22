@@ -17,8 +17,17 @@ class AdminMiddleware
             return redirect()->route('admin.login')->with('error', 'Please authenticate to access this management portal.');
         }
 
-        if (!auth()->user()->isAdmin()) {
+        $user = auth()->user();
+
+        if (!$user->isAdmin()) {
             abort(404);
+        }
+        
+        if (!$user->isActive()) {
+            auth()->logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+            return redirect()->route('admin.login')->with('error', 'Your staff account is inactive.');
         }
 
         return $next($request);

@@ -16,6 +16,10 @@ class AdminModuleMiddleware
         if (!$user || !$user->isAdmin()) {
             abort(403, 'Access denied.');
         }
+        
+        if (!$user->isActive()) {
+            abort(403, 'Your account is inactive.');
+        }
 
         if ($user->hasFullAdminAccess()) {
             return $next($request);

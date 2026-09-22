@@ -349,6 +349,7 @@
                 $adminUser->canAccessAdminModule('packages') ||
                 $adminUser->canAccessAdminModule('orders') ||
                 $adminUser->canAccessAdminModule('users') ||
+                $adminUser->canAccessAdminModule('staff') ||
                 $adminUser->canAccessAdminModule('countries') ||
                 $adminUser->canAccessAdminModule('coupons') ||
                 $adminUser->canAccessAdminModule('blogs') ||
@@ -379,6 +380,12 @@
                 @if(($adminCounts['users'] ?? 0) > 0)
                     <span class="nav-badge nav-badge-info">{{ $adminCounts['users'] }}</span>
                 @endif
+            </a>
+            @endif
+            @if($adminUser->canAccessAdminModule('staff'))
+            <a href="{{ route('admin.staff.index') }}" class="nav-link {{ request()->routeIs('admin.staff.*') ? 'active' : '' }}">
+                <i class="bi bi-person-badge"></i>
+                <span>Staff & Admins</span>
             </a>
             @endif
             @if($adminUser->canAccessAdminModule('countries'))

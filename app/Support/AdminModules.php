@@ -32,6 +32,11 @@ class AdminModules
                 'section' => 'Management',
                 'routes' => ['admin.users.*'],
             ],
+            'staff' => [
+                'label' => 'Staff & Admins',
+                'section' => 'Management',
+                'routes' => ['admin.staff.*'],
+            ],
             'countries' => [
                 'label' => 'Countries',
                 'section' => 'Management',
@@ -181,6 +186,7 @@ class AdminModules
             'packages' => 'admin.packages.index',
             'orders' => 'admin.orders.index',
             'users' => 'admin.users.index',
+            'staff' => 'admin.staff.index',
             'countries' => 'admin.countries.index',
             'coupons' => 'admin.coupons.index',
             'blogs' => 'admin.blogs.index',

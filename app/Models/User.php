@@ -13,11 +13,13 @@ class User extends Authenticatable
 
     protected $fillable = [
         'name',
+        'designation',
         'email',
         'password',
         'phone',
         'country',
         'is_admin',
+        'is_active',
         'admin_modules',
         'last_login_at',
         'referred_by',
@@ -37,6 +39,7 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'is_admin' => 'boolean',
+            'is_active' => 'boolean',
             'admin_modules' => 'array',
             'last_login_at' => 'datetime',
             'google2fa_enabled' => 'boolean',
@@ -50,6 +53,14 @@ class User extends Authenticatable
     public function isAdmin(): bool
     {
         return $this->is_admin === true;
+    }
+
+    /**
+     * Check if user account is active
+     */
+    public function isActive(): bool
+    {
+        return $this->is_active !== false;
     }
 
     /**
