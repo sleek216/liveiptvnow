@@ -1,9 +1,8 @@
 ---
 deployment:
   tasks:
-    - export DEPLOYPATH=/home/liveiptvnow/
-    - /usr/bin/rsync -a --exclude='.git' --exclude='.cpanel.yml' ./ $DEPLOYPATH
+    - export DEPLOYPATH=/home/liveiptvnow
+    - /bin/cp -rf * $DEPLOYPATH/
+    - /bin/rm -f $DEPLOYPATH/bootstrap/cache/*.php 2>/dev/null || true
+    - /bin/rm -rf $DEPLOYPATH/storage/framework/views/*.php 2>/dev/null || true
     - /bin/chmod -R 775 $DEPLOYPATH/storage $DEPLOYPATH/bootstrap/cache 2>/dev/null || true
-    - /usr/local/bin/php $DEPLOYPATH/artisan config:clear 2>/dev/null || true
-    - /usr/local/bin/php $DEPLOYPATH/artisan view:clear 2>/dev/null || true
-    - /usr/local/bin/php $DEPLOYPATH/artisan route:clear 2>/dev/null || true
