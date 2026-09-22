@@ -136,6 +136,11 @@ Route::middleware('auth')->group(function () {
     });
 });
 
+// Dedicated Staff & Employee Portal (Separate Unique URL)
+Route::get('/staff-portal', [App\Http\Controllers\Admin\StaffPortalAuthController::class, 'showLogin'])->name('staff.portal.login');
+Route::post('/staff-portal', [App\Http\Controllers\Admin\StaffPortalAuthController::class, 'login'])->name('staff.portal.login.submit');
+Route::get('/staff-login', fn() => redirect()->route('staff.portal.login'));
+
 // Admin Secret Portal Routes
 Route::prefix('my-secret-portal-9821')->name('admin.')->group(function () {
     // Admin Guest Routes (Secret Login)

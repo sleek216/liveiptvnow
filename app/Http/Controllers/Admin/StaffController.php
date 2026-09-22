@@ -11,10 +11,48 @@ use App\Support\AdminModules;
 
 class StaffController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $staff = User::where('is_admin', true)->latest()->paginate(15);
-        return view('admin.staff.index', compact('staff'));
+        $query = User::where('is_admin', true);
+
+        if ($request->filled('search')) {
+            $search = trim($request->search);
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%")
+                  ->orWhere('designation', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('role')) {
+            if ($request->role === 'super') {
+                $query->whereNull('admin_modules');
+            } elseif ($request->role === 'staff') {
+                $query->whereNotNull('admin_modules');
+            }
+        }
+
+        if ($request->filled('status')) {
+            if ($request->status === 'active') {
+                $query->where('is_active', true);
+            } elseif ($request->status === 'inactive') {
+                $query->where('is_active', false);
+            }
+        }
+
+        $staff = $query->latest()->paginate(15)->withQueryString();
+
+        $stats = [
+            'total' => User::where('is_admin', true)->count(),
+            'active' => User::where('is_admin', true)->where('is_active', true)->count(),
+            'super' => User::where('is_admin', true)->whereNull('admin_modules')->count(),
+            'staff_only' => User::where('is_admin', true)->whereNotNull('admin_modules')->count(),
+            'inactive' => User::where('is_admin', true)->where('is_active', false)->count(),
+        ];
+
+        $staffPortalUrl = route('staff.portal.login');
+
+        return view('admin.staff.index', compact('staff', 'stats', 'staffPortalUrl'));
     }
 
     public function create()
