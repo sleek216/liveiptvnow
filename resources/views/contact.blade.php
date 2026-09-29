@@ -178,12 +178,19 @@
                     <div class="ch-side-card socials">
                         <h4>Follow Our <em>Community</em></h4>
                         <p>Get the latest updates, channel list changes, and exclusive deals.</p>
+                        @php
+                            $cSocialFb = \App\Models\Setting::get('social_facebook', 'https://www.facebook.com/liveiptvnow');
+                            $cSocialTw = \App\Models\Setting::get('social_twitter', 'https://twitter.com/liveiptvnow');
+                            $cSocialIg = \App\Models\Setting::get('social_instagram', 'https://www.instagram.com/liveiptvnow');
+                            $cSocialYt = \App\Models\Setting::get('social_youtube', 'https://www.youtube.com/@liveiptvnow');
+                            $cSocialTg = \App\Models\Setting::get('social_telegram', 'https://t.me/liveiptvnow');
+                        @endphp
                         <div class="ch-soc-grid">
-                            <a href="#" class="ch-soc"><i class="ri-facebook-fill"></i></a>
-                            <a href="#" class="ch-soc"><i class="ri-twitter-x-line"></i></a>
-                            <a href="#" class="ch-soc"><i class="ri-instagram-fill"></i></a>
-                            <a href="#" class="ch-soc"><i class="ri-youtube-fill"></i></a>
-                            <a href="#" class="ch-soc"><i class="ri-telegram-fill"></i></a>
+                            <a href="{{ $cSocialFb }}" target="_blank" rel="noopener noreferrer" class="ch-soc" aria-label="Facebook"><i class="ri-facebook-fill"></i></a>
+                            <a href="{{ $cSocialTw }}" target="_blank" rel="noopener noreferrer" class="ch-soc" aria-label="Twitter/X"><i class="ri-twitter-x-line"></i></a>
+                            <a href="{{ $cSocialIg }}" target="_blank" rel="noopener noreferrer" class="ch-soc" aria-label="Instagram"><i class="ri-instagram-fill"></i></a>
+                            <a href="{{ $cSocialYt }}" target="_blank" rel="noopener noreferrer" class="ch-soc" aria-label="YouTube"><i class="ri-youtube-fill"></i></a>
+                            <a href="{{ $cSocialTg }}" target="_blank" rel="noopener noreferrer" class="ch-soc" aria-label="Telegram"><i class="ri-telegram-fill"></i></a>
                         </div>
                     </div>
 

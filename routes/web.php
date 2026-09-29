@@ -28,6 +28,10 @@ use App\Http\Controllers\TwoFactorController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\LanguageController;
+use App\Http\Controllers\SitemapController;
+
+// XML Sitemap
+Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 
 // Language Switcher
 Route::get('lang/{locale}', [LanguageController::class, 'switch'])->name('lang.switch');

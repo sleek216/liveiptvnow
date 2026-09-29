@@ -1,5 +1,6 @@
 @extends('layouts.app')
-@section('title', 'Live IPTV Now — #1 Premium IPTV | 40,000+ Channels HD & 4K')
+@section('title', 'Live IPTV Now | Premium IPTV with 40,000+ HD & 4K Channels')
+@section('meta_description', 'Get premium IPTV with 40,000+ live channels in HD and 4K quality. Enjoy sports, entertainment, movies and more with fast, reliable streaming and instant delivery.')
 
 @push('styles')
 <style>
@@ -594,9 +595,15 @@
 <section class="hero">
     {{-- Background Image --}}
     <div class="hero-bg">
-        <img src="/iptv_hero_people_watching_tv_1772364978982.png"
-             alt="Family enjoying premium IPTV streaming"
-             loading="eager">
+        <picture>
+            <source srcset="/iptv_hero_people_watching_tv_1772364978982.webp" type="image/webp">
+            <img src="/iptv_hero_people_watching_tv_1772364978982.png"
+                 alt="Family enjoying premium IPTV streaming with 40,000+ live channels"
+                 width="1920" height="1080"
+                 fetchpriority="high"
+                 loading="eager"
+                 decoding="async">
+        </picture>
     </div>
 
     {{-- Text Content --}}
@@ -738,7 +745,14 @@
     <div class="wrap">
         <div class="split-inner">
             <div class="split-img" data-aos="fade-right">
-                <img src="/speed_test_speedometer.png" alt="Ultra High Speed Internet Speedometer">
+                <picture>
+                    <source srcset="/speed_test_speedometer.webp" type="image/webp">
+                    <img src="/speed_test_speedometer.png"
+                         alt="Ultra High Speed IPTV Streaming Speedometer"
+                         width="600" height="400"
+                         loading="lazy"
+                         decoding="async">
+                </picture>
             </div>
             <div class="split-text" data-aos="fade-left" data-aos-delay="100">
                 <span class="sec-tag"><i class="ri-speed-fill"></i> Ultra Performance</span>
@@ -870,7 +884,14 @@
                 </div>
             </div>
             <div class="why-img" data-aos="fade-left" data-aos-delay="200">
-                <img src="/iptv_hero_people_watching_tv_1772364978982.png" alt="Happy customers using Live IPTV Now">
+                <picture>
+                    <source srcset="/iptv_hero_people_watching_tv_1772364978982.webp" type="image/webp">
+                    <img src="/iptv_hero_people_watching_tv_1772364978982.png"
+                         alt="Happy customers enjoying Live IPTV Now"
+                         width="600" height="400"
+                         loading="lazy"
+                         decoding="async">
+                </picture>
                 <div class="why-over">
                     <strong>4.9 ★</strong>
                     <span>Customer Rating</span>

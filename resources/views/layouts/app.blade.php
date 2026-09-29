@@ -4,9 +4,99 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="theme-color" content="#ff4d1c">
-    <meta name="description" content="Live IPTV Now - #1 Premium IPTV Service with 40,000+ Channels, HD &amp; 4K Quality. Zero Buffering. Instant Delivery.">
+    <title>@yield('title', 'Live IPTV Now | Premium IPTV with 40,000+ HD & 4K Channels')</title>
+    <meta name="description" content="@yield('meta_description', 'Get premium IPTV with 40,000+ live channels in HD and 4K quality. Enjoy sports, entertainment, movies and more with fast, reliable streaming and instant delivery.')">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="{{ url()->current() }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Live IPTV Now - Premium Streaming Service')</title>
+
+    {{-- Open Graph / Facebook --}}
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:title" content="@yield('title', 'Live IPTV Now | Premium IPTV with 40,000+ HD & 4K Channels')">
+    <meta property="og:description" content="@yield('meta_description', 'Get premium IPTV with 40,000+ live channels in HD and 4K quality. Enjoy sports, entertainment, movies and more with fast, reliable streaming and instant delivery.')">
+    <meta property="og:image" content="{{ asset('iptv_hero_people_watching_tv_1772364978982.webp') }}">
+    <meta property="og:site_name" content="Live IPTV Now">
+
+    {{-- Twitter Cards --}}
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="{{ url()->current() }}">
+    <meta name="twitter:title" content="@yield('title', 'Live IPTV Now | Premium IPTV with 40,000+ HD & 4K Channels')">
+    <meta name="twitter:description" content="@yield('meta_description', 'Get premium IPTV with 40,000+ live channels in HD and 4K quality. Enjoy sports, entertainment, movies and more with fast, reliable streaming and instant delivery.')">
+    <meta name="twitter:image" content="{{ asset('iptv_hero_people_watching_tv_1772364978982.webp') }}">
+
+    {{-- Preload LCP Hero Image on Homepage for Faster Mobile Core Web Vitals --}}
+    @if(request()->is('/'))
+    <link rel="preload" as="image" href="/iptv_hero_people_watching_tv_1772364978982.webp" type="image/webp" fetchpriority="high">
+    @endif
+
+    {{-- JSON-LD Structured Data / Schema Markup --}}
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@graph": [
+            {
+                "@type": "Organization",
+                "@id": "https://liveiptvnow.com/#organization",
+                "name": "Live IPTV Now",
+                "url": "https://liveiptvnow.com",
+                "logo": {
+                    "@type": "ImageObject",
+                    "url": "https://liveiptvnow.com/images/favicon.png",
+                    "caption": "Live IPTV Now Logo"
+                },
+                "contactPoint": [
+                    {
+                        "@type": "ContactPoint",
+                        "contactType": "Customer Support",
+                        "email": "support@liveiptvnow.com",
+                        "availableLanguage": ["English", "Spanish", "French", "Arabic"]
+                    }
+                ],
+                "sameAs": [
+                    "https://www.facebook.com/liveiptvnow",
+                    "https://twitter.com/liveiptvnow",
+                    "https://www.instagram.com/liveiptvnow",
+                    "https://www.youtube.com/@liveiptvnow",
+                    "https://t.me/liveiptvnow"
+                ]
+            },
+            {
+                "@type": "WebSite",
+                "@id": "https://liveiptvnow.com/#website",
+                "url": "https://liveiptvnow.com",
+                "name": "Live IPTV Now",
+                "description": "Premium IPTV service with 40,000+ live channels in HD & 4K quality.",
+                "publisher": {
+                    "@id": "https://liveiptvnow.com/#organization"
+                },
+                "potentialAction": {
+                    "@type": "SearchAction",
+                    "target": "https://liveiptvnow.com/channels?q={search_term_string}",
+                    "query-input": "required name=search_term_string"
+                }
+            },
+            {
+                "@type": "Service",
+                "@id": "https://liveiptvnow.com/#service",
+                "name": "Premium IPTV Subscription Service",
+                "serviceType": "IPTV Streaming",
+                "provider": {
+                    "@id": "https://liveiptvnow.com/#organization"
+                },
+                "description": "Get premium IPTV with 40,000+ live channels in HD and 4K quality. Enjoy sports, entertainment, movies and more with fast, reliable streaming and instant delivery.",
+                "offers": {
+                    "@type": "AggregateOffer",
+                    "priceCurrency": "USD",
+                    "lowPrice": "12.99",
+                    "highPrice": "149.99",
+                    "offerCount": "12"
+                }
+            }
+        ]
+    }
+    </script>
+    @stack('schema')
 
     {{-- Favicon --}}
     <link rel="icon" type="image/png" href="{{ asset('images/favicon.png') }}">
@@ -199,12 +289,19 @@
                         <span class="ft-logo-text">Live<b>IPTV</b>Now</span>
                     </div>
                     <p>{{ __('Premium IPTV streaming with 40,000+ live channels in stunning 4K & HD. Zero buffering, instant activation, and 24/7 expert support.') }}</p>
+                    @php
+                        $fbUrl = \App\Models\Setting::get('social_facebook', 'https://www.facebook.com/liveiptvnow');
+                        $twUrl = \App\Models\Setting::get('social_twitter', 'https://twitter.com/liveiptvnow');
+                        $igUrl = \App\Models\Setting::get('social_instagram', 'https://www.instagram.com/liveiptvnow');
+                        $ytUrl = \App\Models\Setting::get('social_youtube', 'https://www.youtube.com/@liveiptvnow');
+                        $tgUrl = \App\Models\Setting::get('social_telegram', 'https://t.me/liveiptvnow');
+                    @endphp
                     <div class="ft-socials">
-                        <a href="#" aria-label="Facebook"><i class="ri-facebook-fill"></i></a>
-                        <a href="#" aria-label="Twitter/X"><i class="ri-twitter-x-line"></i></a>
-                        <a href="#" aria-label="Instagram"><i class="ri-instagram-fill"></i></a>
-                        <a href="#" aria-label="YouTube"><i class="ri-youtube-fill"></i></a>
-                        <a href="#" aria-label="Telegram"><i class="ri-telegram-fill"></i></a>
+                        <a href="{{ $fbUrl }}" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><i class="ri-facebook-fill"></i></a>
+                        <a href="{{ $twUrl }}" target="_blank" rel="noopener noreferrer" aria-label="Twitter/X"><i class="ri-twitter-x-line"></i></a>
+                        <a href="{{ $igUrl }}" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="ri-instagram-fill"></i></a>
+                        <a href="{{ $ytUrl }}" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><i class="ri-youtube-fill"></i></a>
+                        <a href="{{ $tgUrl }}" target="_blank" rel="noopener noreferrer" aria-label="Telegram"><i class="ri-telegram-fill"></i></a>
                     </div>
                 </div>
 
@@ -235,11 +332,12 @@
                     <p>{{ __('Our team is available around the clock to help you.') }}</p>
                     <div class="ft-ct-row">
                         <div class="ft-ct-ic"><i class="ri-mail-send-fill"></i></div>
-                        <div><span>{{ __('Email Us') }}</span><strong>support@liveiptvnow.com</strong></div>
+                        <div><span>{{ __('Email Us') }}</span><a href="mailto:support@liveiptvnow.com" style="color:inherit;text-decoration:none;"><strong>support@liveiptvnow.com</strong></a></div>
                     </div>
+                    @php $ftWa = \App\Models\Setting::get('whatsapp_number', '+1 (800) 123-4567'); @endphp
                     <div class="ft-ct-row">
                         <div class="ft-ct-ic"><i class="ri-whatsapp-fill"></i></div>
-                        <div><span>{{ __('WhatsApp') }}</span><strong>+1 (800) 123-4567</strong></div>
+                        <div><span>{{ __('WhatsApp') }}</span><a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $ftWa) }}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;"><strong>{{ $ftWa }}</strong></a></div>
                     </div>
                     <div class="ft-ct-row">
                         <div class="ft-ct-ic"><i class="ri-time-fill"></i></div>

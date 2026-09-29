@@ -1,10 +1,12 @@
 User-agent: *
 Allow: /
+Disallow: /admin/
+Disallow: /my_secret_portal_9821/
+Disallow: /checkout/
+Disallow: /order/
+Disallow: /login
+Disallow: /register
+Disallow: /password/
+Disallow: /secret-dashboard/
 
-Sitemap: http://liveiptvnow.com/?sitemapindex.xml
-Sitemap: http://liveiptvnow.com/?sitemap294.xml
-Sitemap: http://liveiptvnow.com/?sitemap255.xml
-Sitemap: http://liveiptvnow.com/?sitemap135.xml
-Sitemap: http://liveiptvnow.com/?sitemap112.xml
-Sitemap: http://liveiptvnow.com/?sitemap739.xml
-Sitemap: http://liveiptvnow.com/goods.php?sitemap754.xml
+Sitemap: https://liveiptvnow.com/sitemap.xml
