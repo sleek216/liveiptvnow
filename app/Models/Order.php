@@ -144,26 +144,32 @@ class Order extends Model
     /**
      * Calculate expiry date based on package duration
      */
-    protected function calculateExpiryDate()
+    public function calculateExpiryDate(): ?\Carbon\Carbon
     {
         if (!$this->package) {
             return null;
         }
 
-        $date = now();
-        $hasDuration = false;
-
-        if (!empty($this->package->duration_months)) {
-            $date->addMonths($this->package->duration_months);
-            $hasDuration = true;
+        // Lifetime package (no expiry)
+        if (
+            (int) $this->package->duration_months >= 999 ||
+            str_contains(strtolower($this->package->name), 'lifetime') ||
+            str_contains(strtolower((string) $this->package->duration_label), 'lifetime')
+        ) {
+            return null;
         }
 
-        if (!empty($this->package->duration_days)) {
-            $date->addDays($this->package->duration_days);
-            $hasDuration = true;
+        $date = $this->activated_at ? $this->activated_at->copy() : now();
+
+        if (!empty($this->package->duration_months) && (int) $this->package->duration_months > 0) {
+            return $date->addMonths((int) $this->package->duration_months);
         }
 
-        return $hasDuration ? $date : null;
+        if (!empty($this->package->duration_days) && (int) $this->package->duration_days > 0) {
+            return $date->addDays((int) $this->package->duration_days);
+        }
+
+        return null;
     }
 
     /**
