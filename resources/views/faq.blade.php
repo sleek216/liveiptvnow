@@ -3,45 +3,48 @@
 @section('meta_description', 'Find answers to frequently asked questions about Live IPTV Now setup, subscription plans, supported devices, channel lists, and 24/7 technical support.')
 
 @push('schema')
+@php
+    $faqSchema = [
+        '@context' => 'https://schema.org',
+        '@type' => 'FAQPage',
+        'mainEntity' => [
+            [
+                '@type' => 'Question',
+                'name' => 'What is Live IPTV Now and how does it work?',
+                'acceptedAnswer' => [
+                    '@type' => 'Answer',
+                    'text' => 'Live IPTV Now is a premium streaming service delivering over 40,000 live channels, movies, sports, and series in HD and 4K quality directly over the internet to any compatible device.',
+                ],
+            ],
+            [
+                '@type' => 'Question',
+                'name' => 'Which devices are supported by Live IPTV Now?',
+                'acceptedAnswer' => [
+                    '@type' => 'Answer',
+                    'text' => 'Our service works with Smart TVs (Samsung, LG, Sony), Amazon FireStick, Android TV boxes, Apple TV, iPhone, iPad, Android phones, Windows PC, Mac, MAG devices, and Enigma2.',
+                ],
+            ],
+            [
+                '@type' => 'Question',
+                'name' => 'How quickly will I receive my IPTV credentials after payment?',
+                'acceptedAnswer' => [
+                    '@type' => 'Answer',
+                    'text' => 'Activation is instant and automated. As soon as your payment is confirmed, your M3U playlist URL, Xtream Codes credentials, and setup instructions are sent directly to your email address.',
+                ],
+            ],
+            [
+                '@type' => 'Question',
+                'name' => 'Do you offer a money-back guarantee?',
+                'acceptedAnswer' => [
+                    '@type' => 'Answer',
+                    'text' => "Yes, we offer a 24-hour money-back guarantee. If you experience technical issues that our support team cannot resolve, you are entitled to a full refund.",
+                ],
+            ],
+        ],
+    ];
+@endphp
 <script type="application/ld+json">
-{
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-        {
-            "@type": "Question",
-            "name": "What is Live IPTV Now and how does it work?",
-            "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Live IPTV Now is a premium streaming service delivering over 40,000 live channels, movies, sports, and series in HD and 4K quality directly over the internet to any compatible device."
-            }
-        },
-        {
-            "@type": "Question",
-            "name": "Which devices are supported by Live IPTV Now?",
-            "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Our service works with Smart TVs (Samsung, LG, Sony), Amazon FireStick, Android TV boxes, Apple TV, iPhone, iPad, Android phones, Windows PC, Mac, MAG devices, and Enigma2."
-            }
-        },
-        {
-            "@type": "Question",
-            "name": "How quickly will I receive my IPTV credentials after payment?",
-            "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Activation is instant and automated. As soon as your payment is confirmed, your M3U playlist URL, Xtream Codes credentials, and setup instructions are sent directly to your email address."
-            }
-        },
-        {
-            "@type": "Question",
-            "name": "Do you offer a money-back guarantee?",
-            "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Yes, we offer a 24-hour money-back guarantee. If you experience technical issues that our support team cannot resolve, you are entitled to a full refund."
-            }
-        }
-    ]
-}
+{!! json_encode($faqSchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
 </script>
 @endpush
 

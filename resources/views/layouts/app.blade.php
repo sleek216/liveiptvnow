@@ -31,70 +31,73 @@
     @endif
 
     {{-- JSON-LD Structured Data / Schema Markup --}}
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@graph": [
-            {
-                "@type": "Organization",
-                "@id": "https://liveiptvnow.com/#organization",
-                "name": "Live IPTV Now",
-                "url": "https://liveiptvnow.com",
-                "logo": {
-                    "@type": "ImageObject",
-                    "url": "https://liveiptvnow.com/images/favicon.png",
-                    "caption": "Live IPTV Now Logo"
-                },
-                "contactPoint": [
-                    {
-                        "@type": "ContactPoint",
-                        "contactType": "Customer Support",
-                        "email": "support@liveiptvnow.com",
-                        "availableLanguage": ["English", "Spanish", "French", "Arabic"]
-                    }
+    @php
+        $mainSchema = [
+            '@context' => 'https://schema.org',
+            '@graph' => [
+                [
+                    '@type' => 'Organization',
+                    '@id' => 'https://liveiptvnow.com/#organization',
+                    'name' => 'Live IPTV Now',
+                    'url' => 'https://liveiptvnow.com',
+                    'logo' => [
+                        '@type' => 'ImageObject',
+                        'url' => 'https://liveiptvnow.com/images/favicon.png',
+                        'caption' => 'Live IPTV Now Logo',
+                    ],
+                    'contactPoint' => [
+                        [
+                            '@type' => 'ContactPoint',
+                            'contactType' => 'Customer Support',
+                            'email' => 'support@liveiptvnow.com',
+                            'availableLanguage' => ['English', 'Spanish', 'French', 'Arabic'],
+                        ],
+                    ],
+                    'sameAs' => [
+                        'https://www.facebook.com/liveiptvnow',
+                        'https://twitter.com/liveiptvnow',
+                        'https://www.instagram.com/liveiptvnow',
+                        'https://www.youtube.com/@liveiptvnow',
+                        'https://t.me/liveiptvnow',
+                    ],
                 ],
-                "sameAs": [
-                    "https://www.facebook.com/liveiptvnow",
-                    "https://twitter.com/liveiptvnow",
-                    "https://www.instagram.com/liveiptvnow",
-                    "https://www.youtube.com/@liveiptvnow",
-                    "https://t.me/liveiptvnow"
-                ]
-            },
-            {
-                "@type": "WebSite",
-                "@id": "https://liveiptvnow.com/#website",
-                "url": "https://liveiptvnow.com",
-                "name": "Live IPTV Now",
-                "description": "Premium IPTV service with 40,000+ live channels in HD & 4K quality.",
-                "publisher": {
-                    "@id": "https://liveiptvnow.com/#organization"
-                },
-                "potentialAction": {
-                    "@type": "SearchAction",
-                    "target": "https://liveiptvnow.com/channels?q={search_term_string}",
-                    "query-input": "required name=search_term_string"
-                }
-            },
-            {
-                "@type": "Service",
-                "@id": "https://liveiptvnow.com/#service",
-                "name": "Premium IPTV Subscription Service",
-                "serviceType": "IPTV Streaming",
-                "provider": {
-                    "@id": "https://liveiptvnow.com/#organization"
-                },
-                "description": "Get premium IPTV with 40,000+ live channels in HD and 4K quality. Enjoy sports, entertainment, movies and more with fast, reliable streaming and instant delivery.",
-                "offers": {
-                    "@type": "AggregateOffer",
-                    "priceCurrency": "USD",
-                    "lowPrice": "12.99",
-                    "highPrice": "149.99",
-                    "offerCount": "12"
-                }
-            }
-        ]
-    }
+                [
+                    '@type' => 'WebSite',
+                    '@id' => 'https://liveiptvnow.com/#website',
+                    'url' => 'https://liveiptvnow.com',
+                    'name' => 'Live IPTV Now',
+                    'description' => 'Premium IPTV service with 40,000+ live channels in HD & 4K quality.',
+                    'publisher' => [
+                        '@id' => 'https://liveiptvnow.com/#organization',
+                    ],
+                    'potentialAction' => [
+                        '@type' => 'SearchAction',
+                        'target' => 'https://liveiptvnow.com/channels?q={search_term_string}',
+                        'query-input' => 'required name=search_term_string',
+                    ],
+                ],
+                [
+                    '@type' => 'Service',
+                    '@id' => 'https://liveiptvnow.com/#service',
+                    'name' => 'Premium IPTV Subscription Service',
+                    'serviceType' => 'IPTV Streaming',
+                    'provider' => [
+                        '@id' => 'https://liveiptvnow.com/#organization',
+                    ],
+                    'description' => 'Get premium IPTV with 40,000+ live channels in HD and 4K quality. Enjoy sports, entertainment, movies and more with fast, reliable streaming and instant delivery.',
+                    'offers' => [
+                        '@type' => 'AggregateOffer',
+                        'priceCurrency' => 'USD',
+                        'lowPrice' => '12.99',
+                        'highPrice' => '149.99',
+                        'offerCount' => '12',
+                    ],
+                ],
+            ],
+        ];
+    @endphp
+    <script type="application/ld+json">
+    {!! json_encode($mainSchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
     </script>
     @stack('schema')
 
