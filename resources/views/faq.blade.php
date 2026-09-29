@@ -1,6 +1,6 @@
 @extends('layouts.app')
-@section('title', 'FAQ — Frequently Asked Questions | Live IPTV Now')
-@section('meta_description', 'Find answers to frequently asked questions about Live IPTV Now setup, subscription plans, supported devices, channel lists, and 24/7 technical support.')
+@section('title', 'IPTV FAQ – Plans, Channels, Devices & Setup Help')
+@section('meta_description', 'Find answers about IPTV plans, channels, supported devices, setup, trials, payments, streaming quality and account support.')
 
 @push('schema')
 @php

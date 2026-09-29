@@ -1,5 +1,6 @@
 @extends('layouts.app')
-@section('title', 'Terms of Service — Live IPTV Now')
+@section('title', 'Terms & Conditions – Live IPTV Now')
+@section('meta_description', 'Review the terms and conditions for using Live IPTV Now, including subscriptions, payments, accounts, acceptable use and service policies.')
 
 @section('content')
 @include('layouts.page-hero', [

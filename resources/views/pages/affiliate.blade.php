@@ -1,5 +1,6 @@
 @extends('layouts.app')
-@section('title', 'Affiliate Program — Earn 20% Commission | Live IPTV Now')
+@section('title', 'IPTV Affiliate Program – Earn With Live IPTV Now')
+@section('meta_description', 'Join the Live IPTV Now affiliate program, promote our IPTV service and earn commissions by referring new customers. Apply today.')
 
 @section('content')
 @include('layouts.page-hero', [

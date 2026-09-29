@@ -1,5 +1,6 @@
 @extends('layouts.app')
-@section('title', 'Pricing Plans — Live IPTV Now')
+@section('title', 'IPTV Packages & Plans – Flexible Live TV Subscriptions')
+@section('meta_description', 'Explore IPTV packages with flexible plans, HD and 4K streaming, multiple connections and access to live TV, sports, movies and more.')
 
 @section('content')
 

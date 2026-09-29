@@ -1,5 +1,6 @@
 @extends('layouts.app')
-@section('title', 'How It Works — Get Started in Minutes | Live IPTV Now')
+@section('title', 'How IPTV Works – Setup Guide for Live TV Streaming')
+@section('meta_description', 'Learn how IPTV works, choose a plan, receive your login details and set up live TV on compatible Smart TVs, phones, computers and streaming devices.')
 
 @section('content')
 

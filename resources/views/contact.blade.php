@@ -1,5 +1,6 @@
 @extends('layouts.app')
-@section('title', 'Contact Us — Live IPTV Now | 24/7 Support')
+@section('title', 'Contact Live IPTV Now – 24/7 IPTV Support')
+@section('meta_description', 'Need help with your IPTV service? Contact Live IPTV Now for account, setup, payment and streaming support from our team.')
 
 @section('content')
 

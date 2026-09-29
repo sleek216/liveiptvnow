@@ -1,6 +1,6 @@
 @extends('layouts.app')
-@section('title', 'Live IPTV Now | Premium IPTV with 40,000+ HD & 4K Channels')
-@section('meta_description', 'Get premium IPTV with 40,000+ live channels in HD and 4K quality. Enjoy sports, entertainment, movies and more with fast, reliable streaming and instant delivery.')
+@section('title', 'Live IPTV Service – 40,000+ Channels in HD & 4K')
+@section('meta_description', 'Stream 40,000+ live TV channels, sports, movies and shows in HD & 4K. Enjoy flexible IPTV plans, multi-device streaming and 24/7 support.')
 
 @push('styles')
 <style>
