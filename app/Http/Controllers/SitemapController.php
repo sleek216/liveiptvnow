@@ -83,7 +83,6 @@ class SitemapController extends Controller
 
         return response($xml, 200, [
             'Content-Type' => 'application/xml; charset=utf-8',
-            'X-Robots-Tag' => 'noindex',
         ]);
     }
 }
