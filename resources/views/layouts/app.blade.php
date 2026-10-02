@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="theme-color" content="#ff4d1c">
-    <title>@yield('title', 'Live IPTV Service – 40,000+ Channels in HD & 4K')</title>
-    <meta name="description" content="@yield('meta_description', 'Stream 40,000+ live TV channels, sports, movies and shows in HD & 4K. Enjoy flexible IPTV plans, multi-device streaming and 24/7 support.')">
+    <title>@yield('title', 'Live IPTV Now | Premium IPTV with 40,000+ HD & 4K Channels')</title>
+    <meta name="description" content="@yield('meta_description', 'Get premium IPTV with 40,000+ live channels in HD and 4K quality. Enjoy sports, entertainment, movies and more with fast, reliable streaming and instant delivery.')">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="{{ str_replace('www.', '', url()->current()) }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -13,16 +13,16 @@
     {{-- Open Graph / Facebook --}}
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ url()->current() }}">
-    <meta property="og:title" content="@yield('title', 'Live IPTV Service – 40,000+ Channels in HD & 4K')">
-    <meta property="og:description" content="@yield('meta_description', 'Stream 40,000+ live TV channels, sports, movies and shows in HD & 4K. Enjoy flexible IPTV plans, multi-device streaming and 24/7 support.')">
+    <meta property="og:title" content="@yield('title', 'Live IPTV Now | Premium IPTV with 40,000+ HD & 4K Channels')">
+    <meta property="og:description" content="@yield('meta_description', 'Get premium IPTV with 40,000+ live channels in HD and 4K quality. Enjoy sports, entertainment, movies and more with fast, reliable streaming and instant delivery.')">
     <meta property="og:image" content="{{ asset('iptv_hero_people_watching_tv_1772364978982.webp') }}">
     <meta property="og:site_name" content="Live IPTV Now">
 
     {{-- Twitter Cards --}}
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:url" content="{{ url()->current() }}">
-    <meta name="twitter:title" content="@yield('title', 'Live IPTV Service – 40,000+ Channels in HD & 4K')">
-    <meta name="twitter:description" content="@yield('meta_description', 'Stream 40,000+ live TV channels, sports, movies and shows in HD & 4K. Enjoy flexible IPTV plans, multi-device streaming and 24/7 support.')">
+    <meta name="twitter:title" content="@yield('title', 'Live IPTV Now | Premium IPTV with 40,000+ HD & 4K Channels')">
+    <meta name="twitter:description" content="@yield('meta_description', 'Get premium IPTV with 40,000+ live channels in HD and 4K quality. Enjoy sports, entertainment, movies and more with fast, reliable streaming and instant delivery.')">
     <meta name="twitter:image" content="{{ asset('iptv_hero_people_watching_tv_1772364978982.webp') }}">
 
     {{-- Preload LCP Hero Image on Homepage for Faster Mobile Core Web Vitals --}}
@@ -95,6 +95,28 @@
                 ],
             ],
         ];
+        
+        $breadcrumbs = [
+            '@type' => 'BreadcrumbList',
+            'itemListElement' => [
+                [
+                    '@type' => 'ListItem',
+                    'position' => 1,
+                    'name' => 'Home',
+                    'item' => 'https://liveiptvnow.com/'
+                ]
+            ]
+        ];
+        
+        if (request()->path() !== '/') {
+            $breadcrumbs['itemListElement'][] = [
+                '@type' => 'ListItem',
+                'position' => 2,
+                'name' => ucwords(str_replace('-', ' ', request()->segment(1) ?? '')),
+                'item' => url()->current()
+            ];
+        }
+        $mainSchema['@graph'][] = $breadcrumbs;
     @endphp
     <script type="application/ld+json">
     {!! json_encode($mainSchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
@@ -292,7 +314,13 @@
                         <span class="ft-logo-text">Live<b>IPTV</b>Now</span>
                     </div>
                     <p>{{ __('Premium IPTV streaming with 40,000+ live channels in stunning 4K & HD. Zero buffering, instant activation, and 24/7 expert support.') }}</p>
-
+                    <div class="ft-socials">
+                        <a href="https://www.facebook.com/liveiptvnow" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><i class="ri-facebook-fill"></i></a>
+                        <a href="https://twitter.com/liveiptvnow" target="_blank" rel="noopener noreferrer" aria-label="Twitter/X"><i class="ri-twitter-x-line"></i></a>
+                        <a href="https://www.instagram.com/liveiptvnow" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="ri-instagram-fill"></i></a>
+                        <a href="https://www.youtube.com/@liveiptvnow" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><i class="ri-youtube-fill"></i></a>
+                        <a href="https://t.me/liveiptvnow" target="_blank" rel="noopener noreferrer" aria-label="Telegram"><i class="ri-telegram-fill"></i></a>
+                    </div>
                 </div>
 
                 {{-- Services Column --}}
