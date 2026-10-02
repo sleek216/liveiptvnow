@@ -7,7 +7,7 @@
     <title>@yield('title', 'Live IPTV Service – 40,000+ Channels in HD & 4K')</title>
     <meta name="description" content="@yield('meta_description', 'Stream 40,000+ live TV channels, sports, movies and shows in HD & 4K. Enjoy flexible IPTV plans, multi-device streaming and 24/7 support.')">
     <meta name="robots" content="index, follow">
-    <link rel="canonical" href="{{ url()->current() }}">
+    <link rel="canonical" href="{{ str_replace('www.', '', url()->current()) }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     {{-- Open Graph / Facebook --}}
@@ -292,20 +292,7 @@
                         <span class="ft-logo-text">Live<b>IPTV</b>Now</span>
                     </div>
                     <p>{{ __('Premium IPTV streaming with 40,000+ live channels in stunning 4K & HD. Zero buffering, instant activation, and 24/7 expert support.') }}</p>
-                    @php
-                        $fbUrl = \App\Models\Setting::get('social_facebook', 'https://www.facebook.com/liveiptvnow');
-                        $twUrl = \App\Models\Setting::get('social_twitter', 'https://twitter.com/liveiptvnow');
-                        $igUrl = \App\Models\Setting::get('social_instagram', 'https://www.instagram.com/liveiptvnow');
-                        $ytUrl = \App\Models\Setting::get('social_youtube', 'https://www.youtube.com/@liveiptvnow');
-                        $tgUrl = \App\Models\Setting::get('social_telegram', 'https://t.me/liveiptvnow');
-                    @endphp
-                    <div class="ft-socials">
-                        <a href="{{ $fbUrl }}" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><i class="ri-facebook-fill"></i></a>
-                        <a href="{{ $twUrl }}" target="_blank" rel="noopener noreferrer" aria-label="Twitter/X"><i class="ri-twitter-x-line"></i></a>
-                        <a href="{{ $igUrl }}" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="ri-instagram-fill"></i></a>
-                        <a href="{{ $ytUrl }}" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><i class="ri-youtube-fill"></i></a>
-                        <a href="{{ $tgUrl }}" target="_blank" rel="noopener noreferrer" aria-label="Telegram"><i class="ri-telegram-fill"></i></a>
-                    </div>
+
                 </div>
 
                 {{-- Services Column --}}

@@ -29,6 +29,19 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\SitemapController;
+use App\Http\Controllers\SeoPageController;
+
+// SEO Landing Pages
+$seoPages = [
+    'iptv-service', 'iptv-subscription', 'iptv-pricing', 'iptv-free-trial', 'iptv-devices', 'iptv-channels',
+    'iptv-usa', 'iptv-uk', 'iptv-canada', 'iptv-australia', 'iptv-europe',
+    'what-is-iptv', 'how-does-iptv-work', 'iptv-vs-cable', 'iptv-vs-satellite', 'iptv-internet-speed-requirements', 'what-is-epg', 'iptv-troubleshooting-guide', 'iptv-buffering-causes', 'hd-vs-4k-iptv',
+    'iptv-for-smart-tv', 'iptv-for-firestick', 'iptv-for-android', 'iptv-for-ios', 'iptv-for-windows', 'iptv-for-mac', 'iptv-for-mag-box', 'iptv-for-xbox', 'iptv-for-samsung-tv', 'iptv-for-lg-tv', 'iptv-for-roku'
+];
+
+foreach ($seoPages as $page) {
+    Route::get('/' . $page, [SeoPageController::class, 'show'])->defaults('slug', $page)->name('seo.' . $page);
+}
 
 // XML Sitemap
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');

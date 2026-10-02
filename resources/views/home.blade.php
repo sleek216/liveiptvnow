@@ -597,7 +597,7 @@
     <div class="hero-bg">
         <picture>
             <source srcset="/iptv_hero_people_watching_tv_1772364978982.webp" type="image/webp">
-            <img src="/iptv_hero_people_watching_tv_1772364978982.png"
+            <img src="/iptv_hero_people_watching_tv_1772364978982.webp"
                  alt="Family enjoying premium IPTV streaming with 40,000+ live channels"
                  width="1920" height="1080"
                  fetchpriority="high"
@@ -886,7 +886,7 @@
             <div class="why-img" data-aos="fade-left" data-aos-delay="200">
                 <picture>
                     <source srcset="/iptv_hero_people_watching_tv_1772364978982.webp" type="image/webp">
-                    <img src="/iptv_hero_people_watching_tv_1772364978982.png"
+                    <img src="/iptv_hero_people_watching_tv_1772364978982.webp"
                          alt="Happy customers enjoying Live IPTV Now"
                          width="600" height="400"
                          loading="lazy"
